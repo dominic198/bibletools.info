@@ -1,7 +1,6 @@
 $(document).ready(function(){
 	$(document).ajaxError(function(e, jqxhr, settings, exception) {
-		$("body").prepend('<div class="alert global error alert-danger" role="alert"></span> <span class="sr-only">Error:</span> Oops.  An error occured.</div>');
-		$(".global.error").delay(4000).fadeOut(2000);
+		throwError("Oops.  An error occured.");
 	});
 	
 	path = window.location.pathname
@@ -237,8 +236,12 @@ $(document).ready(function(){
 			verse = ref[2].split("-");
 			verse = verse[0];
 			
+			if(!isNumber(verse)){
+				getVerse(book_name + " " + chapter + ":" + "1");
+				return;
+			}
+			
 			if( updateState != false ){
-				
 				stateRef = getSmBook(book).replace(/ /g,'') + "_" + chapter + "." + verse;
 				window.history.pushState(stateRef, null, stateRef);
 			}
@@ -268,7 +271,18 @@ $(document).ready(function(){
 				
 			}); 
 
+		}).error(function() {
+			throwError("Verse could not be loaded.");
+			verse = $("#verse").attr("data-verse");
+			if(!verse){
+				getVerse("Genesis 1:1");
+			}
 		});
+	}
+	
+	function throwError( msg ){
+		$("body").prepend('<div class="alert global error alert-danger" role="alert"></span> <span class="sr-only">Error:</span> ' + msg + '</div>');
+		$(".global.error").delay(4000).fadeOut(2000);
 	}
 	
 	function updateNavigation(nav){
@@ -454,12 +468,11 @@ $(document).ready(function(){
 			return books[book];
 		} else {
 			return books.indexOf(book);
-		}
-		
-		function isNumber(n) {
-		  return !isNaN(parseFloat(n)) && isFinite(n);
-		}
-		
+		}		
+	}
+	
+	function isNumber(n) {
+	  return !isNaN(parseFloat(n)) && isFinite(n);
 	}
 
 });
