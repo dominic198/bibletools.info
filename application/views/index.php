@@ -73,6 +73,7 @@
 					<h3>Bible verse resources and analysis tools.</h3>	
 					<form action="." id="search_form">			
 						<input id="search" placeholder="Genesis 1:1"/>
+						<a class="fa fa-times-circle" id="clear"></a>
 					</form>
 					<br>
 	    		</div>

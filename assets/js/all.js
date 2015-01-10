@@ -166,6 +166,20 @@ $(document).ready(function(){
 		getVerse(ref);
 	});
 	
+	$("#clear").click(function(){
+		$("#search").val("").focus();
+		$(this).hide();
+		console.log("clear click");
+	});
+	
+	$("#search").keydown(function(){
+		if($(this).val() == ""){
+			$("#clear").hide();
+		} else {
+			$("#clear").show();
+		}
+	});
+	
 	$(document).swipe({
 		swipeLeft:function() {
 			ref = $("#verse").attr("data-next");
