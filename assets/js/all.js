@@ -169,7 +169,6 @@ $(document).ready(function(){
 	$("#clear").click(function(){
 		$("#search").val("").focus();
 		$(this).hide();
-		console.log("clear click");
 	});
 	
 	$("#search").keydown(function(){
