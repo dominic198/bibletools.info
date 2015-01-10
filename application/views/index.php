@@ -72,7 +72,7 @@
 					<h1><b>BibleTools</b>.info</h1>
 					<h3>Bible verse resources and analysis tools.</h3>	
 					<form action="." id="search_form">			
-						<input id="search" placeholder="Genesis 1:1"/>
+						<input id="search" placeholder="Enter reference"/>
 						<a class="fa fa-times-circle" id="clear"></a>
 					</form>
 					<br>

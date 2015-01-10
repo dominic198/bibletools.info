@@ -268,6 +268,7 @@ $(document).ready(function(){
 			verse_elem.attr("data-verse", verse);
 			$("#verse .loader").remove();
 			$("input#search").val(book_name + ' ' + chapter + ':' + verse);
+			$("#clear").show();
 						
 			$.getJSON("/bc/get/" + book + "/" + chapter + "/" + verse, function(data) {
 				updateNavigation(data.nav);
