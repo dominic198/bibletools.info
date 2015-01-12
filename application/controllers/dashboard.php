@@ -14,6 +14,24 @@ class Dashboard extends CI_Controller
 		
 		$this->load->view('index', $data);
 	}
+	function contact_form()
+	{
+		$this->load->view('contact_form');
+	}
+	function resource_list()
+	{
+		$this->load->view('resource_list');
+	}
+	function submit_message()
+	{
+		$name = $this->input->post('name');
+		$email = $this->input->post('email');
+		$message = $this->input->post('message')."\r\n\r\n".$email;
+		
+		if(!empty($message)){
+			mail("akjackson1@gmail.com", "BibleTools.info Feedback from ".$name, $message);
+		}
+	}
 	function get_egw()
 	{
 		$book = $this->uri->segment(3);

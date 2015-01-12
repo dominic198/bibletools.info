@@ -131,7 +131,7 @@ $(document).ready(function(){
 		}
 	});
 		
-	$(".bc .panel-body a").live("click", function(e){
+	$(".bc .panel-body a").live("click touchstart", function(e){
 		
 		if($(this).data("datatype") == "bible"){
 			e.preventDefault();
@@ -143,30 +143,30 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".bc .panel-body .scriptRef").live("click", function(e){
+	$(".bc .panel-body .scriptRef").live("click touchstart", function(e){
 			ref = $(this).attr("ref");
 			getVerse(ref);
 	});
 	
-	$(".egw .panel-body span.bible-kjv").live("click", function(e){
+	$(".egw .panel-body span.bible-kjv").live("click touchstart", function(e){
 		e.preventDefault();
 		ref = $(this).attr("title");
 		getVerse(ref);
 	});
 	
-	$("#verse .prev").live("click", function(e){
+	$("#verse .prev").live("click touchstart", function(e){
 		e.preventDefault();
 		ref = $("#verse").attr("data-prev");
 		getVerse(ref);
 	});
 	
-	$("#verse .next").live("click", function(e){
+	$("#verse .next").live("click touchstart", function(e){
 		e.preventDefault();
 		ref = $("#verse").attr("data-next");
 		getVerse(ref);
 	});
 	
-	$("#clear").click(function(){
+	$("#clear").live("click touchstart", function(e){
 		$("#search").val("").focus();
 		$(this).hide();
 	});
@@ -195,16 +195,16 @@ $(document).ready(function(){
 		threshold:100
 	});
 	
-	$(".box.bc, .box.egw").live( "click", function() {
+	$(".box.bc, .box.egw").live( "click touchstart", function() {
 		$(this).toggleClass("expand");
 		$("#resource_list").isotope( 'reloadItems' ).isotope();
 	});
 	
-	$(".expand.box p").live( "click", function() {
+	$(".expand.box p").live( "click touchstart", function() {
 		return false;
 	});
 	
-	$("#load_more").click(function(){
+	$("#load_more").live( "click touchstart", function() {
 		
 		$(this).html("loading...");
 		var book = $("#verse").data("book");
@@ -227,15 +227,37 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("form#contact #submit").live( "click touchstart", function(e) {
+		e.preventDefault();
+		$("form#contact").submit();
+	});
+	
+	$("form#contact").live( "submit", function(e) {
+		e.preventDefault();
+		if($(this).find("#message") != ""){
+			data = $(this).serializeArray();
+			btn =  $(this).find("#submit");
+			btnText = btn.text();
+			btn.text("Sending feedback...");
+			$.post("/about/submit_message", data, function(){
+				throwSuccess("Feedback sent successfully");
+				$('form#contact').trigger("reset");
+				btn.text(btnText);
+			});
+		}
+	});
+	
 	function titleCase(str){
 	    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 	}
 	
 	function getVerse(ref, updateState){
-		$("#resource_list .box, #verse .prev, #verse .next").remove();
-		$("#verse .panel-body").empty().html('<div class="loader"></div>');
-		$("#verse").removeAttr("data-prev data-next");
-		$("#search_form input").blur();
+		if(ref == "about"){
+			getPage("about");
+			return;
+		}
+		
+		initialize();
 		
 		$.getJSON("http://api.biblia.com/v1/bible/content/KJV.json?key=94bc3bc38f99f60cb7f92fbad7cdf912&eachVerse=[ShortBookName].[ChapterNum].[VerseNum]~[VerseText]&passage=" + ref, function(data) {
 			$(".verse .panel-body .loader").hide();
@@ -280,6 +302,8 @@ $(document).ready(function(){
 					loadEGWContent();
 					if($(".box.egw").length == data.total){
 						$("#load_more").hide();
+					}else{
+						$("#load_more").show();
 					}
 				});
 				
@@ -294,8 +318,35 @@ $(document).ready(function(){
 		});
 	}
 	
+	function getPage(page){
+		if(page == "about"){
+			initialize();
+			$.ajax( "/about/contact_form" ).done(function(response) {
+				$("#verse .panel-body").html(response);
+				$("#verse .panel-heading").text("Feedback");
+				$("#verse .loader").remove();
+				window.history.pushState("about", null, "about");
+				$("#clear").hide();
+				$("#resource_list").isotope();
+			});
+		}
+	}
+	
+	function initialize(){
+		$("#resource_list .box, #verse .prev, #verse .next").remove();
+		$("#verse .panel-body").empty().html('<div class="loader"></div>');
+		$("#verse").removeAttr("data-prev data-next");
+		$("#search_form input").blur();
+		$("#load_more").hide();
+	}
+	
 	function throwError( msg ){
 		$("body").prepend('<div class="alert global error alert-danger" role="alert"></span> <span class="sr-only">Error:</span> ' + msg + '</div>');
+		$(".global.error").delay(4000).fadeOut(2000);
+	}
+	
+	function throwSuccess( msg ){
+		$("body").prepend('<div class="alert global error alert-success" role="alert"></span>' + msg + '</div>');
 		$(".global.error").delay(4000).fadeOut(2000);
 	}
 	

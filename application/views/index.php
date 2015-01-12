@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!--<meta name="description" content="">-->
+	<meta name="description" content="BibleTools.info is a web app designed to enhance your Bible study experience by providing powerful resources for almost every verse.">
 	<meta name="author" content="Adam Jackson">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
@@ -20,7 +20,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="/assets/js/all.js?v=13"></script>
+	<script type="text/javascript" src="/assets/js/all.js?v=14"></script>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 		<!----------TEMPLATES---------->
@@ -98,7 +98,7 @@
 
 	<div id="c">
 		<div class="container">
-			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a></p>
+			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about">Feedback</a></p>
 		
 		</div>
 	</div>

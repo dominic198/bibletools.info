@@ -44,6 +44,7 @@ $route['bc/(:any)'] = "bc/$1";
 $route['sdabc/(:any)'] = "sdabc/$1";
 $route['acbc/(:any)'] = "acbc/$1";
 $route['egw/(:any)'] = "egw/$1";
+$route['about/(:any)'] = "dashboard/$1";
 $route['(:any)'] = "dashboard/index";
 
 
