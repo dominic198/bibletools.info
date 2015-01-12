@@ -166,7 +166,7 @@ $(document).ready(function(){
 		getVerse(ref);
 	});
 	
-	$("#clear").live("click", function(e){
+	$("#clear").live("click touchstart", function(e){
 		$("#search").val("").focus();
 		$(this).hide();
 	});
@@ -204,7 +204,7 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$("#load_more").live( "click", function() {
+	$("#load_more").live( "click touchstart", function() {
 		
 		$(this).html("loading...");
 		var book = $("#verse").data("book");
@@ -227,7 +227,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("form#contact #submit").live( "click", function(e) {
+	$("form#contact #submit").live( "click touchstart", function(e) {
 		e.preventDefault();
 		$("form#contact").submit();
 	});
