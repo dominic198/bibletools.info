@@ -131,7 +131,7 @@ $(document).ready(function(){
 		}
 	});
 		
-	$(".bc .panel-body a").live("click touchstart", function(e){
+	$(".bc .panel-body a").live("click", function(e){
 		
 		if($(this).data("datatype") == "bible"){
 			e.preventDefault();
@@ -143,30 +143,30 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".bc .panel-body .scriptRef").live("click touchstart", function(e){
+	$(".bc .panel-body .scriptRef").live("click", function(e){
 			ref = $(this).attr("ref");
 			getVerse(ref);
 	});
 	
-	$(".egw .panel-body span.bible-kjv").live("click touchstart", function(e){
+	$(".egw .panel-body span.bible-kjv").live("click", function(e){
 		e.preventDefault();
 		ref = $(this).attr("title");
 		getVerse(ref);
 	});
 	
-	$("#verse .prev").live("click touchstart", function(e){
+	$("#verse .prev").live("click", function(e){
 		e.preventDefault();
 		ref = $("#verse").attr("data-prev");
 		getVerse(ref);
 	});
 	
-	$("#verse .next").live("click touchstart", function(e){
+	$("#verse .next").live("click", function(e){
 		e.preventDefault();
 		ref = $("#verse").attr("data-next");
 		getVerse(ref);
 	});
 	
-	$("#clear").live("click touchstart", function(e){
+	$("#clear").live("click", function(e){
 		$("#search").val("").focus();
 		$(this).hide();
 	});
@@ -195,16 +195,16 @@ $(document).ready(function(){
 		threshold:100
 	});
 	
-	$(".box.bc, .box.egw").live( "click touchstart", function() {
+	$(".box.bc, .box.egw").live( "click", function() {
 		$(this).toggleClass("expand");
 		$("#resource_list").isotope( 'reloadItems' ).isotope();
 	});
 	
-	$(".expand.box p").live( "click touchstart", function() {
+	$(".expand.box p").live( "click", function() {
 		return false;
 	});
 	
-	$("#load_more").live( "click touchstart", function() {
+	$("#load_more").live( "click", function() {
 		
 		$(this).html("loading...");
 		var book = $("#verse").data("book");
@@ -227,7 +227,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("form#contact #submit").live( "click touchstart", function(e) {
+	$("form#contact #submit").live( "click", function(e) {
 		e.preventDefault();
 		$("form#contact").submit();
 	});
