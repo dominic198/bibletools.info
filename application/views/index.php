@@ -98,7 +98,7 @@
 
 	<div id="c">
 		<div class="container">
-			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about">Feedback</a></p>
+			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a></p>
 		
 		</div>
 	</div>
