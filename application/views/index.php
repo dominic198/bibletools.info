@@ -20,7 +20,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="/assets/js/all.js?v=16"></script>
+	<script type="text/javascript" src="/assets/js/all.js?v=17"></script>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 		<!----------TEMPLATES---------->

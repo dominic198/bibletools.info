@@ -284,12 +284,13 @@ $(document).ready(function(){
 				getVerse(book_name + " " + chapter + ":" + "1");
 				return;
 			}
-			
+			if(!isNumber(chapter)){
+				chapter = 1;
+			}
 			if( updateState != false ){
 				stateRef = getSmBook(book).replace(/ /g,'') + "_" + chapter + "." + verse;
 				window.history.pushState(stateRef, null, stateRef);
 			}
-			
 			$("#verse .panel-body").text(text[1]);
 			$("#verse .panel-heading").text(book_name + " " + chapter + ":" + verse);
 			verse_elem = $("#verse");
