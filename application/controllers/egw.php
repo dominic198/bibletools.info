@@ -67,9 +67,12 @@ class Egw extends CI_Controller
 	    foreach($egw as $item){
 	    	$html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=".$item['reference']);
 	    	if( is_object($html) ){
-	    		$title = $html->find("h4", 0);
-	    			if( $title )
-	    				$title = $title->plaintext;
+	    		if( !$html->find("h4", 0) ){
+	    			$data['reference'] = $item['reference'];
+					$this->db->insert('egw_quotes', $data);
+	    		}
+	    			
+	    		$title = $html->find("h4", 0)->plaintext;
 				$title = str_replace("Page ", "", $title);
 				
 				$html = $html->find("div.showitem", 0);
@@ -86,6 +89,7 @@ class Egw extends CI_Controller
 				$data['reference'] = $item['reference'];
 				$this->db->insert('egw_quotes', $data);
 	    	}
+	    	die;
 	    }
 	}
 }
