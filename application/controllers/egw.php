@@ -60,14 +60,16 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 247';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
 	    foreach($egw as $item){
 	    	$html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=".$item['reference']);
-	    	if( $html ){
-	    		$title = $html->find("h4", 0)->plaintext;
+	    	if( is_object($html) ){
+	    		$title = $html->find("h4", 0);
+	    			if( $title )
+	    				$title = $title->plaintext;
 				$title = str_replace("Page ", "", $title);
 				
 				$html = $html->find("div.showitem", 0);
