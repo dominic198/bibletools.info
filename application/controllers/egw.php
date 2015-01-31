@@ -77,7 +77,7 @@ class Egw extends CI_Controller
 			$data['text'] = $html;
 			$data['reference'] = $item['reference'];
 			
-			$this->db->insert('egw_qutoes', $data); 
+			$this->db->insert('egw_quotes', $data); 
 			die;
 	    }
 	}
