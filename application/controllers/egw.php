@@ -60,7 +60,7 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 247';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 249';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
@@ -70,19 +70,20 @@ class Egw extends CI_Controller
 	    		if( !$html->find("h4", 0) ){
 	    			$data['reference'] = $item['reference'];
 					$this->db->insert('egw_quotes', $data);
-	    		}
+	    		} else {
 	    			
-	    		$title = $html->find("h4", 0)->plaintext;
-				$title = str_replace("Page ", "", $title);
-				
-				$html = $html->find("div.showitem", 0);
-				$html = str_replace("<span name='para1'/>", "", $html);
-				$html = str_replace(" class='standard-indented'", "", $html);
-				
-				$data['title'] = $title;
-				$data['text'] = $html;
-				$data['reference'] = $item['reference'];
-				$this->db->insert('egw_quotes', $data);
+		    		$title = $html->find("h4", 0)->plaintext;
+					$title = str_replace("Page ", "", $title);
+					
+					$html = $html->find("div.showitem", 0);
+					$html = str_replace("<span name='para1'/>", "", $html);
+					$html = str_replace(" class='standard-indented'", "", $html);
+					
+					$data['title'] = $title;
+					$data['text'] = $html;
+					$data['reference'] = $item['reference'];
+					$this->db->insert('egw_quotes', $data);
+				}
 				
 	    	} else {
 	    	
