@@ -78,7 +78,6 @@ class Egw extends CI_Controller
 			$data['reference'] = $item['reference'];
 			
 			$this->db->insert('egw_quotes', $data); 
-			die;
 	    }
 	}
 }
