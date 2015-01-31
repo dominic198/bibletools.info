@@ -60,24 +60,26 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference OFFSET 13';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
 	    foreach($egw as $item){
 	    	$html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=".$item['reference']);
-			$title = $html->find("h4", 0)->plaintext;
-			$title = str_replace("Page ", "", $title);
-			
-			$html = $html->find("div.showitem", 0);
-			$html = str_replace("<span name='para1'/>", "", $html);
-			$html = str_replace(" class='standard-indented'", "", $html);
-			
-			$data['title'] = $title;
-			$data['text'] = $html;
-			$data['reference'] = $item['reference'];
-			
-			$this->db->insert('egw_quotes', $data); 
+	    	if( $html ){
+	    		$title = $html->find("h4", 0)->plaintext;
+				$title = str_replace("Page ", "", $title);
+				
+				$html = $html->find("div.showitem", 0);
+				$html = str_replace("<span name='para1'/>", "", $html);
+				$html = str_replace(" class='standard-indented'", "", $html);
+				
+				$data['title'] = $title;
+				$data['text'] = $html;
+				$data['reference'] = $item['reference'];
+				
+				$this->db->insert('egw_quotes', $data);
+	    	} 
 	    }
 	}
 }
