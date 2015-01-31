@@ -60,7 +60,7 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 249';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 250';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
@@ -90,7 +90,6 @@ class Egw extends CI_Controller
 				$data['reference'] = $item['reference'];
 				$this->db->insert('egw_quotes', $data);
 	    	}
-	    	die;
 	    }
 	}
 }
