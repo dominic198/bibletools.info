@@ -60,7 +60,7 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference OFFSET 13';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
@@ -77,9 +77,13 @@ class Egw extends CI_Controller
 				$data['title'] = $title;
 				$data['text'] = $html;
 				$data['reference'] = $item['reference'];
-				
 				$this->db->insert('egw_quotes', $data);
-	    	} 
+				
+	    	} else {
+	    	
+				$data['reference'] = $item['reference'];
+				$this->db->insert('egw_quotes', $data);
+	    	}
 	    }
 	}
 }
