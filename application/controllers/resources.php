@@ -20,7 +20,6 @@ class Resources extends CI_Controller
 		$bc = $this->getBc($book, $chapter, $verse);
 		$egw = $this->getEgw($book, $chapter, $verse);
 		
-		print_r($bc + $egw);die;
 		$this->output->set_output( json_encode( $bc + $egw ) );
 	}
 	
