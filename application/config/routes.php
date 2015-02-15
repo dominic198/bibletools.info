@@ -40,6 +40,7 @@
 
 $route['default_controller'] = "dashboard";
 
+$route['resources/(:any)'] = "resources/$1";
 $route['bc/(:any)'] = "bc/$1";
 $route['sdabc/(:any)'] = "sdabc/$1";
 $route['acbc/(:any)'] = "acbc/$1";
