@@ -21,8 +21,9 @@ class Resources extends CI_Controller
 		$bc = $this->getBc($book, $chapter, $verse);
 		$egw = $this->getEgw($book, $chapter, $verse);
 		
-		$resources = array( $kjv, $bc, $verse );
-		
+		$resources = array();
+		$resources['resources'] = array_merge( $kjv, $bc, $egw );
+
 		$this->output->set_output( json_encode( $resources ) );
 	}
 	
