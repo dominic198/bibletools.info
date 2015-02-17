@@ -35,7 +35,7 @@ class Resources extends CI_Controller
 			
 			//$results['nav'] = $this->kjvapi->nav($book, $chapter, $verse);
 		
-			$sdabc_query = $this->db->query('SELECT * FROM sdabc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
+			$sdabc_query = $this->db->query('SELECT content FROM sdabc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
 		    $sdabc = $sdabc_query->result();
 		    if($sdabc) {
 		    	$sdabc[0]->title = "SDA Bible Commentary";
@@ -79,7 +79,9 @@ class Resources extends CI_Controller
 		if(is_numeric($book) AND is_numeric($chapter) AND is_numeric($verse)){
 			$sql = 'SELECT text FROM av WHERE book = '.$book.' AND chapter = '.$chapter.' AND verse = '.$verse;
 		    $query = $this->db->query($sql);
-			return $query->result_array();
+		    $results = $query->result_array();
+		    $results[0]['title'] = "{$book} {$chapter}:{$verse}";
+			return $results;
 		}
 	}
 }
