@@ -81,6 +81,7 @@ class Resources extends CI_Controller
 		    $query = $this->db->query($sql);
 		    $results = $query->result_array();
 		    $results[0]['title'] = "{$book} {$chapter}:{$verse}";
+		    $results[0] += $this->kjvapi->nav($book, $chapter, $verse);
 			return $results;
 		}
 	}
