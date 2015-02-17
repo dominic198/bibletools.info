@@ -114,5 +114,24 @@ class Kjvapi extends CI_Model
 			return $nav;
 		}
 	}
+	
+	function numericNav($book, $chapter, $verse)
+	{
+
+		if(is_numeric($book) AND is_numeric($chapter)  AND is_numeric($verse)){
+			$verse = $this->db->query('SELECT row FROM av WHERE book = '.$book.' AND chapter = '.$chapter.' AND verse = '.$verse)->row_array();
+			$prev_row = $verse['row']-1;
+			$next_row = $verse['row']+1;
+			$prev = $this->db->query('SELECT book, av.chapter, av.verse FROM av WHERE row = '.$prev_row)->row_array();
+			$next = $this->db->query('SELECT book, av.chapter, av.verse FROM av WHERE row = '.$next_row)->row_array();
+			
+			if($prev)
+				$nav['prev'] = $prev['book']." ".$prev['chapter'].":".$prev['verse'];
+			if($next)
+				$nav['next'] = $next['book']." ".$next['chapter'].":".$next['verse'];
+			
+			return $nav;
+		}
+	}
 
 }

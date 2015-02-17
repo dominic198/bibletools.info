@@ -32,9 +32,7 @@ class Resources extends CI_Controller
 		
 		$results = array();
 		if(isset($book) AND is_numeric($verse)){
-			
-			//$results['nav'] = $this->kjvapi->nav($book, $chapter, $verse);
-		
+					
 			$sdabc_query = $this->db->query('SELECT content FROM sdabc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
 		    $sdabc = $sdabc_query->result();
 		    if($sdabc) {
@@ -77,11 +75,12 @@ class Resources extends CI_Controller
 	{
 
 		if(is_numeric($book) AND is_numeric($chapter) AND is_numeric($verse)){
-			$sql = 'SELECT text FROM av WHERE book = '.$book.' AND chapter = '.$chapter.' AND verse = '.$verse;
+			$sql = 'SELECT text, books.book FROM av LEFT JOIN books ON av.book = books.number WHERE av.book = '.$book.' AND chapter = '.$chapter.' AND verse = '.$verse;
 		    $query = $this->db->query($sql);
 		    $results = $query->result_array();
-		    $results[0]['title'] = "{$book} {$chapter}:{$verse}";
-		    $results[0] += $this->kjvapi->nav($book, $chapter, $verse);
+		    $results[0]['title'] = "{$results[0]['book']} {$chapter}:{$verse}";
+		    $results[0] += $this->kjvapi->numericNav($book, $chapter, $verse);
+		    unset( $results[0]['book'] );
 			return $results;
 		}
 	}
