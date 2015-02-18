@@ -44,7 +44,8 @@ class Egw extends CI_Controller
 	{
 		$query = $this->uri->segment(3);
 		if($query != "undefined"){
-			$html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=".$query);
+			//$html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=".$query);
+			 $html = $this->domparser->file_get_html("http://m.egwwritings.org/search.php?lang=en&collection=2&section=all&QUERY=".$query."&sortBy=perbook&Search=Search");
 			$title = $html->find("h4", 0)->plaintext;
 			$title = str_replace("Page ", "", $title);
 			
@@ -60,7 +61,7 @@ class Egw extends CI_Controller
 	}
 	function save_all()
 	{
-		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 250';
+		$sql = 'SELECT DISTINCT(reference) FROM egw_scripture_reference LIMIT 27000 OFFSET 3653';
 	    $query = $this->db->query($sql);
 	    $egw = $query->result_array();
 	    
