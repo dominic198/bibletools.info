@@ -64,7 +64,7 @@ class Resources extends CI_Controller
 	function getEgw($book, $chapter, $verse)
 	{		
 		if(isset($book) AND is_numeric($chapter)){
-			$sql = 'SELECT ref.reference, quote.text, quote.title FROM egw_scripture_reference as ref LEFT JOIN egw_quotes_new as quote ON ref.reference = quote.reference WHERE ref.book = "'.$book.'" AND ref.chapter = '.$chapter.' AND ref.endverse >= '.$verse.' AND ref.verse <= '.$verse.' OR ref.book = "'.$book.'" AND ref.chapter = '.$chapter.' AND ref.verse = '.$verse;
+			$sql = 'SELECT ref.reference, quote.text as content, quote.title FROM egw_scripture_reference as ref LEFT JOIN egw_quotes_new as quote ON ref.reference = quote.reference WHERE ref.book = "'.$book.'" AND ref.chapter = '.$chapter.' AND ref.endverse >= '.$verse.' AND ref.verse <= '.$verse.' OR ref.book = "'.$book.'" AND ref.chapter = '.$chapter.' AND ref.verse = '.$verse;
 		    $query = $this->db->query($sql);
 		    $egw = $query->result_array();
 			return $egw;
