@@ -201,6 +201,7 @@ $(document).ready(function(){
 				getVerse(ref);
 			}
 		},
+		fallbackToMouseEvents:false,
 		threshold:100
 	});
 	
@@ -209,7 +210,7 @@ $(document).ready(function(){
 		$("#resource_list").isotope( 'reloadItems' ).isotope();
 	});
 	
-	$(".expand.box p").live( "click", function() {
+	$(".expand.box .panel-body").live( "click", function() {
 		return false;
 	});
 	
