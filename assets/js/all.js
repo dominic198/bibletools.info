@@ -269,7 +269,7 @@ $(document).ready(function(){
 		
 		initialize();
 		
-		$.getJSON("http://api.biblia.com/v1/bible/content/KJV.json?key=94bc3bc38f99f60cb7f92fbad7cdf912&eachVerse=[ShortBookName].[ChapterNum].[VerseNum]~[VerseText]&passage=" + ref, function(data) {
+		$.getJSON("http://api.biblia.com/v1/bible/content/KJV.json?key=94bc3bc38f99f60cb7f92fbad7cdf912&eachVerse=[ShortBookName].[ChapterNum].[VerseNum]~[VerseText]&passage=" + ref + "&callback=?", function(data) {
 			$(".verse .panel-body .loader").hide();
 			
 			text = data.text.split("~");
