@@ -215,16 +215,14 @@ $(document).ready(function(){
 	});
 	
 	$("#load_more").live( "click", function() {
-		
 		$(this).html("loading...");
-		var book = $("#verse").data("book");
-		var chapter = $("#verse").data("chapter");
-		var verse = $("#verse").data("verse");
+		var book = $("#verse").attr("data-book");
+		var chapter = $("#verse").attr("data-chapter");
+		var verse = $("#verse").attr("data-verse");
 		
 		var offset = $(".egw").length;
 					
 		if(!isNaN(verse)){
-		
 			$.getJSON("/egw/get_from_verse/" + book + "/" + chapter + "/" + verse + "/" + offset, function(data) {
 				$("#egw_template").tmpl(data.items).appendTo("#resource_list");
 				loadEGWContent();
