@@ -8,7 +8,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
 	<!--[if IE]><link rel="shortcut icon" href="favicon.ico"><![endif]-->
-	<link rel="icon" href="favicon.png">
+	<link rel="icon" href="favicon.png"> 
 	<link rel="apple-touch-icon" href="/assets/img/icons/Icon-60@2x.png" />
   	<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/Icon-60@3x.png" />
   	<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/Icon-76.png" />
