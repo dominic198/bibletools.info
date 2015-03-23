@@ -27,9 +27,10 @@ class Dashboard extends CI_Controller
 		$name = $this->input->post('name');
 		$email = $this->input->post('email');
 		$message = $this->input->post('message')."\r\n\r\n".$email;
+		$headers = "From: ".$email;
 		
 		if(!empty($message)){
-			mail("akjackson1@gmail.com", "BibleTools.info Feedback from ".$name, $message);
+			mail( "akjackson1@gmail.com", "BibleTools.info Feedback from ".$name, $message, $headers );
 		}
 	}
 	function get_egw()
