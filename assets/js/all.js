@@ -31,13 +31,18 @@ $(document).ready(function(){
 	
 	window.addEventListener('load', function(e) {
 	
-	  window.applicationCache.addEventListener('updateready', function(e) {
-	    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-	      if (confirm('A new version is available. Load it?')) {
-	        window.location.reload();
-	      }
-	    }
-	  }, false);
+		window.applicationCache.addEventListener('updateready', function(event) {
+			setTimeout(function(){ $(".updating .progress-bar").css("width", "100%"); }, 1000);
+			setTimeout(function(){ location.reload(); }, 2000);
+		}, false);
+			
+		window.applicationCache.addEventListener('downloading', function(event) {
+			$("body").prepend('<div class="overlay"></div><div class="alert updating global error alert-success" role="alert"></span>Downloading update<div class="progress"><div class="progress-bar progress-bar-striped active" style="width: 0%"></div></div></div>');		
+		}, false);
+		
+		window.applicationCache.addEventListener('progress', function(event) {
+			$(".updating .progress-bar").css("width", event.loaded/event.total*90 + "%");
+		}, false);
 	
 	}, false);
 	
@@ -467,7 +472,6 @@ $(document).ready(function(){
 		function isNumber(n) {
 		  return !isNaN(parseFloat(n)) && isFinite(n);
 		}
-		
 	}
 	
 	function getSmBook(book){

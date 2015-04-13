@@ -60,3 +60,19 @@
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
 .ui-helper-hidden-accessible { display:none; }
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 10;
+	background-color: rgba(255,255,255,0.95);
+}
+
+.updating .progress {
+	margin-bottom: 0px;
+	margin-top: 8px;
+	height:8px;
+}
