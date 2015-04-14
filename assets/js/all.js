@@ -35,6 +35,10 @@ $(document).ready(function(){
 			setTimeout(function(){ $(".updating .progress-bar").css("width", "100%"); }, 1000);
 			setTimeout(function(){ location.reload(); }, 2000);
 		}, false);
+		
+		window.applicationCache.addEventListener('cached', function(event) {
+			$(".overlay, .updating").hide();
+		}, false);
 			
 		window.applicationCache.addEventListener('downloading', function(event) {
 			$("body").prepend('<div class="overlay"></div><div class="alert updating global error alert-success" role="alert"></span>Downloading update<div class="progress"><div class="progress-bar progress-bar-striped active" style="width: 0%"></div></div></div>');		
