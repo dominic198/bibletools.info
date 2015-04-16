@@ -67,7 +67,7 @@ class Kjvapi extends CI_Model
 					);
 	
 				}
-				return json_encode($output);
+				return $output;
 				
 			}
 		}

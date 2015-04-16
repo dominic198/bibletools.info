@@ -25,10 +25,12 @@
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 		<!----------TEMPLATES---------->
-	<script id="bible_template" type="text/x-jquery-tmpl">
-	<div class="verse" id="${verse}">
-		<p><strong>${verse} </strong>${text}</p>
-	</div>
+	<script id="verse_template" type="text/x-jquery-tmpl">
+	{{if strongs}}
+		<span data-strongs="${strongs}">${word}</span>
+	{{else}}
+		${word}
+	{{/if}}
 	</script>
 	<script id="egw_template" type="text/x-jquery-tmpl">
 	<div class="col-sm-6 box egw" data-reference="${reference}">

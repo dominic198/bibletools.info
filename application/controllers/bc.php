@@ -21,6 +21,7 @@ class Bc extends CI_Controller
 		if(isset($book) AND is_numeric($verse)){
 			
 			$results['nav'] = $this->kjvapi->nav($book, $chapter, $verse);
+			$results['text'] = $this->kjvapi->verse($book, $chapter, $verse);
 		
 			$sdabc_query = $this->db->query('SELECT * FROM sdabc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
 		    $sdabc = $sdabc_query->result();
@@ -45,7 +46,6 @@ class Bc extends CI_Controller
 		    	$acbc[0]->title = "Adam Clarke Bible Commentary";
 		    	array_push($results['resources'], $acbc[0]);
 		    }
-		    
 		    $this->output->set_output( json_encode( $results ) );
 		}
 	}
