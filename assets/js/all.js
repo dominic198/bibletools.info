@@ -10,7 +10,11 @@ $(document).ready(function(){
 	if(path != ""){
 		getVerse(path);
 	} else {
-		getVerse("Gen_1.1");
+		if( localStorage['lastRef'] ){
+			getVerse( localStorage['lastRef'] );
+		} else {
+			getVerse( "Gen_1.1" );
+		}
 	}
 	
 	window.onpopstate = function(event) {
@@ -218,6 +222,7 @@ $(document).ready(function(){
 		if( updateState != false ){
 			stateRef = getBcvBook(book) + "_" + chapter + "." + verse;
 			window.history.pushState(stateRef, null, stateRef);
+			localStorage['lastRef'] = stateRef;
 		}
 		
 		$("#verse .panel-heading").text(book_name + " " + chapter + ":" + verse);
