@@ -17,11 +17,11 @@
 	
 	<title>BibleTools.info</title>
 	
-	<link href="assets/css/main.css" rel="stylesheet">
+	<link href="assets/css/main.css?v=1.2" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="/assets/js/all.js?v=30"></script>
+	<script type="text/javascript" src="/assets/js/all.js?v=1.1"></script>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 		<!----------TEMPLATES---------->
@@ -61,6 +61,18 @@
 		</div><!--/ .panel -->
 	</div>
 	</script>
+	<script id="map_template" type="text/x-jquery-tmpl">
+	<div class="col-sm-6 box map">
+		<div class="panel panel-modern">
+			<div class="panel-heading">${title}</div>
+			<div class="panel-body" >
+				<a href="/assets/img/maps/${filename}">
+					<img src="/assets/img/maps/${filename}"/>
+				</a>
+			</div>
+		</div><!--/ .panel -->
+	</div>
+	</script>
 	<script id="verse_template" type="text/x-jquery-tmpl">
 	{{if strongs}}
 		<span data-strongs="${strongs}">${word}</span>
@@ -68,6 +80,18 @@
 		${word}
 	{{/if}}
 	</script>
+	<section id="menu">
+		<header><h3><b>BibleTools</b>.info</h3></header>
+		<ul class="main">
+			<li><i class="fa fa-home"></i><a class="home">Home</a></li>
+			<li><i class="fa fa-dollar"></i><a class="donate" target="_blank" href="http://www.gofundme.com/bibletools">Donate</a></li>
+			<!--<li><i class="fa fa-heart"></i><a>Favorites</a></li>-->
+		</ul>
+		<hr/>
+		<ul class="sub">
+			<li><a class="feedback">Send Feedback</a></li>
+		</ul>
+	</section>
 	<div id="headerwrap">
 	    <div class="container">
 	    	<div class="row centered">
@@ -77,6 +101,7 @@
 					<form action="." id="search_form">			
 						<input id="search" placeholder="Enter reference"/>
 						<a class="fa fa-times-circle" id="clear"></a>
+						<a class="fa fa-bars open-menu"></a>
 					</form>
 					<br>
 	    		</div>
@@ -98,22 +123,10 @@
 	    		<a id="load_more">Load More</a>
 		</div><!--/ .row -->
 	</div>
-
 	<div id="c">
 		<div class="container">
 			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a></p>
-		
 		</div>
 	</div>
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	
-	  ga('create', 'UA-56336810-1', 'auto');
-	  ga('send', 'pageview');
-	
-	</script>
 </body>
 </html>

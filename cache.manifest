@@ -1,13 +1,14 @@
 CACHE MANIFEST
-# April 16, 2015 v21
+# June 1, 2015 v8
 
 CACHE:
 /
-/assets/css/main.css
-http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic
-http://fonts.googleapis.com/css?family=Raleway:400,300,700
-http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
-/assets/js/all.js?v=30
+/assets/css/main.css?v=1.2
+#http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic
+#http://fonts.googleapis.com/css?family=Raleway:400,300,700
+#http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
+/assets/js/all.js?v=1.1
+/assets/js/jquery.min.js
 
 NETWORK:
 *
