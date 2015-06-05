@@ -19,10 +19,11 @@ class Resources extends CI_Controller
 				
 		$kjv = $this->getVerse($book, $chapter, $verse);
 		$bc = $this->getBc($book, $chapter, $verse);
+		$map = $this->getMap($book, $chapter, $verse);
 		$egw = $this->getEgw($book, $chapter, $verse);
 		
 		$resources = array();
-		$resources['resources'] = array_merge( $kjv, $bc, $egw );
+		$resources['resources'] = array_merge( $kjv, $bc, $map, $egw );
 
 		$this->output->set_output( json_encode( $resources ) );
 	}
@@ -56,8 +57,22 @@ class Resources extends CI_Controller
 		    	$acbc[0]->title = "Adam Clarke Bible Commentary";
 		    	array_push($results, $acbc[0]);
 		    }
-		    //print_r($results);
 		    return $results;
+		}
+	}
+	
+	function getMap($book, $chapter, $verse)
+	{
+		if(isset($book) AND is_numeric($verse)){
+			$book = str_pad($book, 2, "0", STR_PAD_LEFT);
+	    	$chapter = str_pad($chapter, 3, "0", STR_PAD_LEFT);
+	    	$verse = str_pad($verse, 3, "0", STR_PAD_LEFT);
+			$ref = $book.$chapter.$verse;
+						
+			$map_query = $this->db->query('SELECT maps.filename, "Update the app to view Biblical maps." as content, maps.title FROM map_reference as ref LEFT JOIN maps ON ref.map_id = maps.id WHERE ref.end >= '.$ref.' AND ref.start <= '.$ref);
+		    $map = $map_query->result();
+		    
+		   return $map;
 		}
 	}
 	
