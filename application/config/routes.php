@@ -46,7 +46,7 @@ $route['map/(:any)'] = "map/$1";
 $route['sdabc/(:any)'] = "sdabc/$1";
 $route['acbc/(:any)'] = "acbc/$1";
 $route['egw/(:any)'] = "egw/$1";
-$route['about/(:any)'] = "dashboard/$1";
+$route['about/(:any)'] = "app/$1";
 $route['run/(:any)'] = "run/$1";
 $route['(:any)'] = "app/index";
 
