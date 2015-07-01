@@ -38,16 +38,17 @@
 |
 */
 
-$route['default_controller'] = "dashboard";
-
-$route['resources/(:any)'] = "resources/$1";
+$route['default_controller'] = "app";
+$route['resources/get/(:any)'] = "resources/get/$1";
+$route['resources/(:any)'] = "resources/web/$1";
 $route['bc/(:any)'] = "bc/$1";
 $route['map/(:any)'] = "map/$1";
 $route['sdabc/(:any)'] = "sdabc/$1";
 $route['acbc/(:any)'] = "acbc/$1";
 $route['egw/(:any)'] = "egw/$1";
 $route['about/(:any)'] = "dashboard/$1";
-$route['(:any)'] = "dashboard/index";
+$route['run/(:any)'] = "run/$1";
+$route['(:any)'] = "app/index";
 
 
 

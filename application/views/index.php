@@ -17,11 +17,18 @@
 	
 	<title>BibleTools.info</title>
 	
-	<link href="assets/css/main.css?v=1.2" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type="text/javascript" src="/assets/js/all.js?v=1.1"></script>
+	<?php if( ENVIRONMENT == "production" ) { ?>
+		<link href="assets/app.min.css?v=1" rel="stylesheet">
+		<script type="text/javascript" src="/assets/app.min.js?v=1"></script>
+	<?php } else { ?>
+		<link href="assets/css/lib.css" rel="stylesheet">
+		<link href="assets/css/custom.css" rel="stylesheet">
+		<script type="text/javascript" src="/assets/js/lib.js"></script>
+		<script type="text/javascript" src="/assets/js/custom.js"></script>
+	<?php } ?>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 		<!----------TEMPLATES---------->
@@ -108,6 +115,7 @@
 	    	</div>
 	    </div> <!--/ .container -->
 	</div><!--/ #headerwrap -->
+	<section id="lexicon"></section>
 	<div class="container main">
 		<div class="row">
 	    		<div id="resource_list">

@@ -6,47 +6,23 @@ class Bc extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->helper('url');
-		$this->load->model('kjvapi');
+		$this->load->helper( "url" );
+		$this->load->model( "kjvmodel" );
+		$this->load->model( "commentarymodel" );
 	}
 	
 	function get()
-	{
-		$book = $this->uri->segment(3);
-		$chapter = $this->uri->segment(4);
-		$verse = $this->uri->segment(5);
+	{		
+		$ref = construct_reference( $this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5) );
 		
-		$results = array();
+		$results['nav'] = $this->kjvmodel->nav( $ref );
+		$results['text'] = $this->kjvmodel->verse( $ref );
+		
 		$results['resources'] = array();
-		if(isset($book) AND is_numeric($verse)){
-			
-			$results['nav'] = $this->kjvapi->nav($book, $chapter, $verse);
-			$results['text'] = $this->kjvapi->verse($book, $chapter, $verse);
+		$results['resources'][] = $this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" );
+		$results['resources'][] = $this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" );
+		$results['resources'][] = $this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true );
 		
-			$sdabc_query = $this->db->query('SELECT * FROM sdabc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
-		    $sdabc = $sdabc_query->result();
-		    		    
-		    if($sdabc) {
-		    	$sdabc[0]->title = "SDA Bible Commentary";
-		    	array_push($results['resources'], $sdabc[0]);
-		    }
-		    
-		    $mhcc_query = $this->db->query('SELECT * FROM mhcc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND end_verse >= '.$verse.' AND start_verse <= '.$verse.' OR book = "'.$book.'" AND chapter = '.$chapter.' AND start_verse = '.$verse.' LIMIT 1');
-		    $mhcc = $mhcc_query->result();
-		     
-		     if($mhcc) {
-		    	$mhcc[0]->title = "Matthew Henry Concise Bible Commentary";
-		    	array_push($results['resources'], $mhcc[0]);
-		    }
-		    
-		    $acbc_query = $this->db->query('SELECT * FROM acbc WHERE book = "'.$book.'" AND chapter = '.$chapter.' AND verse = '.$verse.' LIMIT 1');
-		    $acbc = $acbc_query->result();
-		    		    
-		    if($acbc) {
-		    	$acbc[0]->title = "Adam Clarke Bible Commentary";
-		    	array_push($results['resources'], $acbc[0]);
-		    }
-		    $this->output->set_output( json_encode( $results ) );
-		}
+		$this->output->set_output( json_encode( $results ) );
 	}
 }
