@@ -81,6 +81,8 @@ class Kjvmodel extends CI_Model
 			$return = array();
 			$return['text'] = $results['text'];
 			$return['title'] = "{$results['book']} {$results['chapter']}:{$results['verse']}";
+			$link_book = str_replace( " ", "", $results['book'] );
+			$return['link'] = "http://bibletools.info/{$link_book}_{$results['chapter']}:{$results['verse']}";
 			$return += $this->nav( $ref, true );
 			return $return;
 		}
