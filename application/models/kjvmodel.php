@@ -88,22 +88,48 @@ class Kjvmodel extends CI_Model
 		}
 	}
 	
-	function greek_lex($number)
+	function html_verse( $ref )
 	{
-		if(is_numeric($number)){
-			$sql = 'SELECT * FROM greek_lexicon WHERE number = '.$number;
-		    $query = $this->db->query($sql);
-			return $query->result();
+		if( $ref ){
+			$query = "SELECT * FROM kjv_html WHERE ref = $ref";
+			$results = $this->db->query( $query )->row_array();
+			return $results['words'];
 		}
 	}
-	function hebrew_lex($number)
+	
+	function lexicon( $ref, $word )
 	{
-		if(is_numeric($number)){
-			$sql = 'SELECT * FROM hebrew_lexicon WHERE number = '.$number;
-		    $query = $this->db->query($sql);
-			return $query->result();
+		if( is_numeric( $word ) ) {
+			$lang = ( $ref < 40001001 ? "hebrew" : "greek" );
+			$definition = $this->db->select( "kjv_original.word, lexicon_$lang.data, kjv_original.pronun" )
+				->from( "kjv_words" )
+				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
+				->join( "lexicon_$lang", "kjv_original.strongs = lexicon_$lang.strongs" )
+				->where( "kjv_words.id", $word )
+				->get()
+				->row_array();
+			$definition['data'] = json_decode( $definition['data'], true );
+			$definition['pronun'] = json_decode( $definition['pronun'], true );
+			$definition['data']['def']['html'] = $this->makeUl( $definition['data']['def']['long'] );
+			
+			return $definition;
 		}
 	}
+	
+	function makeUl( $array )
+	{
+		$html = "<ol>";
+		foreach( $array as $item ) {
+			if( is_array( $item ) ) {
+				$html .= $this->makeUl( $item );
+			} else {
+				$html .= "<li>$item</li>";
+			}
+		}
+		$html .= "</ol>";
+		return $html;
+	}
+	
 	function get_string_between($string, $start, $end){
 		$string = " ".$string;
 		$ini = strpos($string,$start);

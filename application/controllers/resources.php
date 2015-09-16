@@ -17,22 +17,28 @@ class Resources extends CI_Controller
 	function web()
 	{
 		$ref = $this->uri->segment(2);
+		$word = $this->uri->segment(3);
 		
-		$commentaries = array(
-			$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
-			$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
-			$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
-		);
-		
-		$resources = array(
-			"verse" => $this->kjvmodel->verse( $ref ) ,
-			"nav" => $this->kjvmodel->nav( $ref ),
-			"commentaries" => array_values( array_filter( $commentaries ) ),
-			"maps" => $this->mapmodel->get( $ref ),
-			"egw" => $this->egwmodel->verse_references( $ref, 10 ),
-		);
-		
-		$this->output->set_output( json_encode( $resources ) );
+		if( $word ) {
+			$definition = $this->kjvmodel->lexicon( $ref, $word );
+			$this->output->set_output( json_encode( $definition ) );
+		} else {
+			$commentaries = array(
+				$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
+				$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
+				$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
+			);
+			
+			$resources = array(
+				"verse" => $this->kjvmodel->html_verse( $ref ) ,
+				"nav" => $this->kjvmodel->nav( $ref ),
+				"commentaries" => array_values( array_filter( $commentaries ) ),
+				"maps" => $this->mapmodel->get( $ref ),
+				"egw" => $this->egwmodel->verse_references( $ref, 10 ),
+			);
+			
+			$this->output->set_output( json_encode( $resources ) );
+		}
 	}
 	
 	function get()

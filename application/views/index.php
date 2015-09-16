@@ -81,18 +81,16 @@
 		</div><!--/ .panel -->
 	</div>
 	</script>
-	<script id="verse_template" type="text/x-jquery-tmpl">
-	{{if strongs}}
-		<span data-strongs="${strongs}">${word}</span>
-	{{else}}
-		${word}
-	{{/if}}
+	<script id="lex_template" type="text/x-jquery-tmpl">
+		<h2>${word}<small>${pronun.dic}</small></h2>
+		<p>${data.def.short}</p>
+		<p>{{html data.def.html}}</p>
 	</script>
 	<section id="menu">
 		<header><h3><b>BibleTools</b>.info</h3></header>
 		<ul class="main">
 			<li><i class="fa fa-home"></i><a class="home">Home</a></li>
-			<li><i class="fa fa-dollar"></i><a class="donate" target="_blank" href="http://www.gofundme.com/bibletools">Donate</a></li>
+			<li><i class="fa fa-smile-o"></i><a class="donate" target="_blank" href="http://www.gofundme.com/bibletools">Donate</a></li>
 			<!--<li><i class="fa fa-heart"></i><a>Favorites</a></li>-->
 		</ul>
 		<hr/>
@@ -116,7 +114,24 @@
 	    	</div>
 	    </div> <!--/ .container -->
 	</div><!--/ #headerwrap -->
-	<section id="lexicon"></section>
+	<section id="lexicon" class="col-sm-5">
+		<div class="content">
+			<span class="arrow"></span>
+			<span class="close"><i class="fa fa-close"></i></span>
+			<p>Loading...</p>
+			<?php /*<div class="row">
+				<div class="col-sm-12 box bc">
+					<div class="panel panel-modern">
+						<div class="panel-heading">${title}</div>
+						<div class="panel-body">
+							{{html content}} {{html content}} {{html content}} {{html content}}
+						</div>
+					</div><!--/ .panel -->
+				</div><!--/ .box -->
+			</div><!--/ .row --> */ ?>
+		</div>
+	</div>
+	</section>
 	<div class="container main">
 		<div class="row">
 	    		<div id="resource_list">

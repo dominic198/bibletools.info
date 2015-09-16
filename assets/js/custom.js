@@ -205,22 +205,44 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "#verse .panel-body span" ).live( "click", function(e) {
-		position = $(this).offset();
-		width = $(this).width();
+	$( "#verse .panel-body a" ).live( "click", function(e) {
+		
 		$lexicon = $( "#lexicon" );
-		$lexicon.css( "left", position.left ).css( "top", position.top ).css( "margin-left", "-" + ( 44 - width / 2 ) + "px" );
+		$verse = $( "#verse" );
+		$word = $(this)
+		
+		$word.addClass( "selected" );
+		wordDistance = $word.offset().left - $verse.offset().left;
+		distance = wordDistance / $verse.width() * $( "#lexicon" ).width();
+		
+		$( "#lexicon .arrow" ).css( "left", distance + "px" );
+		$lexicon.css( "left", $word.offset().left ).css( "top", $word.offset().top ).css( "margin-left", "-" + ( Math.abs( distance - ( $word.width() / 2 ) ) ) + "px" );
 		if( ! $lexicon.hasClass( "visible" ) ) {
-			$( "#lexicon" ).show().addClass( "animate visible" );
+			$lexicon.addClass( "visible" );
+			$( "body" ).addClass( "lexicon");
 		}
+		verse = $verse.attr( "data-ref" );
+		strongsNum = $word.attr( "id" );
+		
+		$.getJSON( "/resources/" + verse + "/" + strongsNum, function( data ) {
+			$( "#lexicon p" ).empty();
+			$( "#lex_template" ).tmpl( data ).appendTo( "#lexicon p" );
+		});
+		
 	});
 	
-	$( "body" ).click(function() {
-		$( "#lexicon" ).removeClass( "animate visible" );
+	$( "body, #lexicon .close" ).click(function() {
+		$( "#lexicon" ).removeClass( "visible" ).find( "p" ).text( "Loading..." );
+		$( "body" ).removeClass( "lexicon no_scroll" );
+		$( "#verse a.selected" ).removeClass( "selected" );
 	});
 	
 	$( "#lexicon" ).click(function(e) {
-	    e.stopPropagation();
+		e.stopPropagation();
+	});
+	
+	$( "#lexicon" ).hover(function(e) {
+		$( "body" ).toggleClass( "no_scroll" );
 	});
 	
 	function titleCase(str){
@@ -243,8 +265,6 @@ $(document).ready(function(){
 			getPage( "about" );
 			return;
 		}
-		
-		initializePage();
 			
 		arrayRef = parseVerse( stringRef );
 		book = getBcvBook( arrayRef[0] );
@@ -252,6 +272,16 @@ $(document).ready(function(){
 		chapter = arrayRef[1];
 		verse = arrayRef[2];
 		numericRef = formatRef( book, chapter, verse );
+		
+		if( arrayRef.indexOf( "" ) !== -1 ) {
+			throwError( "Verse could not be loaded." );
+			if( ! $( "#verse" ).attr( "data-book" ) ) {
+				initializeApp( true );
+			}
+			return false;
+		}
+		
+		initializePage();
 		
 		if( updateState != false ){
 			stateRef = getBcvBook( book ) + "_" + chapter + "." + verse;
@@ -271,7 +301,7 @@ $(document).ready(function(){
 					
 		$.getJSON( "/resources/" + numericRef, function( data ) {
 			updateNavigation( data.nav );
-			$( "#verse_template" ).tmpl( data.verse ).appendTo( "#verse .panel-body" );
+			$( "#verse .panel-body" ).html( data.verse );
 			commentaries = $( "#bc_template" ).tmpl( data.commentaries );
 			$( "#resource_list" ).isotope( "insert", commentaries ).isotope();
 			
@@ -334,6 +364,7 @@ $(document).ready(function(){
 	}
 	
 	function parseVerse(ref){
+		ref = decodeURIComponent( ref );
 		ref = ref.replace( "_", " " );
 		var bcv = new bcv_parser;
 		bcv.set_options( { book_alone_strategy: "first_chapter" } );
@@ -351,8 +382,8 @@ $(document).ready(function(){
 		return padLeft( book, 2 ) + padLeft( chapter, 3 ) + padLeft( verse, 3 );
 	}
 	
-	function padLeft(nr, n, str){
-	    return Array(n-String(nr).length+1).join(str||'0')+nr;
+	function padLeft( nr, n, str ){
+	    return Array( n-String( nr ).length + 1 ).join( str||'0' ) + nr;
 	}
 	
 	function initializePage(){
@@ -363,11 +394,11 @@ $(document).ready(function(){
 		$( "#load_more" ).hide();
 	}
 	
-	function initializeApp(){
+	function initializeApp( fresh ){
 		path = window.location.pathname
 	
 		path = path.replace( "/", "" );
-		if( window.navigator.standalone || path == "" ){
+		if( window.navigator.standalone || path == "" || fresh ){
 			if( localStorage['lastRef'] ){
 				getVerse( localStorage['lastRef'] );
 			} else {
