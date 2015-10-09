@@ -26,7 +26,7 @@ class App extends CI_Controller
 		$headers = "From: $email";
 		
 		if( ! empty( $message ) ) {
-			mail( "akjackson1@gmail.com", "BibleTools.info Feedback from $name", $message, $headers );
+			mail( "adam@bibletools.info", "BibleTools.info Feedback from $name", $message, $headers );
 		}
 	}
 }
