@@ -20,8 +20,15 @@ class Resources extends CI_Controller
 		$word = $this->uri->segment(3);
 		
 		if( $word ) {
-			$definition = $this->kjvmodel->lexicon( $ref, $word );
-			$this->output->set_output( json_encode( $definition ) );
+			$strongs = $this->kjvmodel->lexicon( $ref, $word );
+			$resources = array(
+				"strongs" => $strongs,
+				"resources" => array( 
+					$strongs['data']['def']['long'],
+					$this->kjvmodel->lexicon_occurances( $ref, $word, $strongs['base_word'] ),
+				),
+			);
+			$this->output->set_output( json_encode( $resources ) );
 		} else {
 			$commentaries = array(
 				$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
@@ -45,7 +52,7 @@ class Resources extends CI_Controller
 	{
 		//ANDROID
 		
-		$ref = construct_reference( $this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5) );
+		$ref = constructReference( $this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5) );
 		
 		$maps = $this->mapmodel->get( $ref );
 		foreach( $maps as $key => $map ) {

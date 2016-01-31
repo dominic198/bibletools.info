@@ -72,12 +72,10 @@ a:hover {
 	font-size: 30px
 }
 #c {
-	background: #222;
 	padding-top: 15px;
-	text-align: right
-}
-#c p {
-	color: #fff
+	text-align: right;
+	border-top: solid 1px #ddd;
+	margin-top: 25px;
 }
 .animate {
 	-webkit-transition: all 0.2s ease;
@@ -142,7 +140,7 @@ a:hover {
 .box {
 	cursor: pointer
 }
-.box.box .panel-body {
+.box .panel-body {
 	cursor: pointer;
 	height: 160px;
 	overflow: hidden
@@ -173,7 +171,7 @@ a:hover {
 .box .panel-body h1,
 .box .panel-body h2,
 .box .panel-body h3,
-.box.expand .panel-body:after {
+.box.expand:not(.map) .panel-body:after {
 	display: none
 }
 .box.box.expand .panel-body h1,
@@ -182,7 +180,7 @@ a:hover {
 	margin-top: 0;
 	display: block
 }
-.box.expand .panel-body {
+.box.expand:not(.map) .panel-body {
 	height: auto!important;
 	cursor: text
 }
@@ -432,39 +430,63 @@ a:hover {
 		font-size: 28px
 	}
 }
+@media only screen and (min-width: 501px) {
+	body #headerwrap::after {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 0;
+		background-color: rgba(255,255,255,.5);
+		opacity: 0;
+		content: "";
+		-webkit-transition: height 0s, opacity 300ms ease;
+		-moz-transition: height 0s, opacity 300ms ease;
+		-ms-transition: height 0s, opacity 300ms ease;
+		-o-transition: height 0s, opacity 300ms ease;
+		transition: height 0s, opacity 300ms ease;
+	}
+	body.lexicon #headerwrap::after {
+		opacity: 1;
+		height: 100%;
+	}
+	#lexicon {
+		box-shadow: -1px 3px 6px 3px rgba(0,0,0,.1);
+	}
+}
 body.lexicon #resource_list > .box {
 	opacity: .4;
 }
 body.lexicon #verse a:not(.selected) {
 	opacity: .4;
 }
+body.lexicon #headerwrap {
+	position: relative;
+	border-color: #D9DBDB;
+}
 section#lexicon {
 	opacity: 0;
 	background-color: #34495e;
 	color: #eee;
 	height: 0;
-	position: absolute;
-	left: 150px;
-	top: 500px;
-	border: solid 4px #eee;
-	border-radius: 7px;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	top: 0;
 	z-index: 1;
-	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2);
-	margin-top: 100px;
-	margin-right: 20px;
 	padding: 0;
 	visibility: hidden;
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
+	transition: all 0.2s ease;
 	-webkit-transform: translateZ(0);
 	
 }
 section#lexicon.visible {
 	opacity: 1;
 	visibility: visible;
-	margin-top: 30px;
-	height: 340px;
+	height: 100%;
 	-webkit-transform: translateZ(0);
 	-webkit-transition: height 0s, opacity 300ms ease, margin-top 300ms ease;
 	-moz-transition: height 0s, opacity 300ms ease, margin-top 300ms ease;
@@ -487,6 +509,16 @@ section#lexicon .close {
 	opacity: .3;
 	color: #fff;
 	text-shadow: none;
+	z-index: 1;
+}
+section#lexicon .close:hover {
+	opacity: .8;
+}
+section#lexicon .close .fa {
+	background-color: #34495e;
+	vertical-align: top;
+	padding: 3px 6px 4px 6px;
+	border-radius: 50%;
 }
 section#lexicon .arrow {
 	bottom: 100%;
@@ -521,6 +553,32 @@ section#lexicon h2 small {
 }
 section#lexicon .box {
 	color: #555;
+}
+section#lexicon .box .panel-body {
+	height: 90px;
+}
+section#lexicon a.load_more {
+	color: #f7784a;
+}
+section#lexicon .definition .long {
+	display:none;
+}
+section#lexicon .occurances {
+	list-style-type: none;
+	padding: 0;
+}
+section#lexicon .occurances li {
+	border-bottom: solid 1px #ddd;
+	margin-bottom: 15px;
+}
+section#lexicon .occurances a {
+	color: #555;
+}
+section#lexicon .occurances li {
+	cursor: pointer;
+}
+section#lexicon .occurances p {
+	margin-bottom: 15px;
 }
 @media only screen and (max-width: 500px) {
 	section#lexicon {

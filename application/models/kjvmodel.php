@@ -6,6 +6,7 @@ class Kjvmodel extends CI_Model
 	{
 		parent::__construct();
 		$this->load->database();
+		$this->load->helper( "reference" );
 	}
 
 
@@ -48,7 +49,6 @@ class Kjvmodel extends CI_Model
 						array_splice($text_array, $position,0,"°");
 						
 					}
-					
 					
 					$html[$wordNumber]['strongsNum'] = $strongsCode;
 					$html[$wordNumber]['wordNum'] = $wordNumber;
@@ -101,18 +101,69 @@ class Kjvmodel extends CI_Model
 	{
 		if( is_numeric( $word ) ) {
 			$lang = ( $ref < 40001001 ? "hebrew" : "greek" );
-			$definition = $this->db->select( "kjv_original.word, lexicon_$lang.data, kjv_original.pronun" )
+			$definition = $this->db->select( "kjv_original.word, kjv_original.id, lexicon_$lang.data, lexicon_$lang.base_word, kjv_original.pronun" )
 				->from( "kjv_words" )
 				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
 				->join( "lexicon_$lang", "kjv_original.strongs = lexicon_$lang.strongs" )
 				->where( "kjv_words.id", $word )
 				->get()
 				->row_array();
+				
+			$connected_words = $this->db->select( "id" )
+				->from( "kjv_words" )
+				->where( "orig_id", $definition['id'] )
+				->get()
+				->result_array();
+			
 			$definition['data'] = json_decode( $definition['data'], true );
 			$definition['pronun'] = json_decode( $definition['pronun'], true );
-			$definition['data']['def']['html'] = $this->makeUl( $definition['data']['def']['long'] );
+			$definition['data']['def']['long']['content'] = $this->makeUl( $definition['data']['def']['long'] );
+			$definition['data']['def']['long']['title'] = "More Strongs Definitions";
+			$definition['connected_words'] = $connected_words;
 			
 			return $definition;
+		}
+	}
+	
+	function lexicon_occurances( $ref, $word_id, $base_word )
+	{
+		if( is_numeric( $word_id ) ) {
+			$sign = ( $ref < 40001001 ? "<" : ">=" );
+			
+			$word = $this->db->select( "*" )
+				->from( "kjv_words" )
+				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
+				->where( "kjv_words.id", $word_id )
+				->get()
+				->row_array();
+							
+			$related_verses = $this->db->select( "kjv_html.ref, kjv_html.words" )
+				->from( "kjv_html" )
+				->join( "kjv_original", "kjv_html.ref = kjv_original.ref" )
+				->where( "kjv_original.strongs", $word['strongs'] )
+				->where( "kjv_html.ref $sign 40001001" )
+				->get()
+				->result_array();
+				
+			/*$related_words = $this->db->select( "kjv_words.id" )
+				->from( "kjv_words" )
+				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
+				->where( "kjv_original.strongs", $word['strongs'] )
+				->where( "kjv_words.ref $sign 40001001" )
+				->get()
+				->result_array();*/
+						
+			$html = "<ul class='occurances'>";
+			foreach( $related_verses as $verse ) {
+				$ref_array = parseReference( $verse['ref'] );
+				$words = strip_tags( $verse['words'] );
+				$html .= "<li><strong>{$ref_array['book']} {$ref_array['chapter']}:{$ref_array['verse']}</strong><p>$words</p></li>";
+			}
+			
+			return [
+				"title" => count( $related_verses ) . " other occurances of the root word: $base_word" ,
+				"content" => $html,
+			];
 		}
 	}
 	

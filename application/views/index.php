@@ -22,11 +22,12 @@
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="assets/app.min.css?v=1" rel="stylesheet">
-		<script type="text/javascript" src="/assets/app.min.js?v=1"></script>
+		<link href="assets/app.min.css?v=1.1" rel="stylesheet">
+		<script type="text/javascript" src="/assets/app.min.js?v=1.1"></script>
 	<?php } else { ?>
 		<link href="assets/css/lib.css" rel="stylesheet">
 		<link href="assets/css/custom.css" rel="stylesheet">
+		<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/assets/js/lib.js"></script>
 		<script type="text/javascript" src="/assets/js/custom.js"></script>
 	<?php } ?>
@@ -81,10 +82,23 @@
 		</div><!--/ .panel -->
 	</div>
 	</script>
-	<script id="lex_template" type="text/x-jquery-tmpl">
+	<script id="word_def_template" type="text/x-jquery-tmpl">
 		<h2>${word}<small>${pronun.dic}</small></h2>
-		<p>${data.def.short}</p>
-		<p>{{html data.def.html}}</p>
+		<p class="short">${data.def.short}</p>
+		<div class="long">{{html data.def.html}}</div>
+		<div class="resources"></div>
+	</script>
+	<script id="word_resource_template" type="text/x-jquery-tmpl">
+		<div class="row">
+			<div class="col-sm-12 box">
+				<div class="panel panel-modern">
+					<div class="panel-heading">${title}</div>
+					<div class="panel-body">
+						{{html content}}
+					</div>
+				</div><!--/ .panel -->
+			</div><!--/ .box -->
+		</div><!--/ .row -->
 	</script>
 	<section id="menu">
 		<header><h3><b>BibleTools</b>.info</h3></header>
@@ -118,17 +132,7 @@
 		<div class="content">
 			<span class="arrow"></span>
 			<span class="close"><i class="fa fa-close"></i></span>
-			<p>Loading...</p>
-			<?php /*<div class="row">
-				<div class="col-sm-12 box bc">
-					<div class="panel panel-modern">
-						<div class="panel-heading">${title}</div>
-						<div class="panel-body">
-							{{html content}} {{html content}} {{html content}} {{html content}}
-						</div>
-					</div><!--/ .panel -->
-				</div><!--/ .box -->
-			</div><!--/ .row --> */ ?>
+			<div class="definition">Loading...</div>
 		</div>
 	</div>
 	</section>
@@ -146,10 +150,10 @@
 	    		</div>
 	    		<a id="load_more">Load More</a>
 		</div><!--/ .row -->
-	</div>
-	<div id="c">
-		<div class="container">
-			<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a></p>
+		<div id="c">
+			<div class="container">
+				<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a></p>
+			</div>
 		</div>
 	</div>
 </body>

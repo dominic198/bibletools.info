@@ -158,7 +158,7 @@ $(document).ready(function(){
 		threshold:200
 	});
 	
-	$( ".box.bc, .box.egw" ).live( "click", function() {
+	$( ".box" ).live( "click", function() {
 		$(this).toggleClass( "expand" );
 		$( "#resource_list" ).isotope( 'reloadItems' ).isotope();
 	});
@@ -207,42 +207,73 @@ $(document).ready(function(){
 	
 	$( "#verse .panel-body a" ).live( "click", function(e) {
 		
+		clearLexicon();
+		
 		$lexicon = $( "#lexicon" );
 		$verse = $( "#verse" );
-		$word = $(this)
+		$word = $(this);
 		
 		$word.addClass( "selected" );
-		wordDistance = $word.offset().left - $verse.offset().left;
-		distance = wordDistance / $verse.width() * $( "#lexicon" ).width();
+		//wordDistance = $word.offset().left - $verse.offset().left;
+		//distance = wordDistance / $verse.width() * $( "#lexicon" ).width();
 		
-		$( "#lexicon .arrow" ).css( "left", distance + "px" );
-		$lexicon.css( "left", $word.offset().left ).css( "top", $word.offset().top ).css( "margin-left", "-" + ( Math.abs( distance - ( $word.width() / 2 ) ) ) + "px" );
+		//$( "#lexicon .arrow" ).css( "left", distance + "px" );
+		//$lexicon.css( "left", $word.offset().left ).css( "top", $word.offset().top ).css( "margin-left", "-" + ( Math.abs( distance - ( $word.width() / 2 ) ) ) + "px" );
 		if( ! $lexicon.hasClass( "visible" ) ) {
 			$lexicon.addClass( "visible" );
 			$( "body" ).addClass( "lexicon");
 		}
 		verse = $verse.attr( "data-ref" );
-		strongsNum = $word.attr( "id" );
+		word_id = $word.attr( "id" );
 		
-		$.getJSON( "/resources/" + verse + "/" + strongsNum, function( data ) {
-			$( "#lexicon p" ).empty();
-			$( "#lex_template" ).tmpl( data ).appendTo( "#lexicon p" );
+		$.getJSON( "/resources/" + verse + "/" + word_id, function( data ) {
+			$( "#lexicon .definition" ).empty();
+			$( "#word_def_template" ).tmpl( data.strongs ).appendTo( "#lexicon .definition" );
+			$( "#word_resource_template" ).tmpl( data.resources ).appendTo( "#lexicon .resources" );
+			data.strongs.connected_words.forEach( function( word ) {
+				$( "#verse #" + word.id ).addClass( "selected" );
+			});
 		});
 		
 	});
 	
-	$( "body, #lexicon .close" ).click(function() {
-		$( "#lexicon" ).removeClass( "visible" ).find( "p" ).text( "Loading..." );
-		$( "body" ).removeClass( "lexicon no_scroll" );
-		$( "#verse a.selected" ).removeClass( "selected" );
+	$( "#lexicon .close" ).click(function() {
+		clearLexicon();
 	});
+	
+	function clearLexicon() {
+		$( "#lexicon" ).removeClass( "visible" ).find( ".definition" ).text( "Loading..." ).find( ".resources" ).empty();
+		$( "body" ).removeClass( "lexicon no_scroll" ).focus();
+		$( "#verse a.selected" ).removeClass( "selected" );
+	}
+	
+	$( document ).mouseup( function (e) {
+		var container = $( "#lexicon" );
+		
+		if ( ! container.is( e.target )
+			&& container.has( e.target ).length === 0 )
+		{
+			clearLexicon();
+		}
+	});
+	
 	
 	$( "#lexicon" ).click(function(e) {
-		e.stopPropagation();
+		//e.stopPropagation();
 	});
 	
-	$( "#lexicon" ).hover(function(e) {
+	$( "body.lexicon #lexicon" ).live( "hover", function(e) {
 		$( "body" ).toggleClass( "no_scroll" );
+	});
+	
+	$( "#lexicon a.load_more" ).click( function(e) {
+		$( "#lexicon .definition .long" ).slideToggle();
+	});
+	
+	$( ".expand ul.occurances li" ).live( "click", function(e) {
+		ref = $(this).find( "strong" ).text();
+		getVerse( ref );
+		clearLexicon();
 	});
 	
 	function titleCase(str){
