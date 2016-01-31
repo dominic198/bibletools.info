@@ -219,6 +219,7 @@ $(document).ready(function(){
 		
 		//$( "#lexicon .arrow" ).css( "left", distance + "px" );
 		//$lexicon.css( "left", $word.offset().left ).css( "top", $word.offset().top ).css( "margin-left", "-" + ( Math.abs( distance - ( $word.width() / 2 ) ) ) + "px" );
+		$( "body" ).addClass( "no_scroll" );
 		if( ! $lexicon.hasClass( "visible" ) ) {
 			$lexicon.addClass( "visible" );
 			$( "body" ).addClass( "lexicon");
@@ -260,10 +261,6 @@ $(document).ready(function(){
 	
 	$( "#lexicon" ).click(function(e) {
 		//e.stopPropagation();
-	});
-	
-	$( "body.lexicon #lexicon" ).live( "hover", function(e) {
-		$( "body" ).toggleClass( "no_scroll" );
 	});
 	
 	$( "#lexicon a.load_more" ).click( function(e) {

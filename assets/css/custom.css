@@ -66,6 +66,9 @@ a:hover {
 	#verse {
 		width: 100%
 	}
+	.no_scroll {
+		position:fixed;
+	}
 }
 #headerwrap h3 {
 	color: #fff;
@@ -83,7 +86,9 @@ a:hover {
 	-o-transition: all 0.2s ease;
 }
 .no_scroll {
-	overflow: hidden;
+	overflow-x:hidden !important;
+	overflow: hidden !important;
+	width: 100%;
 }
 .panel-modern {
 	width: 100%;
@@ -501,9 +506,10 @@ section#lexicon .content {
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
+	position: relative;
 }
 section#lexicon .close {
-	position: absolute;
+	position: fixed;
 	top: 4px;
 	right: 8px;
 	opacity: .3;
@@ -580,33 +586,17 @@ section#lexicon .occurances li {
 section#lexicon .occurances p {
 	margin-bottom: 15px;
 }
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 767px) {
 	section#lexicon {
 		width: 100%;
 		height: 0;
-		border: none;
-		position: fixed;
-		top: 0 !important;
-		left: 0 !important;
-		margin-left: 0 !important;
-		margin-top: 800px !important;
-		border-radius: 0 !important;
 	}
-	section#lexicon.visible {
-		height: 100%;
-		margin-top: 0 !important;
-		-webkit-transition: height 0s, opacity 300ms ease;
-		-moz-transition: height 0s, opacity 300ms ease;
-		-ms-transition: height 0s, opacity 300ms ease;
-		-o-transition: height 0s, opacity 300ms ease;
-		transition: height 0s, opacity 300ms ease
+	section#lexicon .close {
+		position: absolute;
 	}
 	section#lexicon .close {
 		top: 9px !important;
 		right: 14px !important;
 		font-size: 28px;
-	}
-	section#lexicon .arrow {
-		display: none;
 	}
 }
