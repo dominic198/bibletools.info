@@ -34,6 +34,7 @@ class Resources extends CI_Controller
 				$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
 				$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
 				$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
+				$this->commentarymodel->get( $ref, "tsk", "Treasury of Scripture Knowledge" ),
 			);
 			
 			$resources = array(

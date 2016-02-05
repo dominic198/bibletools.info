@@ -11,7 +11,7 @@ $(document).ready(function(){
 		}
 	};
 	
-	$(function() {
+	$( function() {
 	    FastClick.attach(document.body);
 	});
 
@@ -101,6 +101,11 @@ $(document).ready(function(){
 	
 	$( ".bc .panel-body .scriptRef" ).live( "click", function(e){
 			ref = $(this).attr( "ref" );
+			getVerse(ref);
+	});
+	
+	$( ".bc .panel-body .tskref a" ).live( "click", function(e){
+			ref = $(this).text();
 			getVerse(ref);
 	});
 	

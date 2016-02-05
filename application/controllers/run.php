@@ -63,8 +63,8 @@ class Run extends CI_Controller
 	function churches()
 	{
 		$churches = array();
-	    $page = 3;
-	    while( $page < 4 ){
+	    $page = 183;
+	    while( $page < 244 ){
 	    	$html = $this->domparser->file_get_html( "http://adventistdirectory.org/default.aspx?page=searchresults&&EntityType=C&CtryCode=US&SortBy=0&PageIndex=$page" );
 	    	if( is_object($html) ){
 	    		$table = $html->find( "table", 1 );
@@ -180,7 +180,12 @@ class Run extends CI_Controller
 			$city = explode( " ", $location[0] );
 			array_pop( $city );
 			$city = implode( " ", $city );
-			$zip = $location[1];
+			if( array_key_exists( 1, $location ) ) {
+				$zip = $location[1];
+			} else {
+				$zip = "";
+			}
+			
 			
 			return array(
 				"name" => "",
@@ -190,6 +195,37 @@ class Run extends CI_Controller
 				"city" => $city,
 				"country" => $address[2]
 			);
+		}
+	}
+	
+	function tsk()
+	{		
+		$query = $this->db->get( "kjv_verses", 32000, 16883 );
+		
+		foreach ( $query->result() as $verse ) {
+			
+			$ref = $verse->ref;
+			$context = stream_context_create( [
+				"http" => [
+					"header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+					"method"  => "POST",
+					"content" => http_build_query( [ "key" => "value1" ] ),
+				],
+			] );
+			
+			$result = file_get_contents( "http://tsk-online.com//Data/GetTskReferences/$ref", false, $context );
+			if ( $result === FALSE ) { die( "error" ); }
+			
+			$array = json_decode( $result );
+			$html = $this->domparser->str_get_html( $array->TskReferences );
+			$html = str_replace( "subhead2", "head", $html );
+			$html = str_replace( 'a href="#"', "a", $html );
+			$data = [
+				"start" => $ref,
+				"content" => trim( $html ),
+			];
+			$this->db->insert( "tsk", $data );
+			unset( $data );
 		}
 	}
 }

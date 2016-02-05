@@ -147,7 +147,7 @@ a:hover {
 }
 .box .panel-body {
 	cursor: pointer;
-	height: 160px;
+	max-height: 160px;
 	overflow: hidden
 }
 .map.box img {
@@ -187,11 +187,15 @@ a:hover {
 }
 .box.expand:not(.map) .panel-body {
 	height: auto!important;
+	max-height: none;
 	cursor: text
 }
 .box.expand .panel-heading {
 	cursor: pointer;
 	padding-right: 35px
+}
+.box.bc .head {
+	clear: both;
 }
 .box.bc .head,
 .box.bc .emphasis {
@@ -599,4 +603,9 @@ section#lexicon .occurances p {
 		right: 14px !important;
 		font-size: 28px;
 	}
+}
+
+.tskref {
+	float: left;
+	width: 33%;
 }

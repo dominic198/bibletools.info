@@ -22,8 +22,8 @@
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="assets/app.min.css?v=1.1" rel="stylesheet">
-		<script type="text/javascript" src="/assets/app.min.js?v=1.1"></script>
+		<link href="assets/app.min.css?v=1.2" rel="stylesheet">
+		<script type="text/javascript" src="/assets/app.min.js?v=1.2"></script>
 	<?php } else { ?>
 		<link href="assets/css/lib.css" rel="stylesheet">
 		<link href="assets/css/custom.css" rel="stylesheet">

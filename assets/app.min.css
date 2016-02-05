@@ -158,14 +158,15 @@ h3{color:#fff;font-size:30px}#c{padding-top:15px;text-align:right;border-top:sol
 solid #ccc;outline:0;font-size:22px;color:#666}.box
 .open{color:#999;position:absolute;top:15px;right:15px}.box
 .open{display:none}.box.expand
-.open{display:block}.box{cursor:pointer}.box .panel-body{cursor:pointer;height:160px;overflow:hidden}.map.box
+.open{display:block}.box{cursor:pointer}.box .panel-body{cursor:pointer;max-height:160px;overflow:hidden}.map.box
 img{width:120%;margin-left:-10%;margin-top:-50%}.box .panel-body:after{background-size:100%;background-image:-webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #fff));background-image:-webkit-linear-gradient(rgba(255, 255, 255, 0), #fff);background-image:-moz-linear-gradient(rgba(255, 255, 255, 0), #fff);background-image:-o-linear-gradient(rgba(255, 255, 255, 0), #fff);background-image:-ms-linear-gradient(rgba(255, 255, 255, 0), #fff);background-image:linear-gradient(rgba(255, 255, 255, 0), #fff);content:"";width:100%;border-radius:3px;position:absolute;top:auto;right:0;bottom:0;height:70px;pointer-events:none}.box .panel-body h1,
 .box .panel-body h2,
 .box .panel-body h3,
 .box.expand:not(.map) .panel-body:after{display:none}.box.box.expand .panel-body h1,
 .box.box.expand .panel-body h2,
 .box.expand .panel-body
-h3{margin-top:0;display:block}.box.expand:not(.map) .panel-body{height:auto!important;cursor:text}.box.expand .panel-heading{cursor:pointer;padding-right:35px}.box.bc .head,
+h3{margin-top:0;display:block}.box.expand:not(.map) .panel-body{height:auto!important;max-height:none;cursor:text}.box.expand .panel-heading{cursor:pointer;padding-right:35px}.box.bc
+.head{clear:both}.box.bc .head,
 .box.bc
 .emphasis{font-weight:700;font-style:italic}.loader{background:url(/assets/img/loader_white.gif);width:32px;height:32px;top:50%;left:50%;margin-top:-16px;margin-left:-16px;padding:0;position:absolute}#verse .panel-body{position:relative;min-height:160px}#verse .panel-body
 a{font-weight:300;color:#555}#verse .panel-body a:hover, #verse .panel-body
@@ -211,4 +212,4 @@ a{color:#555}section#lexicon .occurances
 li{cursor:pointer}section#lexicon .occurances
 p{margin-bottom:15px}@media only screen and (max-width: 767px){section#lexicon{width:100%;height:0}section#lexicon
 .close{position:absolute}section#lexicon
-.close{top:9px !important;right:14px !important;font-size:28px}}
+.close{top:9px !important;right:14px !important;font-size:28px}}.tskref{float:left;width:33%}
