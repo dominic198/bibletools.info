@@ -196,6 +196,10 @@ a:hover {
 }
 .box.bc .head {
 	clear: both;
+	padding-top: 15px;
+}
+.box.bc .head:first-child {
+	padding-top: 0;
 }
 .box.bc .head,
 .box.bc .emphasis {

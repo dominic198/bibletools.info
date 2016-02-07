@@ -166,7 +166,7 @@ img{width:120%;margin-left:-10%;margin-top:-50%}.box .panel-body:after{backgroun
 .box.box.expand .panel-body h2,
 .box.expand .panel-body
 h3{margin-top:0;display:block}.box.expand:not(.map) .panel-body{height:auto!important;max-height:none;cursor:text}.box.expand .panel-heading{cursor:pointer;padding-right:35px}.box.bc
-.head{clear:both}.box.bc .head,
+.head{clear:both;padding-top:15px}.box.bc .head:first-child{padding-top:0}.box.bc .head,
 .box.bc
 .emphasis{font-weight:700;font-style:italic}.loader{background:url(/assets/img/loader_white.gif);width:32px;height:32px;top:50%;left:50%;margin-top:-16px;margin-left:-16px;padding:0;position:absolute}#verse .panel-body{position:relative;min-height:160px}#verse .panel-body
 a{font-weight:300;color:#555}#verse .panel-body a:hover, #verse .panel-body
