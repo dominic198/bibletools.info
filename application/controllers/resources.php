@@ -67,7 +67,7 @@ class Resources extends CI_Controller
 			$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
 		);
 		$resources = array_merge( $resources,
-			$maps,
+			$maps
 			//$this->egwmodel->verse_quotes( $ref )
 		);
 		
