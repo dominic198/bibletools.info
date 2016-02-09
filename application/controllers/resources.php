@@ -31,7 +31,7 @@ class Resources extends CI_Controller
 			$this->output->set_output( json_encode( $resources ) );
 		} else {
 			$commentaries = array(
-				$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
+				//$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
 				$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
 				$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
 				$this->commentarymodel->get( $ref, "tsk", "Treasury of Scripture Knowledge" ),
@@ -42,7 +42,7 @@ class Resources extends CI_Controller
 				"nav" => $this->kjvmodel->nav( $ref ),
 				"commentaries" => array_values( array_filter( $commentaries ) ),
 				"maps" => $this->mapmodel->get( $ref ),
-				"egw" => $this->egwmodel->verse_references( $ref, 10 ),
+				//"egw" => $this->egwmodel->verse_references( $ref, 10 ),
 			);
 			
 			$this->output->set_output( json_encode( $resources ) );
@@ -62,13 +62,13 @@ class Resources extends CI_Controller
 		
 		$resources = array(
 			$this->kjvmodel->plain_verse( $ref ),
-			$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
+			//$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
 			$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
 			$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
 		);
 		$resources = array_merge( $resources,
 			$maps,
-			$this->egwmodel->verse_quotes( $ref )
+			//$this->egwmodel->verse_quotes( $ref )
 		);
 		
 		$results['resources'] = array_values( array_filter( $resources ) );
