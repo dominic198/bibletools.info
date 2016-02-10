@@ -20,7 +20,6 @@ class Commentarymodel extends CI_Model
 		
 			if( $result ) {
 				$result['title'] = $title;
-				//return $result;
 			}
 			return $result;
 		}

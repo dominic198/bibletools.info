@@ -8,69 +8,6 @@ class Kjvmodel extends CI_Model
 		$this->load->database();
 		$this->load->helper( "reference" );
 	}
-
-
-	function chapter($book, $chapter)
-	{
-
-		if(is_numeric($book) AND is_numeric($chapter)){
-			$sql = 'SELECT * FROM kjv_verses WHERE book = '.$book.' AND chapter = '.$chapter;
-		    $query = $this->db->query($sql);
-			return $query->result();
-		}
-	}
-	function search($phrase, $offset = 0)
-	{
-
-		if(is_numeric($offset)){
-			$sql = "SELECT book, chapter, verse, text FROM kjv_verses WHERE text LIKE '%".$this->db->escape_like_str($phrase)."%' LIMIT 15 OFFSET ".$offset;
-			$query = $this->db->query($sql);
-			return $query->result();
-		}
-	}
-	function verse( $ref )
-	{
-		if( is_numeric( $ref ) ){
-			$sql = "SELECT * FROM kjv_verses WHERE ref = $ref";
-		    $query = $this->db->query($sql);
-			foreach ($query->result() as $line)
-			{
-				$encoding = str_replace("¶ ", "", $line->coding);
-				$encoding = explode(' ', $encoding);
-				$text_array = explode(' ', $line->text);
-				$html = array();
-				foreach ($encoding as $code){ //Create array of 
-					$wordNumberArray = explode("~", $code);
-					$wordNumber = $wordNumberArray[0];
-					$strongsCode = $this->get_string_between($code, "~", "~");
-					
-					if(strstr($code, "*")){ 
-						$position = $wordNumber;
-						array_splice($text_array, $position,0,"°");
-						
-					}
-					
-					$html[$wordNumber]['strongsNum'] = $strongsCode;
-					$html[$wordNumber]['wordNum'] = $wordNumber;
-					
-				}
-				$i = -1;
-				foreach ($text_array as $word){ //Create array of 
-				$i++;
-					if(isset($html[$i])) { $strongs = $html[$i]['strongsNum']; } else { $strongs = NULL; }
-					if(isset($html[$i]['ast'])){
-					}
-					$output[] = array(
-					  'word' => $word,
-					  'strongs' => $strongs,
-					);
-	
-				}
-				return $output;
-				
-			}
-		}
-	}
 	
 	function plain_verse( $ref )
 	{
@@ -181,14 +118,6 @@ class Kjvmodel extends CI_Model
 		return $html;
 	}
 	
-	function get_string_between($string, $start, $end){
-		$string = " ".$string;
-		$ini = strpos($string,$start);
-		if ($ini == 0) return "";
-		$ini += strlen($start);
-		$len = strpos($string,$end,$ini) - $ini;
-		return substr($string,$ini,$len);
-	}
 	function nav( $ref, $numeric = false )
 	{
 
