@@ -37,6 +37,10 @@ class Resources extends CI_Controller
 				$this->commentarymodel->get( $ref, "tsk", "Treasury of Scripture Knowledge" ),
 			);
 			
+			if( FULL ) { //TEMPORARY ACCESS TO SDA BC
+				$commentaries[] = $this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" );
+			}
+			
 			$resources = array(
 				"verse" => $this->kjvmodel->html_verse( $ref ) ,
 				"nav" => $this->kjvmodel->nav( $ref ),
@@ -44,6 +48,10 @@ class Resources extends CI_Controller
 				"maps" => $this->mapmodel->get( $ref ),
 				//"egw" => $this->egwmodel->verse_references( $ref, 10 ),
 			);
+			
+			if( FULL ) { //TEMPORARY ACCESS TO EGW
+				$resources['egw'] = $this->egwmodel->verse_references( $ref, 10 );
+			}
 			
 			$this->output->set_output( json_encode( $resources ) );
 		}

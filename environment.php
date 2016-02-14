@@ -1,14 +1,14 @@
 <?php
-if(! defined('ENVIRONMENT') ) {
-	$domain = strtolower($_SERVER['HTTP_HOST']);
-	
-	switch($domain) {
-		case 'bibletools.info' :
-			define('ENVIRONMENT', 'production');
+$domain = strtolower($_SERVER['HTTP_HOST']);
+if( ! defined( "ENVIRONMENT" ) ) {	
+	switch( $domain ) {
+		case "bibletools.info":
+			define( "ENVIRONMENT", "production" );
 			break;
 		default :
-			define('ENVIRONMENT', 'development');
+			define( "ENVIRONMENT", "development" );
 			break;
 	}
 }
+define( "FULL", $domain === "full.bibletools.info" );
 ?>
