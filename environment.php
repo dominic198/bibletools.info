@@ -10,5 +10,5 @@ if( ! defined( "ENVIRONMENT" ) ) {
 			break;
 	}
 }
-define( "FULL", $domain === "full.bibletools.info" );
+define( "FULL", $domain === "beta.bibletools.info" );
 ?>
