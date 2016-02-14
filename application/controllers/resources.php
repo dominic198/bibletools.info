@@ -38,7 +38,7 @@ class Resources extends CI_Controller
 			);
 			
 			if( FULL ) { //TEMPORARY ACCESS TO SDA BC
-				$commentaries[] = $this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" );
+				array_unshift( $commentaries, $this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ) );
 			}
 			
 			$resources = array(
