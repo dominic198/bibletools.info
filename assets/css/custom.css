@@ -185,10 +185,13 @@ a:hover {
 	margin-top: 0;
 	display: block
 }
-.box.expand:not(.map) .panel-body {
+.box.expand .panel-body {
 	height: auto!important;
 	max-height: none;
 	cursor: text
+}
+.box.expand.map .panel-body {
+	height: 150px !important;
 }
 .box.expand .panel-heading {
 	cursor: pointer;
@@ -355,14 +358,17 @@ a:hover {
 	height: 8px
 }
 #menu {
+	overflow: scroll !important;
+	-webkit-overflow-scrolling: touch;
 	width: 220px;
 	background: #fff;
 	position: fixed;
 	z-index: 99;
 	box-shadow: 9px 0 9px -2px rgba(0, 0, 0, .2);
 	-webkit-box-shadow: 9px 0 9px -2px rgba(0, 0, 0, .2);
-	height: 100%;
 	left: -240px;
+	top: 0;
+	bottom: 0;
 	-webkit-transition: all .3s;
 	-moz-transition: all .3s;
 	-ms-transition: all .3s;
@@ -402,6 +408,29 @@ a:hover {
 	padding-right: 14px;
 	font-size: 22px;
 	color: #777
+}
+#menu ul.main li ul {
+	margin: 18px -18px 0 -18px;
+	background-color: #F4F4F4;
+	padding: 0 0 0 18px;
+	box-shadow: inset 0px 2px 14px -5px rgba(0,0,0,.3);
+	box-sizing: content-box;
+	height: 0;
+	overflow: hidden;
+}
+#menu ul.main li ul li:first-of-type {
+	padding-top: 18px;
+}
+#menu ul.main li ul li:last-of-type {
+	padding-bottom: 18px;
+}
+#menu ul.main li ul.open {
+	height: 100%;
+	overflow: visible;
+}
+#menu ul.main li ul li a {
+	font-size: 16px;
+	color: #999
 }
 @media only screen and (max-width: 500px) {
 	#search_form {

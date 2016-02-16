@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	$(document).ajaxError(function(e, jqxhr, settings, exception) {
 		throwError( "Oops.  An error occurred." );
 	});
@@ -59,12 +60,16 @@ $(document).ready(function(){
 			}
 		}
 	});
-	
+
+	$( "#menu .history" ).click( function(){
+		$( "ul#history_list" ).toggleClass( "open" );
+	});	
+
 	$( ".open-menu" ).click( function(){
 		openMenu();
 	});
 	
-	$( ".overlay.menu" ).live( "click", function() {
+	$( document ).on( "click", ".overlay.menu", function(e) {
 		closeMenu();
 	});
 	
@@ -78,7 +83,12 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "input#search" ).live( "keydown", function(e) {
+	$( document ).on( "click", "ul#history_list a", function(e) {
+		getVerse( $(this).text() );
+		closeMenu();
+	});
+	
+	$( document ).on( "keydown", "input#search", function(e) {
 		if(e.which == 9) { // Tab
 		    return false;
 		}
@@ -87,7 +97,7 @@ $(document).ready(function(){
 		}
 	});
 		
-	$( ".bc .panel-body a" ).live( "click", function(e){
+	$( document ).on( "click", ".bc .panel-body a", function(e) {
 		
 		if($(this).data( "datatype" ) == "bible" ){
 			e.preventDefault();
@@ -99,35 +109,35 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( ".bc .panel-body .scriptRef" ).live( "click", function(e){
+	$( document ).on( "click", ".bc .panel-body .scriptRef", function(e) {
 			ref = $(this).attr( "ref" );
 			getVerse(ref);
 	});
 	
-	$( ".bc .panel-body .tskref a" ).live( "click", function(e){
+	$( document ).on( "click", ".bc .panel-body .tskref a", function(e) {
 			ref = $(this).text();
 			getVerse(ref);
 	});
 	
-	$( ".egw .panel-body span.bible-kjv" ).live( "click", function(e){
+	$( document ).on( "click", ".egw .panel-body span.bible-kjv", function(e) {
 		e.preventDefault();
 		ref = $(this).attr( "title" );
 		getVerse(ref);
 	});
 	
-	$( "#verse .prev" ).live( "click", function(e){
+	$( document ).on( "click", "#verse .prev", function(e) {
 		e.preventDefault();
 		ref = $( "#verse" ).attr( "data-prev" );
 		getVerse(ref);
 	});
 	
-	$( "#verse .next" ).live( "click", function(e){
+	$( document ).on( "click", "#verse .next", function(e) {
 		e.preventDefault();
 		ref = $( "#verse" ).attr( "data-next" );
 		getVerse(ref);
 	});
 	
-	$( "#clear" ).live( "click", function(e){
+	$( document ).on( "click", "#clear", function(e) {
 		$( "#search" ).val( "" ).focus();
 		$(this).hide();
 	});
@@ -163,16 +173,16 @@ $(document).ready(function(){
 		threshold:200
 	});
 	
-	$( ".box" ).live( "click", function() {
+	$( document ).on( "click", ".box", function(e) {
 		$(this).toggleClass( "expand" );
 		$( "#resource_list" ).isotope( 'reloadItems' ).isotope();
 	});
 	
-	$( ".expand.box .panel-body" ).live( "click", function() {
+	$( document ).on( "click", ".expand.box .panel-body", function(e) {
 		return false;
 	});
 	
-	$( "#load_more" ).live( "click", function() {
+	$( document ).on( "click", "#load_more", function(e) {
 		$( this ).html( "loading..." );
 		var ref = $( "#verse" ).attr( "data-ref" );
 		var offset = $( ".egw" ).length;
@@ -190,12 +200,12 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "form#contact #submit" ).live( "click", function(e) {
+	$( document ).on( "click", "form#contact #submit", function(e) {
 		e.preventDefault();
 		$( "form#contact" ).submit();
 	});
 	
-	$( "form#contact" ).live( "submit", function(e) {
+	$( document ).on( "submit", "form#contact", function(e) {
 		e.preventDefault();
 		if($(this).find( "#message" ) != "" ){
 			data = $(this).serializeArray();
@@ -210,7 +220,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "#verse .panel-body a" ).live( "click", function(e) {
+	$( document ).on( "click", "#verse .panel-body a", function(e) {
 		
 		clearLexicon();
 		
@@ -257,32 +267,37 @@ $(document).ready(function(){
 		var container = $( "#lexicon" );
 		
 		if ( ! container.is( e.target )
-			&& container.has( e.target ).length === 0 )
+			&& container.has( e.target ).length === 0
+			&& container.hasClass( "visible" ) )
 		{
 			clearLexicon();
 		}
 	});
 	
-	
-	$( "#lexicon" ).click(function(e) {
-		//e.stopPropagation();
-	});
-	
-	$( "#lexicon a.load_more" ).click( function(e) {
-		$( "#lexicon .definition .long" ).slideToggle();
-	});
-	
-	$( ".expand ul.occurances li" ).live( "click", function(e) {
+	$( document ).on( "click", ".expand ul.occurances li", function(e) {
 		ref = $(this).find( "strong" ).text();
 		getVerse( ref );
 		clearLexicon();
 	});
+	
+	function saveRefHistory( ref ) {
+		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
+		if( ! ref_history ) {
+			ref_history = [];
+		}
+		if( ref_history[0] != ref ) {
+			ref_history.unshift( ref );
+			ref_history = ref_history.slice( 0, 10 );
+			localStorage.setItem( "history", JSON.stringify( ref_history ) );
+		}
+	}
 	
 	function titleCase(str){
 	    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 	}
 	
 	function closeMenu(){
+		$( "ul#history_list" ).removeClass( "open" );
 		$( ".overlay.menu" ).fadeOut( 160 ).remove();
 		$( "#menu" ).removeClass( "show" );
 	}
@@ -291,6 +306,14 @@ $(document).ready(function(){
 		$( "body" ).append( "<div class='overlay menu'></div>" )
 		$( ".overlay.menu" ).fadeIn( 160 );
 		$( "#menu" ).addClass( "show" );
+		
+		$history_list = $( "ul#history_list" );
+		$history_list.empty();
+		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
+		$.each( ref_history, function( i ) {
+			$li = $( "<li><a>" + ref_history[i] + "</a></li>" );
+			$li.appendTo( $history_list );
+		});
 	}
 	
 	function getVerse( stringRef, updateState ){
@@ -305,6 +328,7 @@ $(document).ready(function(){
 		chapter = arrayRef[1];
 		verse = arrayRef[2];
 		numericRef = formatRef( book, chapter, verse );
+		formattedRef = book_name + " " + chapter + ":" + verse;
 		
 		if( arrayRef.indexOf( "" ) !== -1 ) {
 			throwError( "Verse could not be loaded." );
@@ -322,7 +346,9 @@ $(document).ready(function(){
 			localStorage['lastRef'] = stateRef;
 		}
 		
-		$( "#verse .panel-heading" ).text( book_name + " " + chapter + ":" + verse );
+		saveRefHistory( formattedRef );
+		
+		$( "#verse .panel-heading" ).text( formattedRef );
 		verse_elem = $( "#verse" );
 		verse_elem.attr( "data-book", book );
 		verse_elem.attr( "data-chapter", chapter );
