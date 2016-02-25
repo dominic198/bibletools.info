@@ -9,13 +9,13 @@ class Egwmodel extends CI_Model
 		$this->load->database();
 		
 	}
-	function verse_references( $ref, $limit, $offset = 0 )
+	function verse_references( $ref, $limit, $offset = 0, $filter = "" )
 	{
 		if( is_numeric( $ref ) ) {
-			$query = "SELECT * FROM egw_scripture_reference WHERE end >= $ref AND start <= $ref OR start = $ref LIMIT $limit OFFSET $offset";
+			$query = "SELECT * FROM egw_scripture_reference WHERE end >= $ref AND start <= $ref $filter OR start = $ref $filter LIMIT $limit OFFSET $offset";
 			$egw = $this->db->query( $query )->result_array();
 			
-			$total_query = "SELECT count(*) as total FROM egw_scripture_reference WHERE end >= $ref AND start <= $ref OR start = $ref";		    $total = $this->db->query( $total_query )->row()->total;
+			$total_query = "SELECT count(*) as total FROM egw_scripture_reference WHERE end >= $ref AND start <= $ref $filter OR start = $ref $filter";				$total = $this->db->query( $total_query )->row()->total;
 			
 			$array['items'] = $egw;
 			$array['total'] = $total;

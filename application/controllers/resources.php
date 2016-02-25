@@ -41,17 +41,18 @@ class Resources extends CI_Controller
 				array_unshift( $commentaries, $this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ) );
 			}
 			
+			$filter = "AND active = 1";
+			if( FULL ) { //TEMPORARY ACCESS TO EGW
+				$filter = "";
+			}
+			
 			$resources = array(
 				"verse" => $this->kjvmodel->html_verse( $ref ) ,
 				"nav" => $this->kjvmodel->nav( $ref ),
 				"commentaries" => array_values( array_filter( $commentaries ) ),
 				"maps" => $this->mapmodel->get( $ref ),
-				//"egw" => $this->egwmodel->verse_references( $ref, 10 ),
+				"egw" => $this->egwmodel->verse_references( $ref, 10, 0, $filter ),
 			);
-			
-			if( FULL ) { //TEMPORARY ACCESS TO EGW
-				$resources['egw'] = $this->egwmodel->verse_references( $ref, 10 );
-			}
 			
 			$this->output->set_output( json_encode( $resources ) );
 		}
