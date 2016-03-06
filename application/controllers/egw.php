@@ -11,16 +11,11 @@ class Egw extends CI_Controller
 	}
 	
 	function get()
-	{
-		$filter = "AND active = 1";
-		if( FULL ) { //TEMPORARY ACCESS TO EGW
-			$filter = "";
-		}
-		
+	{	
 		$ref = $this->uri->segment( 3 );
 		$offset = $this->uri->segment( 4 ) ? $this->uri->segment( 4 ) : 0;
 		
-		$data = json_encode( $this->egwmodel->verse_references( $ref, 10, $offset, $filter ) );
+		$data = json_encode( $this->egwmodel->verse_references( $ref, 10, $offset ) );
 		$this->output->set_output( $data );
 	}
 
