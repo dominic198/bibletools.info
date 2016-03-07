@@ -157,7 +157,7 @@
 		<!--<div class="alert alert-warning" role="alert"><strong>Where are the SDA Bible Commentary and EGW comments gone?</strong>  Don't worry, we're working to bring you the best Bible study experience through a new official partnership.  More to come...</div>-->
 		<div id="c">
 			<div class="container">
-				<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a></p>
+				<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a> • <a href="https://www.gofundme.com/bibletools" target="_blank">Donate</a></p>
 			</div>
 		</div>
 	</div>
