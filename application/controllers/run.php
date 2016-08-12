@@ -25,7 +25,7 @@ class Run extends CI_Controller
 	
 	function restructure()
 	{
-		$sql = 'SELECT * FROM sdabc_cor';
+		$sql = 'SELECT * FROM dar';
 	    $query = $this->db->query($sql);
 	    $references = $query->result_array();
 	    foreach($references as $item){
@@ -38,7 +38,7 @@ class Run extends CI_Controller
 	    	//$data['end'] = $book.$chapter.$end_verse;
 	    	
 			$this->db->where('id', $item['id']);
-			$this->db->update('sdabc_cor', $data);
+			$this->db->update('dar', $data);
 			//die;
 	    }
 	}

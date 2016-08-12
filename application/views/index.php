@@ -22,7 +22,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="assets/app.min.css?v=1.4" rel="stylesheet">
+		<link href="assets/app.min.css?v=1.5" rel="stylesheet">
 		<script type="text/javascript" src="/assets/app.min.js?v=1.3"></script>
 	<?php } else { ?>
 		<link href="assets/css/lib.css" rel="stylesheet">

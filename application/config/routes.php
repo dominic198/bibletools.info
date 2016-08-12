@@ -48,6 +48,7 @@ $route['acbc/(:any)'] = "acbc/$1";
 $route['egw/(:any)'] = "egw/$1";
 $route['about/(:any)'] = "app/$1";
 $route['run/(:any)'] = "run/$1";
+$route['uriahsmith/(:any)'] = "uriahsmith/$1";
 $route['(:any)'] = "app/index";
 
 

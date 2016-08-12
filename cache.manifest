@@ -1,9 +1,9 @@
 CACHE MANIFEST
-# March 7, 2016 v1
+# August 12, 2016 v1
 
 CACHE:
 /
-/assets/app.min.css?v=1.4
+/assets/app.min.css?v=1.5
 https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic
 https://fonts.googleapis.com/css?family=Raleway:400,300,700
 https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js

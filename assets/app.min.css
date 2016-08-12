@@ -217,4 +217,4 @@ a{color:#555}section#lexicon .occurances
 li{cursor:pointer}section#lexicon .occurances
 p{margin-bottom:15px}@media only screen and (max-width: 767px){section#lexicon{width:100%;height:0}section#lexicon
 .close{position:absolute}section#lexicon
-.close{top:9px !important;right:14px !important;font-size:28px}}.tskref{float:left;width:33%}
+.close{top:9px !important;right:14px !important;font-size:28px}}.tskref{float:left;width:33%}.egw_refcode{margin-left:7px;font-size:80%;color:#1b9c7f}.egw_refcode:before{content:"{"}.egw_refcode:after{content:"}"}
