@@ -99,11 +99,13 @@ $(document).ready(function(){
 		
 	$( document ).on( "click", ".bc .panel-body a", function(e) {
 		
-		if($(this).data( "datatype" ) == "bible" ){
+		if( $(this).data( "datatype" ) == "bible" ){
 			e.preventDefault();
 			ref = $(this).data( "reference" );
 			getVerse(ref);
-						
+		} else if( $(this).hasClass( "link" ) ){
+			e.preventDefault();
+			getVerse( $(this).text() );
 		} else {
 			return false;
 		}
