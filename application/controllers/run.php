@@ -25,20 +25,24 @@ class Run extends CI_Controller
 	
 	function restructure()
 	{
-		$sql = 'SELECT * FROM dar';
+		$sql = 'SELECT id, verse, end_verse, book, chapter FROM barnes';
 	    $query = $this->db->query($sql);
 	    $references = $query->result_array();
 	    foreach($references as $item){
 	    	$book = str_pad($item['book'], 2, "0", STR_PAD_LEFT);
 	    	$chapter = str_pad($item['chapter'], 3, "0", STR_PAD_LEFT);
 	    	$start_verse = str_pad($item['verse'], 3, "0", STR_PAD_LEFT);
-	    	//$end_verse = str_pad($item['endverse'], 3, "0", STR_PAD_LEFT);
+	    	$endverse = $item['end_verse'];
+	    	if( $endverse == 0 ) {
+	    		$endverse = $item['verse'];
+	    	}
+	    	$end_verse = str_pad($endverse, 3, "0", STR_PAD_LEFT);
 	    	
 	    	$data['start'] = $book.$chapter.$start_verse;
-	    	//$data['end'] = $book.$chapter.$end_verse;
+	    	$data['end'] = $book.$chapter.$end_verse;
 	    	
 			$this->db->where('id', $item['id']);
-			$this->db->update('dar', $data);
+			$this->db->update('barnes', $data);
 			//die;
 	    }
 	}

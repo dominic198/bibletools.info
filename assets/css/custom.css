@@ -112,7 +112,8 @@ a:hover {
 }
 #verse .panel-heading {
 	background-color: #34495e;
-	color: #eee
+	color: #eee;
+	text-align: center;
 }
 #search_form {
 	width: 70%;
@@ -258,6 +259,9 @@ a:hover {
 	line-height: 21px;
 	font-size: 30px;
 	opacity: .5
+}
+#verse .prev {
+	float:left;
 }
 #verse .next:hover,
 #verse .prev:hover {

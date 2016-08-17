@@ -98,12 +98,11 @@ $(document).ready(function(){
 	});
 		
 	$( document ).on( "click", ".bc .panel-body a", function(e) {
-		
 		if( $(this).data( "datatype" ) == "bible" ){
 			e.preventDefault();
 			ref = $(this).data( "reference" );
 			getVerse(ref);
-		} else if( $(this).hasClass( "link" ) ){
+		} else if( $(this).hasClass( "link" )){
 			e.preventDefault();
 			getVerse( $(this).text() );
 		} else {
@@ -113,6 +112,8 @@ $(document).ready(function(){
 	
 	$( document ).on( "click", ".bc .panel-body .scriptRef", function(e) {
 			ref = $(this).attr( "ref" );
+			ref = ref.replace( "+", " " );
+			alert(ref);
 			getVerse(ref);
 	});
 	

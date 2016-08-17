@@ -12,12 +12,17 @@ class Studylight extends CI_Controller
 	function commentary()
 	{
 		$books = $this->_getCommentary( "bnb" );
+		/*$books = [
+			"commentaries/bnb/esther.html",
+		];
+		print_r($books);die;*/
 		foreach( $books as $book ) {
 			if( $book != "" ) {
 				$chapters = $this->_getCommentaryChapters( $book );
-				//$chapters = [ 5 ];
 				foreach( $chapters as $chapter ) {
-					$html = $this->domparser->file_get_html( "https://www.studylight.org/commentaries/bnb/view.cgi?bk=$book&ch=$chapter" );
+					$html = $this->domparser->file_get_html( "https://www.studylight.org/commentaries/bnb/$chapter" );
+					$chapter_number = explode( "-", $chapter );
+					$chapter_number = (int) substr( end( $chapter_number ), 0, -5 );
 					$sections = $html->find( "div[style='margin-top:25px;']" );
 					foreach( $sections as $section ) {
 						//echo $section;die;
@@ -34,8 +39,8 @@ class Studylight extends CI_Controller
 									"verse" => explode( "-", $range )[0],
 									"end_verse" => explode( "-", $range )[1],
 									"content" => trim( $section->innertext ),
-									"book" => $book + 1,
-									"chapter" => $chapter,
+									"book" => $book,
+									"chapter" => $chapter_number,
 									"fix" => $fix,
 								];
 								$this->db->insert( "barnes", $data );
@@ -44,8 +49,8 @@ class Studylight extends CI_Controller
 									"verse" => substr( $heading, strpos( $heading, "Verse " ) + 6 ),
 									"end_verse" => 0,
 									"content" => trim( $section->innertext ),
-									"book" => $book + 1,
-									"chapter" => $chapter,
+									"book" => $book,
+									"chapter" => $chapter_number,
 								];
 								$this->db->insert( "barnes", $data );
 							}
@@ -59,6 +64,7 @@ class Studylight extends CI_Controller
 				//die;
 			}
 		}
+		die;
 	}
 	
 	function fix() {
@@ -133,7 +139,7 @@ class Studylight extends CI_Controller
 	
 	private function _getCommentary( $commentary )
 	{
-		$html = $this->domparser->file_get_html( "http://www.studylight.org/commentaries/$commentary/" );
+		$html = $this->domparser->file_get_html( "http://www.studylight.org/commentaries/$commentary.html" );
 		$ot_table = $html->find( "table", 1 );
 		$nt_table = $html->find( "table", 2 );
 		$ot_links = $ot_table->find( "a" );
@@ -145,7 +151,7 @@ class Studylight extends CI_Controller
 		}, $ot_links );*/
 		
 		$nt = array_map( function( $link ) {
-			return substr( $link->href, strpos( $link->href, "bk=" ) + 3 );
+			return $link->href;
 		}, $nt_links );
 		
 		return $nt;
@@ -153,12 +159,12 @@ class Studylight extends CI_Controller
 	
 	private function _getCommentaryChapters( $book )
 	{
-		$html = $this->domparser->file_get_html( "https://www.studylight.org/commentaries/bnb/view.cgi?bk=$book" );
+		$html = $this->domparser->file_get_html( "https://www.studylight.org$book" );
 		$table = $html->find( "table", 1 );
 		$links = $table->find( "a" );
 		
 		$array = array_map( function( $link ) {
-			return substr( $link->href, strpos( $link->href, "ch=" ) + 3 ); 
+			return $link->href; 
 		}, $links );
 		
 		//REMOVE LATER TO GET INTRODUCTIONS

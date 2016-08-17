@@ -22,8 +22,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="assets/app.min.css?v=1.5" rel="stylesheet">
-		<script type="text/javascript" src="/assets/app.min.js?v=1.4"></script>
+		<link href="assets/app.min.css?v=1.6" rel="stylesheet">
+		<script type="text/javascript" src="/assets/app.min.js?v=1.5"></script>
 	<?php } else { ?>
 		<link href="assets/css/lib.css" rel="stylesheet">
 		<link href="assets/css/custom.css" rel="stylesheet">
@@ -52,7 +52,7 @@
 						<span>${reference}</span>
 					{{/if}}
 				</span>
-				<a href="http://text.egwwritings.org/search.php?lang=en&section=all&collection=2&QUERY=${reference}" title="Open at EGWWritings.org" target="_blank" class="fa fa-share-square-o open"></a>
+				<a href="https://m.egwwritings.org/search?query=${reference}" title="Open at EGWWritings.org" target="_blank" class="fa fa-share-square-o open"></a>
 			</div>
 			<div class="panel-body">
 				loading ...
