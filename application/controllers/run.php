@@ -235,26 +235,24 @@ class Run extends CI_Controller
 	
 	function pull_egw_paragraph_quotes()
 	{
-		$url = $this->get_full_url( "https://m.egwwritings.org/search?query=TMK 22.3" );
-		$paragraph_id = substr( $url, strpos( $url, "#" ) + 1 );
-		$html = $this->domparser->file_get_html( $url );
-		$quote = $html->find( "#" . $paragraph_id, 0 );
-		echo $quote;die;
-		$sql = 'SELECT * FROM egw_quotes WHERE reference LIKE "%.%" LIMIT 1 OFFSET 1';
+		$sql = 'SELECT * FROM egw_quotes WHERE reference LIKE "%.%" AND new_content IS NULL AND failed IS NULL LIMIT 1';
 	    $query = $this->db->query($sql);
 	    $references = $query->result_array();
 	    foreach( $references as $item ) {
 	    	$ref = $item["reference"];
-	    	$html = $this->domparser->file_get_html( "https://m.egwwritings.org/search?query=$ref" );
-	    	echo $html;die;
-	    	$quote = $html->find( ".egw-selected-paragraph", 0 );
+	    	$url = $this->get_full_url( "https://m.egwwritings.org/search?query=$ref" );
+			$paragraph_id = substr( $url, strpos( $url, "#" ) + 1 );
+			$html = $this->domparser->file_get_html( $url );
+			$quote = $html->find( "#" . $paragraph_id, 0 );
 	    	
 	    	if( $quote ) {
-	    		die( "quote found" );
+	    		$data["new_content"] = trim( $quote );
 	    	} else {
-	    		die( "quote not found" );
+	    		$data["failed"] = 1;
 	    	}
-	    	//print_r($quote);die;
+	    	$this->db->where( "id", $item["id"] );
+			$this->db->update( "egw_quotes", $data );
+			unset( $data );
 	    }
 	}
 	
