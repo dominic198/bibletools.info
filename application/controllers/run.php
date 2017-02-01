@@ -232,4 +232,49 @@ class Run extends CI_Controller
 			unset( $data );
 		}
 	}
+	
+	function pull_egw_paragraph_quotes()
+	{
+		$url = $this->get_full_url( "https://m.egwwritings.org/search?query=TMK 22.3" );
+		$paragraph_id = substr( $url, strpos( $url, "#" ) + 1 );
+		$html = $this->domparser->file_get_html( $url );
+		$quote = $html->find( "#" . $paragraph_id, 0 );
+		echo $quote;die;
+		$sql = 'SELECT * FROM egw_quotes WHERE reference LIKE "%.%" LIMIT 1 OFFSET 1';
+	    $query = $this->db->query($sql);
+	    $references = $query->result_array();
+	    foreach( $references as $item ) {
+	    	$ref = $item["reference"];
+	    	$html = $this->domparser->file_get_html( "https://m.egwwritings.org/search?query=$ref" );
+	    	echo $html;die;
+	    	$quote = $html->find( ".egw-selected-paragraph", 0 );
+	    	
+	    	if( $quote ) {
+	    		die( "quote found" );
+	    	} else {
+	    		die( "quote not found" );
+	    	}
+	    	//print_r($quote);die;
+	    }
+	}
+	
+	function get_full_url( $url )
+	{
+		$ch = curl_init( $url );
+		curl_setopt( $ch, CURLOPT_HEADER, true );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, false);
+		$header = curl_exec( $ch );
+		
+		$fields = explode( "\r\n", preg_replace( '/\x0D\x0A[\x09\x20]+/', ' ', $header ) );
+		
+		for( $i=0; $i<count( $fields ); $i++ )
+		{
+			if( strpos( $fields[$i], "Location" ) !== false )
+			{
+				$url = str_replace( "Location: ", "", $fields[$i] );
+			}
+		}
+		return $url;
+	}
 }
