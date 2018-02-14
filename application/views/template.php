@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" manifest="cache.manifest">
+<html>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,6 +50,22 @@
 			</div>
 		</div>
 	</nav>
+	<?php if( $is_admin ) { ?>
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container">
+				<div class="collapse navbar-collapse">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link" href="/admin/dashboard">Dashboard</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/admin/question">Add Question</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	<?php } ?>
 	<section id="menu">
 		<header><h3><b>BibleTools</b>.info</h3></header>
 		<ul class="main">
@@ -81,54 +97,8 @@
 	    	</div>
 	    </div> <!--/ .container -->
 	</div><!--/ #headerwrap -->
-	<section id="lexicon" class="col-sm-5">
-		<div class="content">
-			<span class="arrow"></span>
-			<span class="close"><i class="fa fa-close"></i></span>
-			<div class="definition">Loading...</div>
-		</div>
-	</div>
-	</section>
 	<div class="container main">
-		<h2><?php echo $title; ?></h2>
-		<div class="question-verses">
-			<a>Zechariah 5:1</a>
-			<a>Zechariah 5:3</a>
-			<a>John 4:3</a>
-		</div>
-		<div id="resource_list" class="row">
-			<div class="col-sm-8">
-				<?php foreach( $resources as $resource ) { ?>
-		    		<div class="panel panel-modern">
-						<div class="panel-heading">
-							<img src="/assets/img/authors/egw.png"/>
-							<div class="resource-info">
-								<strong><?php echo $resource["name"]; ?></strong><br/>
-								<small>Desire of Ages, p.55</small>
-							</div>
-						</div>
-						<div class="panel-body"><?php echo $resource["content"]; ?></div>
-					</div><!--/ .panel -->
-				<?php } ?>
-	    	</div>
-	    	<div class="col-sm-4" id="verse">
-	    		<div class="panel panel-modern">
-					<div class="panel-heading">
-						<h3>Related Questions</h3>
-					</div>
-					<div class="panel-body">
-						<ul>
-							<li><a>A related question</a></li>
-							<li><a>Question about Matthew 1</a></li>
-							<li><a>A related question</a></li>
-							<li><a>Question about Matthew 1</a></li>
-							<li><a>A related question</a></li>
-							<li><a>Question about Matthew 1</a></li>
-						</ul>
-					</div>
-				</div><!--/ .panel -->
-	    	</div>
-		</div><!--/ .row -->
+		<?php echo $contents; ?>
 		<!--<div class="alert alert-warning" role="alert"><strong>Where are the SDA Bible Commentary and EGW comments gone?</strong>  Don't worry, we're working to bring you the best Bible study experience through a new official partnership.  More to come...</div>-->
 		<div id="c">
 			<div class="container">

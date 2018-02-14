@@ -275,4 +275,20 @@ class Run extends CI_Controller
 		}
 		return $url;
 	}
+	
+	function merge_resources()
+	{
+		$sql = 'SELECT * FROM sdabc';
+	    $query = $this->db->query($sql);
+	    $items = $query->result_array();
+	    foreach( $items as $item ) {
+	    	$data = [
+				"start" => $item["start"],
+				"content" => $item["content"],
+				"info_id" => 6,
+			];
+			//$this->db->insert( "resources", $data );
+			unset( $data );
+	    }
+	}
 }

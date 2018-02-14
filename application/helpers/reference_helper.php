@@ -18,9 +18,53 @@ if ( ! function_exists( "construct_reference" ) )
     	];
     }
     
+     function parseReferenceToText( $start, $end )
+    {
+    	$start = [
+    		"book" => getBook( + substr( $start, 0, 2 ) ),
+    		"chapter" => + substr( $start, 2, 3 ),
+    		"verse" => + substr( $start, 5, 3 ),
+    	];
+    	
+    	if( is_numeric( $end ) ) {
+	    	$end = [
+	    		"book" => getBook( + substr( $end, 0, 2 ) ),
+	    		"chapter" => + substr( $end, 2, 3 ),
+	    		"verse" => + substr( $end, 5, 3 ),
+	    	];
+	    } else {
+	    	$end = null;
+	    }
+    	
+    	$ref = $start["book"] . " " . $start["chapter"];
+    	if( $start["verse"] ) $ref .= ":" . $start["verse"];
+    	if( $end && $end["chapter"] && $end["chapter"] != $start["chapter"] ) {
+    		$ref .= "-" . $end["chapter"];
+    		if( $end && $end["verse"] ) $ref .= ":" . $end["verse"];
+    	} else {
+    		if( $end && $end["verse"] ) $ref .= "-" . $end["verse"];
+    	}
+    	
+    	return $ref;
+    }
+    
     function getBook( $book_number )
     {
-    	$books = [
+    	$books = getBooks();
+		return $books[$book_number];
+    }
+    
+    function textToNumber( $ref )
+    {
+    	$array = explode( ".", $ref );
+    	$books = getBookAbbreviationNumbers();
+    	$book_number = $books[$array[0]];
+    	return constructReference( $book_number, $array[1], $array[2] );
+    }
+    
+    function getBooks()
+    {
+    	return [
 			1 => "Genesis",
 			2 => "Exodus",
 			3 => "Leviticus",
@@ -88,6 +132,77 @@ if ( ! function_exists( "construct_reference" ) )
 			65 => "Jude",
 			66 => "Revelation",
 		];
-		return $books[$book_number];
+    }
+    
+    function getBookAbbreviationNumbers()
+    {
+    	return [
+    		"Gen" => 1,
+			"Exod" => 2,
+			"Lev" => 3,
+			"Num" => 4,
+			"Deut" => 5,
+			"Josh" => 6,
+			"Judg" => 7,
+			"Ruth" => 8,
+			"1Sam" => 9,
+			"2Sam" => 10,
+			"1Kgs" => 11,
+			"2Kgs" => 12,
+			"1Chr" => 13,
+			"2Chr" => 14,
+			"Ezra" => 15,
+			"Neh" => 16,
+			"Esth" => 17,
+			"Job" => 18,
+			"Ps" => 19,
+			"Prov" => 20,
+			"Eccl" => 21,
+			"Song" => 22,
+			"Isa" => 23,
+			"Jer" => 24,
+			"Lam" => 25,
+			"Ezek" => 26,
+			"Dan" => 27,
+			"Hos" => 28,
+			"Joel" => 29,
+			"Amos" => 30,
+			"Obad" => 31,
+			"Jonah" => 32,
+			"Mic" => 33,
+			"Nah" => 34,
+			"Hab" => 35,
+			"Zeph" => 36,
+			"Hag" => 37,
+			"Zech" => 38,
+			"Mal" => 39,
+			"Matt" => 40,
+			"Mark" => 41,
+			"Luke" => 42,
+			"John" => 43,
+			"Acts" => 44,
+			"Rom" => 45,
+			"1Cor" => 46,
+			"2Cor" => 47,
+			"Gal" => 48,
+			"Eph" => 49,
+			"Phil" => 50,
+			"Col" => 51,
+			"1Thess" => 52,
+			"2Thess" => 53,
+			"1Tim" => 54,
+			"2Tim" => 55,
+			"Titus" => 56,
+			"Phlm" => 57,
+			"Heb" => 58,
+			"Jas" => 59,
+			"1Pet" => 60,
+			"2Pet" => 61,
+			"1John" => 62,
+			"2John" => 63,
+			"3John" => 64,
+			"Jude" => 65,
+			"Rev" => 66,
+    	];
     }
 }
