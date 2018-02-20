@@ -21,9 +21,7 @@ p {
 	line-height: 28px;
 	margin-bottom: 25px
 }
-.centered {
-	text-align: center
-}
+
 a, .scriptRef {
 	color: #c0392b;
 	cursor: pointer;
@@ -80,33 +78,24 @@ a:hover {
 	color: #fff;
 	font-size: 70px
 }
-@media only screen and (max-width: 767px) {
-	#verse {
-		width: 100%
-	}
-	.no_scroll {
-		position:fixed;
-	}
-}
 #headerwrap h3 {
 	color: #fff;
 	font-size: 30px
 }
-#c {
-	padding-top: 15px;
-	text-align: right;
-	border-top: solid 1px #ddd;
-	margin-top: 25px;
-}
-.animate {
-	-webkit-transition: all 0.2s ease;
-	-moz-transition: all 0.2s ease;
-	-o-transition: all 0.2s ease;
+@media only screen and (max-width: 767px) {
+	.no_scroll {
+		position:fixed;
+	}
 }
 .no_scroll {
 	overflow-x:hidden !important;
 	overflow: hidden !important;
 	width: 100%;
+}
+.animate {
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
 }
 .panel-modern {
 	background-color: white;
@@ -155,34 +144,35 @@ a:hover {
 	border: 4px solid white;
 	outline: 0;
 	font-size: 22px;
-	color: #666
+	color: #666;
+	margin-bottom: 3px;
 }
-.box .open {
+.resource .open {
 	color: #999;
 	position: absolute;
 	top: 15px;
 	right: 15px
 }
-.box .open {
+.resource .open {
 	display: none
 }
-.box.expand .open {
+.resource.expand .open {
 	display: block
 }
-.box {
+.resource {
 	cursor: pointer
 }
-.box .panel-body {
+.resource .panel-body {
 	cursor: pointer;
 	max-height: 160px;
 	overflow: hidden
 }
-.map.box img {
+.map.resource img {
 	width: 120%;
 	margin-left: -10%;
 	margin-top: -50%
 }
-.box .panel-body:after {
+.resource .panel-body:after {
 	background-size: 100%;
 	background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #fff));
 	background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), #fff);
@@ -200,39 +190,39 @@ a:hover {
 	height: 70px;
 	pointer-events: none
 }
-.box .panel-body h1,
-.box .panel-body h2,
-.box .panel-body h3,
-.box.expand:not(.map) .panel-body:after {
+.resource .panel-body h1,
+.resource .panel-body h2,
+.resource .panel-body h3,
+.resource.expand:not(.map) .panel-body:after {
 	display: none
 }
-.box.box.expand .panel-body h1,
-.box.box.expand .panel-body h2,
-.box.expand .panel-body h3 {
+.resource.resource.expand .panel-body h1,
+.resource.resource.expand .panel-body h2,
+.resource.expand .panel-body h3 {
 	margin-top: 0;
 	display: block
 }
-.box.expand .panel-body {
+.resource.expand .panel-body {
 	height: auto!important;
 	max-height: none;
 	cursor: text
 }
-.box.expand.map .panel-body {
+.resource.expand.map .panel-body {
 	height: 150px !important;
 }
-.box.expand .panel-heading {
+.resource.expand .panel-heading {
 	cursor: pointer;
 	padding-right: 35px
 }
-.box.bc .head {
+.resource.bc .head {
 	clear: both;
 	padding-top: 15px;
 }
-.box.bc .head:first-child {
+.resource.bc .head:first-child {
 	padding-top: 0;
 }
-.box.bc .head,
-.box.bc .emphasis {
+.resource.bc .head,
+.resource.bc .emphasis {
 	font-weight: 700;
 	font-style: italic
 }
@@ -325,37 +315,32 @@ a:hover {
 	color: #C8C8C8;
 	cursor: pointer
 }
-.ui-autocomplete {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
+
+.search-results {
+	width: 100%;
 	box-sizing: border-box;
 	display: none;
-	padding: 5px 0;
+	padding: 5px 8px;
 	position: absolute;
 	background-color: #fff;
 	overflow-y: auto;
-	width: 200px;
-	margin: 5px 21px;
-	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-	-o-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
 	background-clip: padding-box;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
 	border-radius: 6px;
-	z-index: 20
+	z-index: 20;
+	text-align: left;
 }
-.ui-autocomplete li {
+.search-results ul {
+	padding-left: 0;
+	margin-bottom: 0;
+}
+.search-results li {
 	padding: 5px 20px;
 	overflow: hidden;
 	cursor: pointer
 }
-.ui-autocomplete li.ui-state-focus,
-.ui-autocomplete li:hover {
+.search-results li.selected,
+.search-results li:hover:not(.heading) {
 	color: #fff;
 	text-decoration: none;
 	background-color: #0081c2;
@@ -367,9 +352,16 @@ a:hover {
 	background-repeat: repeat-x;
 	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0)
 }
-.ui-helper-hidden-accessible {
-	display: none
+.search-results li a {
+	color: inherit !important;
 }
+
+.search-results li.heading {
+	opacity: .6;
+	padding-left: 0;
+	cursor: default;
+}
+
 .overlay {
 	position: fixed;
 	top: 0;
@@ -526,7 +518,7 @@ a:hover {
 		box-shadow: -1px 3px 6px 3px rgba(0,0,0,.1);
 	}
 }
-body.lexicon #resource_list > .box {
+body.lexicon #resource_list > .resource {
 	opacity: .4;
 }
 body.lexicon #verse a:not(.selected) {
@@ -624,10 +616,10 @@ section#lexicon h2 small {
 	font-size: 60%;
 	margin-left: 10px;
 }
-section#lexicon .box {
+section#lexicon .resource {
 	color: #555;
 }
-section#lexicon .box .panel-body {
+section#lexicon .resource .panel-body {
 	height: 90px;
 }
 section#lexicon a.load_more {
@@ -713,7 +705,7 @@ h2 {
 
 .panel-body li {
 	padding: 2px 0;
-	border-bottom: solid 1px #eee;
+	/*border-bottom: solid 1px #eee;*/
 	padding: 5px 0;
 }
 

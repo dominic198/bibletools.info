@@ -40,7 +40,7 @@ class Resources extends CI_Controller
 			);
 			
 			$resources = array(
-				"verse" => $this->kjvmodel->html_verse( $ref ) ,
+				"verse" => $this->kjvmodel->html_verse( $ref ),
 				"nav" => $this->kjvmodel->nav( $ref ),
 				"commentaries" => array_values( array_filter( $commentaries ) ),
 				"maps" => $this->mapmodel->get( $ref ),

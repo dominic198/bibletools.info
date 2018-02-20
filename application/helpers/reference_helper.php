@@ -18,7 +18,7 @@ if ( ! function_exists( "construct_reference" ) )
     	];
     }
     
-     function parseReferenceToText( $start, $end )
+     function parseReferenceToText( $start, $end = null )
     {
     	$start = [
     		"book" => getBook( + substr( $start, 0, 2 ) ),
@@ -60,6 +60,16 @@ if ( ! function_exists( "construct_reference" ) )
     	$books = getBookAbbreviationNumbers();
     	$book_number = $books[$array[0]];
     	return constructReference( $book_number, $array[1], $array[2] );
+    }
+    
+	function shortTextToNumber( $ref )
+    {
+    	$pieces = explode( "_", $ref );
+    	$book = $pieces[0];
+    	$chapter = explode( ".", $pieces[1] )[0];
+    	$verse = explode( ".", $pieces[1] )[1];
+    	$book_abbreviations = getBookAbbreviationNumbers();
+    	return constructReference( $book_abbreviations[$book], $chapter, $verse );
     }
     
     function getBooks()

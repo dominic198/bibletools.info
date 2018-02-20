@@ -29,6 +29,7 @@
 		<link href="/assets/css/answers.css" rel="stylesheet">
 		<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/assets/js/lib.js"></script>
+		<script type="text/javascript" src="/assets/js/custom.js"></script>
 	<?php } ?>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
@@ -84,13 +85,20 @@
 	</section>
 	<div id="headerwrap">
 	    <div class="container">
-	    	<div class="row centered">
+	    	<div class="row text-center">
 	    		<div class="col-lg-12">
 					<h1><b>BibleTools</b>.info</h1>
 					<h3>Bible Verse Explanations and Resources</h3>	
 					<form action="." id="search_form">			
 						<input id="search" autocomplete="off" placeholder="Search for a verse or question..."/>
 						<a class="fa fa-times-circle" id="clear"></a>
+						<div class="search-results">
+							<ul>
+								<li class="heading verse-heading">Verses</li>
+								<li class="heading">Questions</li>
+								<li><a href="/question/why-did-god-curse-israel-with-famine-for-3-5-years">Why did God curse Israel with famine for 3.5 years?</a></li>
+							</ul>
+						</div>
 					</form>
 					<br>
 	    		</div>
@@ -99,12 +107,6 @@
 	</div><!--/ #headerwrap -->
 	<div class="container main">
 		<?php echo $contents; ?>
-		<!--<div class="alert alert-warning" role="alert"><strong>Where are the SDA Bible Commentary and EGW comments gone?</strong>  Don't worry, we're working to bring you the best Bible study experience through a new official partnership.  More to come...</div>-->
-		<div id="c">
-			<div class="container">
-				<p>Created by <a href="http://rawcomposition.com">Adam Jackson</a> • <a href="/about" id="feedback">Feedback</a> • <a href="https://www.gofundme.com/bibletools" target="_blank">Donate</a></p>
-			</div>
-		</div>
 	</div>
 </body>
 </html>

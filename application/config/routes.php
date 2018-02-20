@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['question/(:any)'] = "question/index/$1";
+$route['verse/(:any)'] = "verse/index/$1";
 /*$route['default_controller'] = "app";
 $route['resources/get/(:any)'] = "resources/get/$1";
 $route['resources/(:any)'] = "resources/web/$1";
