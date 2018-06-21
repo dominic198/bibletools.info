@@ -1,5 +1,17 @@
 $(document).ready(function(){
 	
+	if( $( "#search" ).val() > 0 ) {
+		$( "#clear" ).show();
+	}
+	
+	$( ".navbar-toggler, .open-menu" ).click( function() {
+		openMenu();
+	});
+	
+	$( document ).on( "click", ".overlay.menu", function(e) {
+		closeMenu();
+	});
+	
 	$( document ).on( "click", ".resource", function(e) {
 		$(this).toggleClass( "expand" );
 	});
@@ -8,29 +20,30 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	function openVerse( raw_ref ) {
+		var ref = parseVerse( raw_ref );
+		saveRefHistory( getPrettyRef( ref) );
+		window.location.href = "/verse/" + ref[0] + "_" + ref[1] + "." + ref[2];
+	}
+	
 	$( "#search" ).on( "keyup change", function() {
 		value = $(this).val();
-		if( value.length > 1 ) {
-			$( ".search-results" ).show();
+		if( value.length > 1 && getBook( value.trim() ) == -1 ) {
+			$( ".search-results, #clear" ).show();
 			ref = parseVerse( value );
 			book_name = getBook( getBcvBook( ref[0] ) );
 			$( ".book-suggestion, .ref-suggestion" ).remove();
-			if( ref[0] == "" ) {
-				$( ".search-results .verse-heading" ).hide();
+			last_character = value.trim().substr(-1);
+			if( isNumber( last_character ) || last_character == ":" ) {
+				$( ".search-results .verse-heading" ).after( "<li class='ref-suggestion'>Go to <b>" + book_name + " " + ref[1] + ":" + ref[2] + "</b></li>" );
 			} else {
-				$( ".search-results .verse-heading" ).show();
-				last_character = value.trim().substr(-1);
-				if( isNumber( last_character ) || last_character == ":" ) {
-					$( ".search-results .verse-heading" ).after( "<li class='ref-suggestion'>Study <b>" + book_name + " " + ref[1] + ":" + ref[2] + "</b></li>" );
-				} else {
-					$( ".search-results .verse-heading" ).after( "<li class='book-suggestion'><b>" + book_name + "</b></li>" );
-				}
-				if( $( ".search-results .selected" ).length < 1 ) {
-					$( ".search-results li:not(.heading)" ).first().addClass( "selected" );
-				}
+				$( ".search-results .verse-heading" ).after( "<li class='book-suggestion'>" + book_name + "</li>" );
+			}
+			if( $( ".search-results .selected" ).length < 1 ) {
+				$( ".search-results li:not(.heading)" ).first().addClass( "selected" );
 			}
 		} else {
-			$( ".search-results" ).hide();
+			$( ".search-results, #clear" ).hide();
 		}
 	});
 	
@@ -41,7 +54,7 @@ $(document).ready(function(){
 	});
 	
 	$( "#search" ).blur( function() {
-		$( ".search-results" ).hide();
+		$( ".search-results" ).delay( 100 ).hide(0);
 	});
 	
 	$( "#search" ).keydown(function(e) {
@@ -63,17 +76,42 @@ $(document).ready(function(){
 			if( $selected.hasClass( "book-suggestion" ) ) {
 				$( "#search" ).val( $selected.text() + " " );
 			} else if( $selected.hasClass( "ref-suggestion" ) ) {
-				ref = parseVerse( $(this).val() );
-				window.location.href = "/verse/" + ref[0] + "_" + ref[1] + "." + ref[2];
-			} else {
-				alert( "question" );
+				openVerse( $(this).val() );
 			}
+		}
+	});
+	
+	$( document ).on( "mousedown", ".ref-suggestion", function() {
+		openVerse( $(this).text() );
+	});
+	
+	$( document ).on( "click", ".book-suggestion", function() {
+		$( "#search" ).val( $selected.text() + " " );
+		
+	});
+	
+	$( ".toggle-history" ).click( function() {
+		$( ".history-list" ).show();
+	});
+	
+	$( "#clear" ).click( function(e) {
+		$( "#search" ).val( "" ).focus();
+		$(this).hide();
+	});
+	
+	$( document ).mouseup( function (e) {
+		var container = $( "#search_form" );
+		
+		if ( ! container.is( e.target )
+			&& container.has( e.target ).length === 0 )
+		{
+			$( ".search-results" ).hide();
 		}
 	});
 	
 	//Global functions
 	
-	function parseVerse( ref ){
+	function parseVerse( ref ) {
 		ref = decodeURIComponent( ref );
 		ref = ref.replace( "_", " " );
 		var bcv = new bcv_parser;
@@ -86,6 +124,10 @@ $(document).ready(function(){
 		if( ! new_ref[2] ) { new_ref[2] = "1" }
 		
 		return new_ref;
+	}
+	
+	function getPrettyRef( ref ) {
+		return getBook( getBcvBook( ref[0] ) ) + " " + ref[1] + ":" + ref[2];
 	}
 	
 	function isNumber( n ) {
@@ -242,6 +284,49 @@ $(document).ready(function(){
 		} else {
 			return books.indexOf(book);
 		}
+	}
+	
+	function closeMenu(){
+		//$( "ul#history_list" ).removeClass( "open" );
+		$( ".overlay.menu" ).fadeOut( 160 ).remove();
+		$( "#menu" ).removeClass( "show" );
+	}
+	
+	function openMenu(){
+		$( "body" ).append( "<div class='overlay menu'></div>" )
+		$( ".overlay.menu" ).fadeIn( 160 );
+		$( "#menu" ).addClass( "show" );
+		updateHistoryLists();
+	}
+	
+	$( "#menu .history" ).click( function(){
+		$( "#menu .history-list" ).toggleClass( "open" );
+	});	
+	
+	$( ".history-toggle" ).click( function() {
+		updateHistoryLists();
+	});
+	
+	function saveRefHistory( ref ) {
+		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
+		if( ! ref_history ) {
+			ref_history = [];
+		}
+		if( ref_history[0] != ref ) {
+			ref_history.unshift( ref );
+			ref_history = ref_history.slice( 0, 10 );
+			localStorage.setItem( "history", JSON.stringify( ref_history ) );
+		}
+	}
+	
+	function updateHistoryLists() {
+		$history_list = $( ".history-list" );
+		$history_list.empty();
+		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
+		$.each( ref_history, function( i ) {
+			$li = $( "<li><a class='dropdown-item'>" + ref_history[i] + "</a></li>" );
+			$li.appendTo( $history_list );
+		});
 	}
 
 });

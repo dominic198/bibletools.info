@@ -130,12 +130,12 @@ class Kjvmodel extends CI_Model
 			$next = $this->db->query("SELECT * FROM kjv_verses LEFT JOIN kjv_books ON kjv_verses.book = kjv_books.id WHERE kjv_verses.id = $next_id")->row_array();
 			
 			if($prev) {
-				$book = $numeric ? $prev['id'] : $prev['book'];
-				$nav['prev'] = "$book {$prev['chapter']}:{$prev['verse']}";
+				$book = bookNumberToAbbreviation( $prev['id'] );
+				$nav['prev'] = "{$book}_{$prev['chapter']}.{$prev['verse']}";
 			}
 			if($next) {
-				$book = $numeric ? $next['id'] : $next['book'];
-				$nav['next'] = "$book {$next['chapter']}:{$next['verse']}";
+				$book = bookNumberToAbbreviation( $next['id'] );
+				$nav['next'] = "{$book}_{$next['chapter']}.{$next['verse']}";
 			}
 			
 			return $nav;

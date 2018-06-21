@@ -237,15 +237,15 @@ a:hover {
 	padding: 0;
 	position: absolute
 }
-#verse .panel-body {
+ .verse .panel-body {
 	position: relative;
 	min-height: 160px
 }
-#verse .panel-body a {
+ .verse .panel-body a {
 	font-weight: 300;
 	color: #555;
 }
-#verse .panel-body a:hover, #verse .panel-body a.selected {
+ .verse .panel-body a:hover,  .verse .panel-body a.selected {
 	color: #9B2D21;
 	font-weight: 400;
 }
@@ -267,31 +267,36 @@ a:hover {
 	cursor: pointer;
 	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2)
 }
-#verse .next,
-#verse .prev {
-	float: right;
-	color: #eee;
+.verse .panel-heading {
+	position: relative;
+}
+.verse .next,
+.verse .prev {
+	position: absolute;
+	top: 0;
+	color: inherit;
 	cursor: pointer;
 	line-height: 21px;
 	font-size: 30px;
-	opacity: .5
+	opacity: .5;
+	padding: 10px 15px;
 }
-#verse .prev {
-	float:left;
+.verse .prev {
+	left: 0;
 }
-#verse .next:hover,
-#verse .prev:hover {
+.verse .next {
+	right: 0;
+}
+.verse .next:hover,
+.verse .prev:hover {
 	opacity: 1
 }
-#verse .prev {
-	margin-right: 4px
-}
 
-#verse .panel-body span {
+.verse .panel-body span {
 	cursor: pointer;
 }
 
-#verse .panel-body span:hover {
+.verse .panel-body span:hover {
 	font-weight: bold;
 }
 
@@ -305,7 +310,8 @@ a:hover {
 	margin-left: -28px;
 	top: 46px;
 	color: #C8C8C8;
-	cursor: pointer
+	cursor: pointer;
+	display: none;
 }
 .open-menu {
 	font-size: 28px;
@@ -402,7 +408,7 @@ a:hover {
 	left: 0
 }
 #menu header {
-	background: #34495e
+	background: #469fd5
 }
 #menu header h3 {
 	color: #fff;
@@ -476,8 +482,9 @@ a:hover {
 		font-size: 26px
 	}
 	#headerwrap {
-		padding-top: 0;
-		border-bottom: none
+		padding-top: 15px;
+		border-bottom: none;
+		background: rgba(35, 101, 140, 0.9);
 	}
 	#headerwrap h1 {
 		font-size: 40px
@@ -487,6 +494,9 @@ a:hover {
 	}
 	#headerwrap .Tokenize {
 		width: 100%
+	}
+	.nav-main {
+		display: none;
 	}
 }
 @media only screen and (max-width: 400px) {
@@ -504,10 +514,6 @@ a:hover {
 		background-color: rgba(255,255,255,.5);
 		opacity: 0;
 		content: "";
-		-webkit-transition: height 0s, opacity 300ms ease;
-		-moz-transition: height 0s, opacity 300ms ease;
-		-ms-transition: height 0s, opacity 300ms ease;
-		-o-transition: height 0s, opacity 300ms ease;
 		transition: height 0s, opacity 300ms ease;
 	}
 	body.lexicon #headerwrap::after {
@@ -517,11 +523,14 @@ a:hover {
 	#lexicon {
 		box-shadow: -1px 3px 6px 3px rgba(0,0,0,.1);
 	}
+	.open-menu {
+		display: none;
+	}
 }
 body.lexicon #resource_list > .resource {
 	opacity: .4;
 }
-body.lexicon #verse a:not(.selected) {
+body.lexicon  .verse a:not(.selected) {
 	opacity: .4;
 }
 body.lexicon #headerwrap {
@@ -737,4 +746,7 @@ h2 {
 }
 .question-list li {
 	border-bottom: none;
+}
+.history-toggle:after {
+	display: none !important;
 }

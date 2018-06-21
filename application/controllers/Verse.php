@@ -13,10 +13,13 @@ class Verse extends CI_Controller
 	function index()
 	{
 		$ref = $this->uri->segment(2);
+		$short_ref = $ref;
 		$ref = shortTextToNumber( $ref );
 		if( ! $ref ) show_404();
 		$data["verse"] = $this->kjvmodel->html_verse( $ref );
 		$data["text_ref"] = parseReferenceToText( $ref );
+		$data["short_ref"] = $short_ref;
+		$data["navigation"] = $this->kjvmodel->nav( $ref );
 		$data["resources"] = $this->resourcemodel->get( $ref );
 		$this->template->load( "template", "verse", $data );
 	}
