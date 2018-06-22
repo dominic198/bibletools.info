@@ -23,7 +23,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = ENVIRONMENT == "production" ? 'https://bibletools.info' : 'http://bibletools.local';
+
+if( ENVIRONMENT == "production" ) {
+	$config['base_url'] = "https://bibletools.info";
+} elseif( ENVIRONMENT == "beta" ) {
+	$config['base_url'] = "http://beta.bibletools.info";
+} else {
+	$config['base_url'] = "http://bibletools.local";
+}
 
 /*
 |--------------------------------------------------------------------------
