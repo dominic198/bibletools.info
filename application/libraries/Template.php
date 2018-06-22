@@ -16,6 +16,7 @@ class Template {
 		if ( $ci->ion_auth->logged_in() ) {
 			$view_data["is_admin"] = true;
 		}
+		$view_data["history"] = $_SESSION["history"];
 		$this->CI =& get_instance();
 		$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));			
 		return $this->CI->load->view($template, $this->template_data, $return);

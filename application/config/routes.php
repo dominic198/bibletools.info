@@ -49,21 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+$route['default_controller'] = "verse/index";
 $route['question/(:any)'] = "question/index/$1";
-$route['verse/(:any)'] = "verse/index/$1";
-/*$route['default_controller'] = "app";
-$route['resources/get/(:any)'] = "resources/get/$1";
-$route['resources/(:any)'] = "resources/web/$1";
-$route['bc/(:any)'] = "bc/$1";
-$route['map/(:any)'] = "map/$1";
-$route['sdabc/(:any)'] = "sdabc/$1";
-$route['acbc/(:any)'] = "acbc/$1";
-$route['egw/(:any)'] = "egw/$1";
-$route['about/(:any)'] = "app/$1";
-$route['run/(:any)'] = "run/$1";
-$route['uriahsmith/(:any)'] = "uriahsmith/$1";
-$route['studylight/(:any)'] = "studylight/$1";
-$route['admin/login/(:any)'] = "admin/login/$1";
-$route['questions/(:any)'] = "questions/index/$1";
-$route['question/(:any)'] = "question/index/$1";
-/$route['(:any)'] = "app/index";*/
+$route['questions'] = "questions/index";
+$route['(:any)'] = "verse/index";

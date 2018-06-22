@@ -13,6 +13,7 @@ class Questions extends CI_Controller
 		$data["formatted_questions"] = $this->questionmodel->getFormatted();
 		$data["popular_questions"] = $this->questionmodel->getPopular();
 		$data["recent_questions"] = $this->questionmodel->getRecent();
+		$data["active_tab"] = "questions";
 		$this->template->load( "template", "questions", $data );
 	}
 }

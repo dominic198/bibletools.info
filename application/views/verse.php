@@ -3,7 +3,7 @@
 	<div class="col-sm-8">
 		<div class="panel panel-modern verse" data-short-ref="<?php echo $short_ref; ?>" data-ref="<?php echo $text_ref; ?>">
 			<div class="panel-heading text-center">
-				<?php echo $text_ref; ?><a href="/verse/<?php echo $navigation["next"]; ?>" title="Next Verse" class="fa fa-caret-right next"></a><a href="/verse/<?php echo $navigation["prev"]; ?>" title="Previous Verse" class="fa fa-caret-left prev"></a>
+				<?php echo $text_ref; ?><a href="/<?php echo $navigation["next"]; ?>" title="Next Verse" class="fa fa-caret-right next"></a><a href="/<?php echo $navigation["prev"]; ?>" title="Previous Verse" class="fa fa-caret-left prev"></a>
 			</div>
 			<div class="panel-body"><?php echo $verse; ?></div>
 		</div><!--/ .panel -->

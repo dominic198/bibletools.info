@@ -254,6 +254,18 @@ class Run extends CI_Controller
 		return $url;
 	}
 	
+	function get_page_chunk( $url )
+	{
+		$ch = curl_init( $url );
+		curl_setopt( $ch, CURLOPT_POST, 1 );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, "type=chunk" );
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			"x-requested-with: XMLHttpRequest",
+		));
+		return curl_exec( $ch );
+	}
+	
 	function merge_resources()
 	{
 		$sql = 'SELECT * FROM sdabc';
@@ -355,6 +367,49 @@ class Run extends CI_Controller
 			} else {
 				$data["failed"] = 1;
 			}
+			$this->db->insert( "egw_quotes_new", $data );
+			unset( $data );
+		}
+	}
+	
+	function pull_egw_page_quotes()
+	{
+		$sql = 'SELECT scripture_index.* FROM scripture_index LEFT JOIN egw_quotes_new quotes ON scripture_index.reference = quotes.reference WHERE scripture_index.reference NOT LIKE "%.%" AND quotes.id IS NULL';
+		$query = $this->db->query($sql);
+		$references = $query->result_array();
+		foreach( $references as $item ) {
+			$ref = $item["reference"];
+			$url_part = $item["href"];
+			
+			$exists_query = $this->db->query( "SELECT id FROM egw_quotes_new WHERE reference = '$ref'" );
+			//die($ref);
+			if( $exists_query->num_rows() > 0 ) continue;
+			
+			$html = $this->get_page_chunk( "https://m.egwwritings.org$url_part" );
+			
+			$html = $this->domparser->str_get_html( $html );
+			$paragraphs = $html->find( "p.egw_content_wrapper" );
+			
+			$h3 = $html->find( "h3", 0 );
+			
+			$data = [
+				"reference" => $ref,
+			];
+			
+			if( $h3 ) {
+				$data["chapter_title"] = trim( html_entity_decode( $h3->plaintext ) );
+			}
+			
+			if( count( $paragraphs ) > 0 ) {
+				$content = "";
+				foreach( $paragraphs as $p ) {
+					$content .= $p;
+				}
+				$data["content"] = trim( $content );
+			} else {
+				$data["failed"] = 1;
+			}
+			
 			$this->db->insert( "egw_quotes_new", $data );
 			unset( $data );
 		}

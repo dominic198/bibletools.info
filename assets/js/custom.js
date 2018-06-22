@@ -23,7 +23,7 @@ $(document).ready(function(){
 	function openVerse( raw_ref ) {
 		var ref = parseVerse( raw_ref );
 		saveRefHistory( getPrettyRef( ref) );
-		window.location.href = "/verse/" + ref[0] + "_" + ref[1] + "." + ref[2];
+		window.location.href = "/" + ref[0] + "_" + ref[1] + "." + ref[2];
 	}
 	
 	$( "#search" ).on( "keyup change", function() {
@@ -296,37 +296,10 @@ $(document).ready(function(){
 		$( "body" ).append( "<div class='overlay menu'></div>" )
 		$( ".overlay.menu" ).fadeIn( 160 );
 		$( "#menu" ).addClass( "show" );
-		updateHistoryLists();
 	}
 	
 	$( "#menu .history" ).click( function(){
 		$( "#menu .history-list" ).toggleClass( "open" );
 	});	
-	
-	$( ".history-toggle" ).click( function() {
-		updateHistoryLists();
-	});
-	
-	function saveRefHistory( ref ) {
-		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
-		if( ! ref_history ) {
-			ref_history = [];
-		}
-		if( ref_history[0] != ref ) {
-			ref_history.unshift( ref );
-			ref_history = ref_history.slice( 0, 10 );
-			localStorage.setItem( "history", JSON.stringify( ref_history ) );
-		}
-	}
-	
-	function updateHistoryLists() {
-		$history_list = $( ".history-list" );
-		$history_list.empty();
-		var ref_history = JSON.parse( localStorage.getItem( "history" ) );
-		$.each( ref_history, function( i ) {
-			$li = $( "<li><a class='dropdown-item'>" + ref_history[i] + "</a></li>" );
-			$li.appendTo( $history_list );
-		});
-	}
 
 });
