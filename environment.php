@@ -6,7 +6,7 @@ if( ! defined( "ENVIRONMENT" ) ) {
 			define( "ENVIRONMENT", "production" );
 			break;
 		case "beta.bibletools.info":
-			define( "ENVIRONMENT", "beta" );
+			define( "ENVIRONMENT", "testing" );
 			break;
 		default :
 			define( "ENVIRONMENT", "development" );
