@@ -22,7 +22,6 @@ $(document).ready(function(){
 	
 	function openVerse( raw_ref ) {
 		var ref = parseVerse( raw_ref );
-		saveRefHistory( getPrettyRef( ref) );
 		window.location.href = "/" + ref[0] + "_" + ref[1] + "." + ref[2];
 	}
 	

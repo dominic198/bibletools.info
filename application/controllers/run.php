@@ -372,20 +372,21 @@ class Run extends CI_Controller
 		}
 	}
 	
-	function pull_egw_page_quotes()
+	function fix_egw_failed_quotes()
 	{
-		$sql = 'SELECT scripture_index.* FROM scripture_index LEFT JOIN egw_quotes_new quotes ON scripture_index.reference = quotes.reference WHERE scripture_index.reference NOT LIKE "%.%" AND quotes.id IS NULL';
+		$sql = 'SELECT scripture_index.* FROM scripture_index LEFT JOIN egw_quotes quotes ON scripture_index.reference = quotes.reference WHERE scripture_index.reference NOT LIKE "%.%" AND quotes.content = ""';
 		$query = $this->db->query($sql);
 		$references = $query->result_array();
 		foreach( $references as $item ) {
 			$ref = $item["reference"];
+			die($ref);
 			$url_part = $item["href"];
 			
-			$exists_query = $this->db->query( "SELECT id FROM egw_quotes_new WHERE reference = '$ref'" );
-			//die($ref);
-			if( $exists_query->num_rows() > 0 ) continue;
+			$failed_query = $this->db->query( "SELECT id FROM egw_quotes WHERE reference = '$ref' AND failed = 1" );
+			if( ! $failed_query->num_rows() > 0 ) continue;
 			
 			$html = $this->get_page_chunk( "https://m.egwwritings.org$url_part" );
+			echo $html;die;
 			
 			$html = $this->domparser->str_get_html( $html );
 			$paragraphs = $html->find( "p.egw_content_wrapper" );
@@ -471,5 +472,23 @@ class Run extends CI_Controller
 			$this->db->where( "id", $item["id"] );
 			$this->db->update('abundance');
 		}
+	}
+	
+	function create_egw_info()
+	{
+		$query = $this->db->query( "SELECT * FROM resources WHERE reference != '' AND info_id IS NULL" );
+		$items = $query->result_array();
+		foreach( $items as $item ) {
+			$code = explode( " ", $item["reference"] );
+			$code = $code[0];
+			$info = $this->db->query( "SELECT id FROM resource_info WHERE code = '$code'" );
+			$info = $info->row_array();
+			if( array_key_exists( "id", $info ) ) {
+				$this->db->set( "info_id", $info["id"], FALSE );
+				$this->db->where( "id", $item["id"] );
+				$this->db->update('resources');
+			}
+		}
+		
 	}
 }

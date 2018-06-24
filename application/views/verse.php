@@ -13,7 +13,7 @@
 					<img src="/assets/img/authors/<?php echo $resource["logo"]; ?>.png"/>
 					<div class="resource-info">
 						<strong><?php echo $resource["author"]; ?></strong><br/>
-						<small><?php echo $resource["name"]; ?></small>
+						<small><?php echo $resource["name"]; echo $resource["page_ref"] ? ", page " . $resource["page_ref"] : ""; ?></small>
 					</div>
 				</div>
 				<div class="panel-body"><?php echo $resource["content"]; ?></div>
