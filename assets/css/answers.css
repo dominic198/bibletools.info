@@ -43,7 +43,9 @@ a:hover {
 	text-decoration: none;
 	outline: 0
 }
-
+.hidden {
+	display: none;
+}
 .btn-primary {
 	background-color: #77c04b;
 	box-shadow: inset 0 -3px 0 rgba(0,0,0,.1);
@@ -270,26 +272,25 @@ a:hover {
 .verse .panel-heading {
 	position: relative;
 }
-.verse .next,
-.verse .prev {
-	position: absolute;
-	top: 0;
-	color: inherit;
+.next-verse,
+.prev-verse {
+	color: inherit !important;
 	cursor: pointer;
 	line-height: 21px;
-	font-size: 30px;
-	opacity: .5;
-	padding: 10px 15px;
+	font-size: 50px;
+	opacity: .2;
+	padding: 10px 0;
 }
-.verse .prev {
-	left: 0;
+.prev-verse {
+	float: left;
 }
-.verse .next {
-	right: 0;
+.next-verse {
+	float: right;
 }
-.verse .next:hover,
-.verse .prev:hover {
-	opacity: 1
+.next-verse:hover,
+.prev-verse:hover {
+	opacity: .8;
+	color: inherit;
 }
 
 .verse .panel-body span {
@@ -749,4 +750,39 @@ h2 {
 }
 .history-toggle:after {
 	display: none !important;
+}
+
+@keyframes blink {
+    0% {
+      opacity: .2;
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      opacity: .2;
+    }
+}
+
+.loading-animation {
+	display: block;
+	text-align: center;
+	margin-top: 40px;
+	opacity: .3;
+	font-size: 22px;
+}
+
+.loading-animation b {
+    animation-name: blink;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+}
+
+.loading-animation b:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.loading-animation b:nth-child(3) {
+    animation-delay: .4s;
 }

@@ -9,15 +9,16 @@ class Resources extends CI_Controller
 		$this->load->helper( "url" );
 		$this->load->helper( "reference" );
 		$this->load->model( "kjvmodel" );
-		$this->load->model( "egwmodel" );
-		$this->load->model( "commentarymodel" );
-		$this->load->model( "mapmodel" );
+		$this->load->model( "resourcemodel" );
+		$this->load->helper( "history" );
 	}
 	
-	function web()
+	function json()
 	{
-		$ref = $this->uri->segment(2);
-		$word = $this->uri->segment(3);
+		$ref = $this->uri->segment(3);
+		$short_ref = $ref;
+		$word = $this->uri->segment(4);
+		$ref = shortTextToNumber( $ref );
 		
 		if( $word ) {
 			$strongs = $this->kjvmodel->lexicon( $ref, $word );
@@ -30,23 +31,13 @@ class Resources extends CI_Controller
 			);
 			$this->output->set_output( json_encode( $resources ) );
 		} else {
-			$commentaries = array(
-				/*$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),*/
-				$this->commentarymodel->get( $ref, "dar", "Uriah Smith: Daniel and Revelation" ),
-				$this->commentarymodel->get( $ref, "barnes", "Albert Barnes Bible Commentary", true ),
-				$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
-				$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
-				$this->commentarymodel->get( $ref, "tsk", "Cross References" ),
-			);
-			
 			$resources = array(
+				"resources" => $this->resourcemodel->get( $ref ),
 				"verse" => $this->kjvmodel->html_verse( $ref ),
+				"text_ref" => parseReferenceToText( $ref ),
 				"nav" => $this->kjvmodel->nav( $ref ),
-				"commentaries" => array_values( array_filter( $commentaries ) ),
-				"maps" => $this->mapmodel->get( $ref ),
-				"egw" => $this->egwmodel->verse_references( $ref, 10, 0 ),
 			);
-			
+			saveLastVerse( $short_ref );
 			$this->output->set_output( json_encode( $resources ) );
 		}
 	}

@@ -108,6 +108,29 @@ $(document).ready(function(){
 		}
 	});
 	
+	function loadVerse( ref ){
+		$( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
+		window.history.pushState( ref, null, ref );
+		$.getJSON( "/resources/json/" + ref, function( data ) {
+			$( ".verse .panel-body" ).html( data.verse );
+			$( ".next-verse" ).attr( "href", "/" + data.nav.next );
+			$( ".prev-verse" ).attr( "href", "/" + data.nav.prev );
+			$( ".prev-verse" ).toggleClass( "hidden", data.nav.prev == false );
+			$( ".next-verse" ).toggleClass( "hidden", data.nav.next == false );
+			$( "h2 .text-ref" ).text( data.text_ref );
+			$( "#resource_list .resource" ).remove();
+			$.each( data.resources, function( index, resource ) {
+				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><img src="/assets/img/authors/' + resource.logo + '.png"><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
+			});
+		});
+	}
+	
+	$( ".next-verse, .prev-verse" ).click( function(e) {
+		e.preventDefault();
+		ref = $(this).attr( "href" ).substring(1);
+		loadVerse( ref );
+	});
+	
 	//Global functions
 	
 	function parseVerse( ref ) {

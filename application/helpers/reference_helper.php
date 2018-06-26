@@ -76,7 +76,7 @@ if ( ! function_exists( "construct_reference" ) )
     
     function bookNumberToAbbreviation( $number )
     {
-    	return array_flip( getBookAbbreviationNumbers() )[$number];
+    	return $number ? array_flip( getBookAbbreviationNumbers() )[$number] : false;
     }
     
     function getBooks()
