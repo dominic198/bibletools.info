@@ -8,6 +8,10 @@ $(document).ready(function(){
 		openMenu();
 	});
 	
+	$( ".map .panel-body a" ).magnificPopup( {
+		type: "image"
+	});
+	
 	$( document ).on( "click", ".overlay.menu", function(e) {
 		closeMenu();
 	});
@@ -20,9 +24,38 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	function openVerse( raw_ref ) {
-		var ref = parseVerse( raw_ref );
-		window.location.href = "/" + ref[0] + "_" + ref[1] + "." + ref[2];
+	function loadVerse( ref ){
+		$( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
+		$( "#search" ).blur();
+		closeMenu();
+		window.history.pushState( ref, null, ref );
+		$.getJSON( "/resources/json/" + ref, function( data ) {
+			$( ".verse .panel-body" ).html( data.verse );
+			$( ".next-verse" ).attr( "href", "/" + data.nav.next );
+			$( ".prev-verse" ).attr( "href", "/" + data.nav.prev );
+			$( ".prev-verse" ).toggleClass( "hidden", data.nav.prev == false );
+			$( ".next-verse" ).toggleClass( "hidden", data.nav.next == false );
+			$( "h2 .text-ref" ).text( data.text_ref );
+			$( "#resource_list .resource" ).remove();
+			$.each( data.main_resources, function( index, resource ) {
+				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><img src="/assets/img/authors/' + resource.logo + '.png"><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
+			});
+			$.each( data.sidebar_resources, function( index, resource ) {
+				$( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.name + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
+			});
+			$( ".map .panel-body a" ).magnificPopup( {
+				type: "image"
+			});
+			$( ".history-list" ).prepend( '<li><a href="/' + ref + '" class="dropdown-item ref-link">' + data.text_ref + '</a></li>' );
+			$( ".history-list" ).each(function( index ) {
+				$(this).find( "li" ).last().remove();
+			});
+		});
+	}
+	
+	function OpenTextRef( text_ref ) {
+		var ref = parseVerse( text_ref );
+		loadVerse( ref[0] + "_" + ref[1] + "." + ref[2] );
 	}
 	
 	$( "#search" ).on( "keyup change", function() {
@@ -75,13 +108,13 @@ $(document).ready(function(){
 			if( $selected.hasClass( "book-suggestion" ) ) {
 				$( "#search" ).val( $selected.text() + " " );
 			} else if( $selected.hasClass( "ref-suggestion" ) ) {
-				openVerse( $(this).val() );
+				OpenTextRef( $(this).val() );
 			}
 		}
 	});
 	
 	$( document ).on( "mousedown", ".ref-suggestion", function() {
-		openVerse( $(this).text() );
+		OpenTextRef( $(this).text() );
 	});
 	
 	$( document ).on( "click", ".book-suggestion", function() {
@@ -108,27 +141,67 @@ $(document).ready(function(){
 		}
 	});
 	
-	function loadVerse( ref ){
-		$( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
-		window.history.pushState( ref, null, ref );
-		$.getJSON( "/resources/json/" + ref, function( data ) {
-			$( ".verse .panel-body" ).html( data.verse );
-			$( ".next-verse" ).attr( "href", "/" + data.nav.next );
-			$( ".prev-verse" ).attr( "href", "/" + data.nav.prev );
-			$( ".prev-verse" ).toggleClass( "hidden", data.nav.prev == false );
-			$( ".next-verse" ).toggleClass( "hidden", data.nav.next == false );
-			$( "h2 .text-ref" ).text( data.text_ref );
-			$( "#resource_list .resource" ).remove();
-			$.each( data.resources, function( index, resource ) {
-				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><img src="/assets/img/authors/' + resource.logo + '.png"><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
-			});
-		});
-	}
-	
-	$( ".next-verse, .prev-verse" ).click( function(e) {
+	$( document ).on( "click", ".ref-link", function(e) {
 		e.preventDefault();
 		ref = $(this).attr( "href" ).substring(1);
 		loadVerse( ref );
+	});
+	
+	$( document ).on( "click", ".verse .panel-body a", function(e) {
+		
+		clearLexicon();
+		
+		$lexicon = $( "#lexicon" );
+		$verse = $( ".verse" );
+		$word = $(this);
+		
+		$word.addClass( "selected" );
+		$( "body" ).addClass( "no_scroll" );
+		if( ! $lexicon.hasClass( "visible" ) ) {
+			$lexicon.addClass( "visible" );
+			$( "body" ).addClass( "lexicon");
+		}
+		verse = $verse.attr( "data-short-ref" );
+		word_id = $word.attr( "id" );
+		
+		$.getJSON( "/resources/json/" + verse + "/" + word_id, function( data ) {
+			$( "#lexicon .definition" ).empty();
+			$( '<h2>' + data.strongs.word + '<small>' + data.strongs.pronun.dic + '</small></h2><p class="short">' + data.strongs.data.def.short + '</p><div class="long">' + data.strongs.data.def.html + '</div><div class="resources"></div>' ).appendTo( "#lexicon .definition" );
+			$.each( data.resources, function( index, resource ) {
+				$( '<div class="row"><div class="col-sm-12 resource"><div class="panel panel-modern"><div class="panel-heading"><strong>' + resource.title + '</strong></div><div class="panel-body">' + resource.content + '</div></div></div></div>' ).appendTo( "#lexicon .resources" );
+			});
+			data.strongs.connected_words.forEach( function( word ) {
+				$( ".verse #" + word.id ).addClass( "selected" );
+			});
+		});
+		
+	});
+	
+	$( "#lexicon .close" ).click(function() {
+		clearLexicon();
+	});
+	
+	function clearLexicon() {
+		$( "#lexicon" ).removeClass( "visible" ).find( ".definition" ).text( "Loading..." ).find( ".resources" ).empty();
+		$( "body" ).removeClass( "lexicon no_scroll" ).focus();
+		$( ".verse a.selected" ).removeClass( "selected" );
+	}
+	
+	$( document ).mouseup( function (e) {
+		var container = $( "#lexicon" );
+		
+		if ( ! container.is( e.target )
+			&& container.has( e.target ).length === 0
+			&& container.hasClass( "visible" ) )
+		{
+			clearLexicon();
+		}
+	});
+	
+	$( document ).on( "click", ".expand ul.occurances li", function(e) {
+		ref = $(this).find( "strong" ).text();
+		getVerse( ref );
+		clearLexicon();
 	});
 	
 	//Global functions
@@ -309,7 +382,7 @@ $(document).ready(function(){
 	}
 	
 	function closeMenu(){
-		//$( "ul#history_list" ).removeClass( "open" );
+		$( ".history-list" ).removeClass( "open" );
 		$( ".overlay.menu" ).fadeOut( 160 ).remove();
 		$( "#menu" ).removeClass( "show" );
 	}

@@ -12,7 +12,16 @@ class Mapmodel extends CI_Model
 	{
 		if( is_numeric( $ref ) ) {
 			$query = "SELECT maps.filename, maps.title FROM map_reference as ref LEFT JOIN maps ON ref.map_id = maps.id WHERE ref.end >= $ref AND ref.start <= $ref";
-		    return $this->db->query( $query )->result_array();
+			$maps = $this->db->query( $query )->result_array();
+			$array = [];
+			foreach( $maps as $map ) {
+				$array[] = [
+					"name" => $map["title"],
+					"class" => "map",
+					"content" => "<a href='/assets/img/maps/{$map["filename"]}'><img src='/assets/img/maps/{$map["filename"]}'/></a>",
+				];
+			}
+			return $array;
 		}
 	}
 }

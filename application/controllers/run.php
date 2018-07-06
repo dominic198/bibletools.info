@@ -442,6 +442,32 @@ class Run extends CI_Controller
 		libxml_use_internal_errors( $previous_use_internal_errors );
 	}
 	
+	function convert_span_to_b()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE \'%<span class="head">%\'';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$spans = $xpath->query( "//span[@class = 'head']" );
+
+			foreach( $spans as $span ) {
+				$phrase = $span->nodeValue;
+				$b = $doc->createElement( "b", $phrase );
+				$span->parentNode->replaceChild( $b, $span );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
 	function fix_egw_refs()
 	{
 		$sql = 'SELECT * FROM scripture_index';

@@ -10,6 +10,7 @@ class Resources extends CI_Controller
 		$this->load->helper( "reference" );
 		$this->load->model( "kjvmodel" );
 		$this->load->model( "resourcemodel" );
+		$this->load->model( "mapmodel" );
 		$this->load->helper( "history" );
 	}
 	
@@ -32,7 +33,11 @@ class Resources extends CI_Controller
 			$this->output->set_output( json_encode( $resources ) );
 		} else {
 			$resources = array(
-				"resources" => $this->resourcemodel->get( $ref ),
+				"main_resources" => $this->resourcemodel->getMain( $ref ),
+				"sidebar_resources" => array_filter( array_merge(
+					[ $this->kjvmodel->getCrossReferences( $ref ) ],
+					$this->mapmodel->get( $ref )
+				) ),
 				"verse" => $this->kjvmodel->html_verse( $ref ),
 				"text_ref" => parseReferenceToText( $ref ),
 				"nav" => $this->kjvmodel->nav( $ref ),

@@ -8,7 +8,7 @@ class Resourcemodel extends CI_Model
 		$this->load->database();
 	}
 
-	function get( $ref )
+	function getMain( $ref )
 	{
 		if( is_numeric( $ref ) ) {
 			$resources = $this->db->query( "SELECT *, coalesce(egw_quotes.content, resources.content) as content FROM resources LEFT JOIN resource_info ON resources.info_id = resource_info.id  LEFT JOIN egw_quotes ON resources.reference = egw_quotes.reference WHERE end >= $ref AND start <= $ref OR start = $ref" )

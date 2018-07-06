@@ -137,4 +137,17 @@ class Kjvmodel extends CI_Model
 			return $nav;
 		}
 	}
+	
+	function getCrossReferences( $ref )
+	{
+		if( is_numeric( $ref ) ) {
+			$query = "SELECT content FROM tsk WHERE start = $ref LIMIT 1";
+			$result = $this->db->query( $query )->row_array();
+			return $result ? [
+				"name" => "Cross References",
+				"class" => "tsk-panel",
+				"content" => $result["content"] ?? "",
+			] : false;
+		}
+	}
 }
