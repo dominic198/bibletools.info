@@ -17,6 +17,7 @@ class Question extends CI_Controller
 		$data["verses"] = $this->questionmodel->getVerses( $data["id"] );
 		$data["related_questions"] = $this->questionmodel->getRelated( $data["id"], $data["category_id"] );
 		$data["active_tab"] = "questions";
+		$this->template->set( "title", $data["title"] );
 		$this->template->load( "template", "question", $data );
 	}
 }

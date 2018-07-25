@@ -23,6 +23,7 @@ class Verse extends CI_Controller
 			redirect( "/Matt_1.1" );
 		}
 		$short_ref = $ref;
+		saveLastVerse( $short_ref );
 		$ref = shortTextToNumber( $ref );
 		$data["verse"] = $this->kjvmodel->html_verse( $ref );
 		if( ! $data["verse"] ) show_404();
@@ -35,7 +36,7 @@ class Verse extends CI_Controller
 			$this->mapmodel->get( $ref )
 		) );
 		$data["active_tab"] = "verses";
+		$this->template->set( "title", $data["text_ref"] );
 		$this->template->load( "template", "verse", $data );
-		saveLastVerse( $short_ref );
 	}
 }

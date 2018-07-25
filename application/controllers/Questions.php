@@ -14,6 +14,7 @@ class Questions extends CI_Controller
 		$data["popular_questions"] = $this->questionmodel->getPopular();
 		$data["recent_questions"] = $this->questionmodel->getRecent();
 		$data["active_tab"] = "questions";
+		$this->template->set( "title", "Questions" );
 		$this->template->load( "template", "questions", $data );
 	}
 }

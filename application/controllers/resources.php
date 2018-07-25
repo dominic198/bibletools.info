@@ -16,12 +16,13 @@ class Resources extends CI_Controller
 	
 	function json()
 	{
-		$ref = $this->uri->segment(3);
+		$segment = $this->uri->segment(3);
+		$ref = $segment == "query" ? parseTextToShort( urldecode( $this->uri->segment(4) ) ) : $segment;
 		$short_ref = $ref;
 		$word = $this->uri->segment(4);
 		$ref = shortTextToNumber( $ref );
 		
-		if( $word ) {
+		if( $segment != "query" && $word ) {
 			$strongs = $this->kjvmodel->lexicon( $ref, $word );
 			$resources = array(
 				"strongs" => $strongs,
@@ -40,6 +41,7 @@ class Resources extends CI_Controller
 				) ),
 				"verse" => $this->kjvmodel->html_verse( $ref ),
 				"text_ref" => parseReferenceToText( $ref ),
+				"short_ref" => $short_ref,
 				"nav" => $this->kjvmodel->nav( $ref ),
 			);
 			saveLastVerse( $short_ref );

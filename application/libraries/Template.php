@@ -16,9 +16,12 @@ class Template {
 		if ( $ci->ion_auth->logged_in() ) {
 			$view_data["is_admin"] = true;
 		}
-		$view_data["history"] = array_key_exists( "history", $_SESSION ) ? $_SESSION["history"] : [] ;
+		$view_data["history"] = array_key_exists( "history", $_SESSION ) ? $_SESSION["history"] : [];
+		//print_r($_SESSION);die;
 		$this->CI =& get_instance();
-		$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));			
+		$this->set('contents', $this->CI->load->view($view, $view_data, TRUE));	
+		$data = $this->template_data;
+		$this->set( "title", array_key_exists( "title", $data ) ? $data["title"] . " – BibleTools.info" : "BibleTools.info" );
 		return $this->CI->load->view($template, $this->template_data, $return);
 	}
 }

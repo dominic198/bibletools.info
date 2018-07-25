@@ -12,7 +12,7 @@
 		<?php foreach( $main_resources as $resource ) { ?>
     		<div class="panel panel-modern resource">
 				<div class="panel-heading">
-					<img src="/assets/img/authors/<?php echo $resource["logo"]; ?>.png"/>
+					<div class="author-icon <?php echo $resource["logo"]; ?>"></div>
 					<div class="resource-info">
 						<strong><?php echo $resource["author"]; ?></strong><br/>
 						<small><?php echo $resource["source"]; ?></small>

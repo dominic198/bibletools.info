@@ -15,13 +15,13 @@
   	<link rel="apple-touch-icon" sizes="152x152" href="/assets/img/icons/Icon-76@2x.png" />
   	<link rel="apple-touch-icon" sizes="58x58" href="/assets/img/icons/Icon-Small@2x.png" />
 	
-	<title>BibleTools.info</title>
+	<title><?php echo $title ?></title>
 	
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
 		<link href="assets/app.min.css?v=1.6" rel="stylesheet">
@@ -29,7 +29,6 @@
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
 		<link href="/assets/css/answers.css" rel="stylesheet">
-		<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/assets/js/lib.js"></script>
 		<script type="text/javascript" src="/assets/js/custom.js"></script>
 	<?php } ?>
@@ -63,11 +62,11 @@
 			<a class="navbar-brand" href="/">BibleTools.info</a>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item <?php if( isset( $active_tab ) && $active_tab == "questions" ) { echo "active"; } ?>">
-						<a class="nav-link" href="/questions">Questions</a>
-					</li>
 					<li class="nav-item <?php if( isset( $active_tab ) && $active_tab == "verses" ) { echo "active"; } ?>">
 						<a class="nav-link" href="/">Verses</a>
+					</li>
+					<li class="nav-item <?php if( isset( $active_tab ) && $active_tab == "about" ) { echo "active"; } ?>">
+						<a class="nav-link" href="/about/info">About</a>
 					</li>
 					<li class="nav-item">
 						<div class="dropdown">

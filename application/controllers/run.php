@@ -418,26 +418,185 @@ class Run extends CI_Controller
 	
 	function ref_to_href()
 	{
-		$sql = 'SELECT * FROM resources WHERE content LIKE "%bible-kjv%" LIMIT 1';
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%scriptRef%"';
 		$query = $this->db->query($sql);
-		$resources = $query->result_array();
-		//print_r($resources);die;
+		$items = $query->result_array();
 		$previous_use_internal_errors = libxml_use_internal_errors( true );
-		foreach( $resources as $item ) {
+		foreach( $items as $item ) {
 			$doc = new DOMDocument( "1.0", "UTF-8" );
-			$doc->loadHTML($item['content']);
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 			$xpath = new DOMXPath($doc);
+			$spans = $xpath->query( "//span[@class = 'scriptRef']" );
 
-			$nodes = $xpath->query( "//span[@class = 'bible-kjv']" );
-			
-			foreach( $nodes as $node ) {
-				//$anchor = $doc->createElement( "a" );
-				$node->parentNode->replaceChild( $node->firstChild, $node );
+			foreach( $spans as $span ) {
+				$ref = str_replace( "+", " ", $span->getAttribute( "ref" ) );
+				if( strpos($ref, "1ma") === 0 || strpos($ref, "bar") === 0  || strpos($ref, "2ma") === 0 || strpos($ref, "sir") === 0 || strpos($ref, "jdt") === 0 || strpos($ref, "1es") === 0 || strpos($ref, "2es") === 0 || strpos($ref, "wis") === 0 ) {
+					continue;
+				}
+				$content = $span->nodeValue;
+				$a = $doc->createElement( "a", $content );
+				$a->setAttribute( "class", "bible-ref" );
+				$new_ref = parseTextToShort( $ref );
+				if( ! $new_ref ) {
+					die( "Couldn't parse $ref" . " in resource id: {$item['id']}" );
+				}
+				$a->setAttribute( "href", "/" . $new_ref );
+				$span->parentNode->replaceChild( $a, $span );
 			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//EGW
+	function egw_ref_to_href()
+	{
+		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%egwlink_bible%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@class = 'link egwlink egwlink_bible']" );
 			
-			echo $doc->saveHTML();die;
-			//$this->db->where( "id", $item["id"] );
-			//$this->db->update( "content", $new_content );
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$a = $doc->createElement( "a", $content );
+				$a->setAttribute( "class", "bible-ref" );
+				$new_ref = parseTextToShort( $content );
+				if( ! $new_ref ) {
+					echo "Couldn't parse $content" . " in resource id: {$item['id']}";
+					continue;
+				}
+				$a->setAttribute( "href", "/" . $new_ref );
+				$link->parentNode->replaceChild( $a, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "egw_quotes" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//EGW, incomplete remote reference
+	function egw_ref_to_href_complex()
+	{
+		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%egwlink_bible%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@class = 'link egwlink egwlink_bible']" );
+			
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$href = $link->getAttribute( "href" );
+				$html = $this->domparser->file_get_html( "https://m.egwwritings.org" . $href );
+				$p = $html->find( "#" . explode( "#", $href )[1], 0 );
+				$new_ref = $p->getAttribute( "data-refcode" );
+				$new_ref = explode( " — ", $new_ref )[1];
+				$new_ref = parseTextToShort( $new_ref );
+				if( ! $new_ref ) {
+					echo "Couldn't parse $content" . " in resource id: {$item['id']}";
+					continue;
+				}
+				$a = $doc->createElement( "a", $content );
+				$a->setAttribute( "class", "bible-ref" );
+				$a->setAttribute( "href", "/" . $new_ref );
+				$link->parentNode->replaceChild( $a, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "egw_quotes" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//DAR
+	function dar_ref_to_href()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE \'%class="link"%\'';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@class = 'link']" );
+			
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$href = $link->getAttribute( "href" );
+				$html = $this->domparser->file_get_html( "https://m.egwwritings.org" . $href );
+				$p = $html->find( "#" . explode( "#", $href )[1], 0 );
+				$new_ref = $p->getAttribute( "data-refcode" );
+				$new_ref = explode( " — ", $new_ref )[1];
+				$new_ref = parseTextToShort( $new_ref );
+				if( ! $new_ref ) {
+					echo "Couldn't parse $content" . " in resource id: {$item['id']}<br>";
+					continue;
+				}
+				$a = $doc->createElement( "a", $content );
+				$a->setAttribute( "class", "bible-ref" );
+				$a->setAttribute( "href", "/" . $new_ref );
+				$link->parentNode->replaceChild( $a, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_ref_to_href()
+	{
+		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%bibleref%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@class = 'bibleref']" );
+			
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$a = $doc->createElement( "a", $content );
+				$a->setAttribute( "class", "bible-ref" );
+				
+				preg_match('#(\d+)$#', $string, $matches);//Get numbers at end of string
+				
+				$new_ref = parseTextToShort( $content );
+				if( ! $new_ref ) {
+					echo "Couldn't parse $content" . " in resource id: {$item['id']}";
+					continue;
+				}
+				$a->setAttribute( "href", "/" . $new_ref );
+				$link->parentNode->replaceChild( $a, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "egw_quotes" );
 		}
 		libxml_use_internal_errors( $previous_use_internal_errors );
 	}

@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	
-	if( $( "#search" ).val() > 0 ) {
+	if( $( ".text-ref" ).text().length > 0 ) {
+		$( "#search" ).val( $( ".text-ref" ).text() );
 		$( "#clear" ).show();
 	}
 	
@@ -20,16 +21,24 @@ $(document).ready(function(){
 		$(this).toggleClass( "expand" );
 	});
 	
-	$( document ).on( "click", ".expand.resource .panel-body", function(e) {
-		return false;
-	});
-	
-	function loadVerse( ref ){
+	function loadVerse( ref, raw = false ){
 		$( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
 		$( "#search" ).blur();
 		closeMenu();
-		window.history.pushState( ref, null, ref );
-		$.getJSON( "/resources/json/" + ref, function( data ) {
+		if( raw ) {
+			url = "/resources/json/query/" + ref;
+		} else {
+			window.history.pushState( ref, null, ref );
+			url = "/resources/json/" + ref;
+		}
+		$.getJSON( url, function( data ) {
+			if( $( ".verse" ).length < 1 ) {
+				window.location = "/" + data.short_ref;
+			}
+			if( raw ) {
+				window.history.pushState( data.short_ref, null, data.short_ref );
+			}
+			$( "#search" ).val( data.text_ref );
 			$( ".verse .panel-body" ).html( data.verse );
 			$( ".next-verse" ).attr( "href", "/" + data.nav.next );
 			$( ".prev-verse" ).attr( "href", "/" + data.nav.prev );
@@ -38,7 +47,7 @@ $(document).ready(function(){
 			$( "h2 .text-ref" ).text( data.text_ref );
 			$( "#resource_list .resource" ).remove();
 			$.each( data.main_resources, function( index, resource ) {
-				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><img src="/assets/img/authors/' + resource.logo + '.png"><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
+				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
 			});
 			$.each( data.sidebar_resources, function( index, resource ) {
 				$( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.name + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
@@ -48,45 +57,62 @@ $(document).ready(function(){
 			});
 			$( ".history-list" ).prepend( '<li><a href="/' + ref + '" class="dropdown-item ref-link">' + data.text_ref + '</a></li>' );
 			$( ".history-list" ).each(function( index ) {
-				$(this).find( "li" ).last().remove();
+				if( $(this).find( "li" ).length > 10 ) {
+					$(this).find( "li" ).last().remove();
+				}
 			});
 		});
 	}
 	
-	function OpenTextRef( text_ref ) {
-		var ref = parseVerse( text_ref );
-		loadVerse( ref[0] + "_" + ref[1] + "." + ref[2] );
-	}
-	
-	$( "#search" ).on( "keyup change", function() {
-		value = $(this).val();
-		if( value.length > 1 && getBook( value.trim() ) == -1 ) {
+	function showSuggestions() {
+		value = $( "#search" ).val();
+		var books = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation" ];
+		var results = books.filter( function( item ){
+			return item.toLowerCase().indexOf( value.toLowerCase() ) > -1;            
+		});
+		if( value.length > 1 && results.length > 0 && books.join( "." ).toLowerCase().split( "." ).indexOf( value.toLowerCase() ) == -1 ) {
 			$( ".search-results, #clear" ).show();
-			ref = parseVerse( value );
-			book_name = getBook( getBcvBook( ref[0] ) );
+			
 			$( ".book-suggestion, .ref-suggestion" ).remove();
-			last_character = value.trim().substr(-1);
-			if( isNumber( last_character ) || last_character == ":" ) {
-				$( ".search-results .verse-heading" ).after( "<li class='ref-suggestion'>Go to <b>" + book_name + " " + ref[1] + ":" + ref[2] + "</b></li>" );
-			} else {
-				$( ".search-results .verse-heading" ).after( "<li class='book-suggestion'>" + book_name + "</li>" );
-			}
+			$.each( results, function( index, item ) {
+				$( ".search-results .verse-heading" ).after( "<li class='book-suggestion'>" + item + "</li>" );
+			});
+			
 			if( $( ".search-results .selected" ).length < 1 ) {
 				$( ".search-results li:not(.heading)" ).first().addClass( "selected" );
 			}
 		} else {
-			$( ".search-results, #clear" ).hide();
+			$( ".search-results li.selected" ).removeClass( "selected" );
+			hideSuggestions()
 		}
+		$( "#clear" ).toggle( value.length > 0 );
+	}
+	
+	function hideSuggestions( delay = false ) {
+		if( delay ) {
+			setTimeout(function(){
+				$( ".search-results" ).delay( 100 ).hide(0);
+				$( ".book-suggestion" ).remove();
+			}, 100);
+		} else {
+			$( ".search-results" ).hide();
+			$( ".book-suggestion" ).remove();
+		}
+		
+	}
+	
+	$( "#search" ).on( "input", function(e) {
+		showSuggestions();
 	});
 	
 	$( "#search" ).focus( function() {
 		if( $(this).val() != "" ) {
-			$( ".search-results" ).show();
+			showSuggestions();
 		}
 	});
 	
 	$( "#search" ).blur( function() {
-		$( ".search-results" ).delay( 100 ).hide(0);
+		hideSuggestions( true );
 	});
 	
 	$( "#search" ).keydown(function(e) {
@@ -105,20 +131,17 @@ $(document).ready(function(){
 		} else if( e.which == 13 ) { //enter
 			e.preventDefault();
 			$selected = $( ".search-results .selected" );
-			if( $selected.hasClass( "book-suggestion" ) ) {
+			if( $selected.length > 0 ) {
 				$( "#search" ).val( $selected.text() + " " );
-			} else if( $selected.hasClass( "ref-suggestion" ) ) {
-				OpenTextRef( $(this).val() );
+				hideSuggestions();
+			} else {
+				loadVerse( $(this).val(), true );
 			}
 		}
 	});
 	
-	$( document ).on( "mousedown", ".ref-suggestion", function() {
-		OpenTextRef( $(this).text() );
-	});
-	
 	$( document ).on( "click", ".book-suggestion", function() {
-		$( "#search" ).val( $selected.text() + " " );
+		$( "#search" ).val( $(this).text() + " " ).focus();
 		
 	});
 	
@@ -206,179 +229,8 @@ $(document).ready(function(){
 	
 	//Global functions
 	
-	function parseVerse( ref ) {
-		ref = decodeURIComponent( ref );
-		ref = ref.replace( "_", " " );
-		var bcv = new bcv_parser;
-		bcv.set_options( { book_alone_strategy: "first_chapter" } );
-		new_ref = bcv.parse( ref ).osis();
-		new_ref = new_ref.split( "-" );
-		new_ref = new_ref[0];
-		new_ref = new_ref.split( "." );
-		
-		if( ! new_ref[2] ) { new_ref[2] = "1" }
-		
-		return new_ref;
-	}
-	
-	function getPrettyRef( ref ) {
-		return getBook( getBcvBook( ref[0] ) ) + " " + ref[1] + ":" + ref[2];
-	}
-	
 	function isNumber( n ) {
 	  return !isNaN( parseFloat( n ) ) && isFinite( n );
-	}
-	
-	function getBcvBook( book ) {
-		var books = [];
-		books[1] = 'Gen';
-		books[2] = 'Exod';
-		books[3] = 'Lev';
-		books[4] = 'Num';
-		books[5] = 'Deut';
-		books[6] = 'Josh';
-		books[7] = 'Judg';
-		books[8] = 'Ruth';
-		books[9] = '1Sam';
-		books[10] = '2Sam';
-		books[11] = '1Kgs';
-		books[12] = '2Kgs';
-		books[13] = '1Chr';
-		books[14] = '2Chr';
-		books[15] = 'Ezra';
-		books[16] = 'Neh';
-		books[17] = 'Esth';
-		books[18] = 'Job';
-		books[19] = 'Ps';
-		books[20] = 'Prov';
-		books[21] = 'Eccl';
-		books[22] = 'Song';
-		books[23] = 'Isa';
-		books[24] = 'Jer';
-		books[25] = 'Lam';
-		books[26] = 'Ezek';
-		books[27] = 'Dan';
-		books[28] = 'Hos';
-		books[29] = 'Joel';
-		books[30] = 'Amos';
-		books[31] = 'Obad';
-		books[32] = 'Jonah';
-		books[33] = 'Mic';
-		books[34] = 'Nah';
-		books[35] = 'Hab';
-		books[36] = 'Zeph';
-		books[37] = 'Hag';
-		books[38] = 'Zech';
-		books[39] = 'Mal';
-		books[40] = 'Matt';
-		books[41] = 'Mark';
-		books[42] = 'Luke';
-		books[43] = 'John';
-		books[44] = 'Acts';
-		books[45] = 'Rom';
-		books[46] = '1Cor';
-		books[47] = '2Cor';
-		books[48] = 'Gal';
-		books[49] = 'Eph';
-		books[50] = 'Phil';
-		books[51] = 'Col';
-		books[52] = '1Thess';
-		books[53] = '2Thess';
-		books[54] = '1Tim';
-		books[55] = '2Tim';
-		books[56] = 'Titus';
-		books[57] = 'Phlm';
-		books[58] = 'Heb';
-		books[59] = 'Jas';
-		books[60] = '1Pet';
-		books[61] = '2Pet';
-		books[62] = '1John';
-		books[63] = '2John';
-		books[64] = '3John';
-		books[65] = 'Jude';
-		books[66] = 'Rev';
-		
-		if( isNumber( book ) ) {
-			return books[book];
-		} else {
-			return books.indexOf( book );
-		}
-	}
-	
-	function getBook( book ) {
-		var books = [];
-		books[1] = 'Genesis';
-		books[2] = 'Exodus';
-		books[3] = 'Leviticus';
-		books[4] = 'Numbers';
-		books[5] = 'Deuteronomy';
-		books[6] = 'Joshua';
-		books[7] = 'Judges';
-		books[8] = 'Ruth';
-		books[9] = '1 Samuel';
-		books[10] = '2 Samuel';
-		books[11] = '1 Kings';
-		books[12] = '2 Kings';
-		books[13] = '1 Chronicles';
-		books[14] = '2 Chronicles';
-		books[15] = 'Ezra';
-		books[16] = 'Nehemiah';
-		books[17] = 'Esther';
-		books[18] = 'Job';
-		books[19] = 'Psalms';
-		books[20] = 'Proverbs';
-		books[21] = 'Ecclesiastes';
-		books[22] = 'Song of Solomon';
-		books[23] = 'Isaiah';
-		books[24] = 'Jeremiah';
-		books[25] = 'Lamentations';
-		books[26] = 'Ezekiel';
-		books[27] = 'Daniel';
-		books[28] = 'Hosea';
-		books[29] = 'Joel';
-		books[30] = 'Amos';
-		books[31] = 'Obadiah';
-		books[32] = 'Jonah';
-		books[33] = 'Micah';
-		books[34] = 'Nahum';
-		books[35] = 'Habakkuk';
-		books[36] = 'Zephaniah';
-		books[37] = 'Haggai';
-		books[38] = 'Zechariah';
-		books[39] = 'Malachi';
-		books[40] = 'Matthew';
-		books[41] = 'Mark';
-		books[42] = 'Luke';
-		books[43] = 'John';
-		books[44] = 'Acts';
-		books[45] = 'Romans';
-		books[46] = '1 Corinthians';
-		books[47] = '2 Corinthians';
-		books[48] = 'Galatians';
-		books[49] = 'Ephesians';
-		books[50] = 'Philippians';
-		books[51] = 'Colossians';
-		books[52] = '1 Thessalonians';
-		books[53] = '2 Thessalonians';
-		books[54] = '1 Timothy';
-		books[55] = '2 Timothy';
-		books[56] = 'Titus';
-		books[57] = 'Philemon';
-		books[58] = 'Hebrews';
-		books[59] = 'James';
-		books[60] = '1 Peter';
-		books[61] = '2 Peter';
-		books[62] = '1 John';
-		books[63] = '2 John';
-		books[64] = '3 John';
-		books[65] = 'Jude';
-		books[66] = 'Revelation';
-		
-		if(isNumber(book)){
-			return books[book];
-		} else {
-			return books.indexOf(book);
-		}
 	}
 	
 	function closeMenu(){

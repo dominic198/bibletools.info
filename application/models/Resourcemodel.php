@@ -21,6 +21,9 @@ class Resourcemodel extends CI_Model
 				} elseif( ! empty( $item["page"] ) ) {
 					$item["source"] .= ", " . $item["page"];
 				}
+				if( !empty( $item["reference"] ) ) {
+					$item["content"] .= "<a href='https://m.egwwritings.org/search?query={$item['reference']}' target='_blank'>Read in context &raquo;</a>";
+				}
 				return $item;
 			}, $resources );
 				

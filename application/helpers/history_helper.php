@@ -11,7 +11,6 @@ if ( ! function_exists( "getLastVerse" ) )
 				return $key;
 			}
 		}
-		session_write_close();
 		return false;
 	}
 	

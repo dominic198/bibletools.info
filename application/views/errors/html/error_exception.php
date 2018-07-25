@@ -1,5 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$to      = 'adam@bibletools.info';
+$subject = $heading;
+$headers = 'From: adam@bibletools.info' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+$headers  .= 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+mail($to, $subject, $message, $headers);
 ?>
 
 <div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">

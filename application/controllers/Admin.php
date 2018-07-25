@@ -26,6 +26,7 @@ class Admin extends CI_Controller
 		if ( ! $this->ion_auth->logged_in() ) {
 			redirect( "admin/login", "refresh" );
 		} else {
+			$this->template->set( "title", "Dashboard" );
 			$this->template->load( "template", "admin/dashboard" );
 		}
 	}
@@ -37,6 +38,7 @@ class Admin extends CI_Controller
 			redirect( "admin/login", "refresh" );
 		} else {
 			$data["categories"] = $this->questionmodel->getCategories();
+			$this->template->set( "title", "Add Question" );
 			$this->template->load( "template", "admin/question", $data );
 		}
 	}

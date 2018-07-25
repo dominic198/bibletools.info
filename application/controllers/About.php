@@ -9,7 +9,15 @@ class About extends CI_Controller
 
 	function feedback()
 	{
+		$this->template->set( "title", "Feedback" );
 		$this->template->load( "template", "feedback" );
+	}
+	
+	function info()
+	{
+		$data["active_tab"] = "about";
+		$this->template->set( "title", "About" );
+		$this->template->load( "template", "about", $data );
 	}
 	
 	function send_feedback()
