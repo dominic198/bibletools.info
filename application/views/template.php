@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8" manifest="old.manifest">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="BibleTools.info is a web app designed to enhance your Bible study experience by providing powerful resources for almost every verse.">
 	<meta name="author" content="Adam Jackson">
@@ -24,20 +24,22 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="assets/app.min.css?v=1.6" rel="stylesheet">
-		<script type="text/javascript" src="/assets/app.min.js?v=1.5"></script>
+		<link href="/assets/css/lib.css" rel="stylesheet">
+		<link href="/assets/css/answers.css?v=2" rel="stylesheet">
+		<script type="text/javascript" src="/assets/js/lib.js"></script>
+		<script type="text/javascript" src="/assets/js/custom.js?v=4"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
-		<link href="/assets/css/answers.css" rel="stylesheet">
+		<link href="/assets/css/answers.css?v=2" rel="stylesheet">
 		<script type="text/javascript" src="/assets/js/lib.js"></script>
-		<script type="text/javascript" src="/assets/js/custom.js"></script>
+		<script type="text/javascript" src="/assets/js/custom.js?v=4"></script>
 	<?php } ?>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
 	<section id="menu">
 		<header><h3><b>BibleTools</b>.info</h3></header>
 		<ul class="main">
-			<li><i class="fa fa-home"></i><a class="home">Home</a></li>
+			<li><i class="fa fa-home"></i><a href="/">Home</a></li>
 			<li><i class="fa fa-smile-o"></i><a class="donate" target="_blank" href="http://www.gofundme.com/bibletools">Donate</a></li>
 			<li>
 				<i class="fa fa-history"></i><a class="history">History</a>
@@ -51,7 +53,7 @@
 		</ul>
 		<hr/>
 		<ul class="sub">
-			<li><a class="feedback">Send Feedback</a></li>
+			<li><a href="/about/feedback">Send Feedback</a></li>
 		</ul>
 	</section>
 	<nav class="navbar nav-main navbar-expand-sm navbar-dark">

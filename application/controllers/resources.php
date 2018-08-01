@@ -54,22 +54,7 @@ class Resources extends CI_Controller
 		//ANDROID
 		
 		$ref = constructReference( $this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5) );
-		
-		$maps = $this->mapmodel->get( $ref );
-		foreach( $maps as $key => $map ) {
-			$maps[$key]['content'] = "Update the app to view Biblical maps.";
-		}
-		
-		$resources = array(
-			$this->kjvmodel->plain_verse( $ref ),
-			$this->commentarymodel->get( $ref, "sdabc", "SDA Bible Commentary" ),
-			$this->commentarymodel->get( $ref, "mhcc", "Matthew Henry Concise Bible Commentary", true ),
-			$this->commentarymodel->get( $ref, "acbc", "Adam Clarke Bible Commentary" ),
-		);
-		$resources = array_merge( $resources,
-			$maps,
-			$this->egwmodel->verse_quotes( $ref )
-		);
+		$resources = [ $this->kjvmodel->plain_verse( $ref ) ] + $this->resourcemodel->getMain( $ref, false );
 		
 		$results['resources'] = array_values( array_filter( $resources ) );
 		$this->output->set_output( json_encode( $results ) );

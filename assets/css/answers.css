@@ -406,7 +406,8 @@ a:hover {
 	height: 100%;
 	width: 100%;
 	z-index: 10;
-	background-color: rgba(255, 255, 255, .95)
+	background-color: rgba(255, 255, 255, .95);
+	cursor: pointer;
 }
 .overlay.menu {
 	display: none
@@ -439,7 +440,7 @@ a:hover {
 	left: 0
 }
 #menu header {
-	background: #469fd5
+	background: #61a4cc
 }
 #menu header h3 {
 	color: #fff;
