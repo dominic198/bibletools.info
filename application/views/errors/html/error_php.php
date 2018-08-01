@@ -1,11 +1,39 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $to      = 'adam@bibletools.info';
-$subject = $heading;
+$subject = $message;
 $headers = 'From: adam@bibletools.info' . "\r\n" .
     'X-Mailer: PHP/' . phpversion();
 $headers  .= 'MIME-Version: 1.0' . "\r\n";
 $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+$body = <<<EOT
+<p>Severity: $severity
+<p>Message:  $message
+<p>Filename: $filepath
+<p>Line Number: $line
+EOT;
+
+if (defined('SHOW_DEBUG_BACKTRACE') && SHOW_DEBUG_BACKTRACE === TRUE):
+
+	$body .= "<p>Backtrace:</p>";
+	foreach (debug_backtrace() as $error):
+
+		if (isset($error['file']) && strpos($error['file'], realpath(BASEPATH)) !== 0):
+
+			$body .= <<<EOT
+<p style='margin-left:10px'>
+File: {$error['file']}<br />
+Line: {$error['line']}<br />
+Function: {$error['function']}
+</p>
+EOT;
+
+		endif;
+
+	endforeach;
+
+endif;
+
 mail($to, $subject, $message, $headers);
 ?>
 
