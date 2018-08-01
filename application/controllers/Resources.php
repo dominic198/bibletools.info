@@ -47,6 +47,7 @@ class Resources extends CI_Controller
 			saveLastVerse( $short_ref );
 			$log = [
 				"verse" => $ref,
+				"formatted_verse" => $resources["text_ref"],
 				"ip" => $_SERVER["REMOTE_ADDR"],
 				"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
 				"type" => "web",
@@ -66,6 +67,7 @@ class Resources extends CI_Controller
 		$results['resources'] = array_values( array_filter( $resources ) );
 		$log = [
 			"verse" => $ref,
+			"formatted_verse" => parseReferenceToText( $ref ),
 			"ip" => $_SERVER["REMOTE_ADDR"],
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
 			"type" => "android",

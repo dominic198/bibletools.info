@@ -40,6 +40,7 @@ class Verse extends CI_Controller
 		
 		$log = [
 			"verse" => $ref,
+			"formatted_verse" => $data["text_ref"],
 			"ip" => $_SERVER["REMOTE_ADDR"],
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
 			"type" => "web",
