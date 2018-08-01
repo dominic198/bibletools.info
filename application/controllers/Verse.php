@@ -16,6 +16,7 @@ class Verse extends CI_Controller
 	function index()
 	{
 		$ref = $this->uri->segment(1);
+		$ref = str_replace( ":", ".", $ref );
 		$history_ref = getLastVerse();
 		if( ! $ref && $history_ref ) {
 			redirect( "/$history_ref" );
