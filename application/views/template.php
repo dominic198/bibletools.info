@@ -8,7 +8,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
 	<!--[if IE]><link rel="shortcut icon" href="favicon.ico"><![endif]-->
-	<link rel="icon" href="favicon.png"> 
+	<link rel="icon" href="/favicon.png"> 
 	<link rel="apple-touch-icon" href="/assets/img/icons/Icon-60@2x.png" />
   	<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/Icon-60@3x.png" />
   	<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/icons/Icon-76.png" />
@@ -23,11 +23,9 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/css/lib.css" rel="stylesheet">
-		<link href="/assets/css/answers.css?v=2" rel="stylesheet">
-		<script type="text/javascript" src="/assets/js/lib.js"></script>
-		<script type="text/javascript" src="/assets/js/custom.js?v=4"></script>
+	<?php if( ENVIRONMENT = "production" ) { ?>
+		<link href="assets/app.min.css?v=2.0" rel="stylesheet">
+		<script type="text/javascript" src="/assets/app.min.js?v=2.0"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
 		<link href="/assets/css/answers.css?v=2" rel="stylesheet">

@@ -32,7 +32,7 @@ $config['js_dir'] = 'assets/js';
 
 $config['compression_engine'] = array(
 	'css' => 'minify', // minify || cssmin
-	'js'  => 'closurecompiler' // jsmin || closurecompiler || jsminplus
+	'js'  => 'jsmin' // jsmin || closurecompiler || jsminplus
 );
 
 
