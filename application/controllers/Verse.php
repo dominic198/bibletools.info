@@ -36,6 +36,15 @@ class Verse extends CI_Controller
 			$this->mapmodel->get( $ref )
 		) );
 		$data["active_tab"] = "verses";
+		
+		$log = [
+			"verse" => $ref,
+			"ip" => $_SERVER["REMOTE_ADDR"],
+			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			"type" => "web",
+		];
+		$this->db->insert( "log", $log );
+		
 		$this->template->set( "title", $data["text_ref"] );
 		$this->template->load( "template", "verse", $data );
 	}

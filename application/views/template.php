@@ -17,8 +17,7 @@
 	
 	<title><?php echo $title ?></title>
 	
-	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
-	<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -28,7 +27,7 @@
 		<script type="text/javascript" src="/assets/app.min.js?v=2.0"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
-		<link href="/assets/css/answers.css?v=2" rel="stylesheet">
+		<link href="/assets/css/custom.css?v=2" rel="stylesheet">
 		<script type="text/javascript" src="/assets/js/lib.js"></script>
 		<script type="text/javascript" src="/assets/js/custom.js?v=4"></script>
 	<?php } ?>

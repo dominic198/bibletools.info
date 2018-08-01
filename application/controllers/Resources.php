@@ -45,6 +45,13 @@ class Resources extends CI_Controller
 				"nav" => $this->kjvmodel->nav( $ref ),
 			);
 			saveLastVerse( $short_ref );
+			$log = [
+				"verse" => $ref,
+				"ip" => $_SERVER["REMOTE_ADDR"],
+				"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
+				"type" => "web",
+			];
+			$this->db->insert( "log", $log );
 			$this->output->set_output( json_encode( $resources ) );
 		}
 	}
@@ -57,6 +64,13 @@ class Resources extends CI_Controller
 		$resources = [ $this->kjvmodel->plain_verse( $ref ) ] + $this->resourcemodel->getMain( $ref, false );
 		
 		$results['resources'] = array_values( array_filter( $resources ) );
+		$log = [
+			"verse" => $ref,
+			"ip" => $_SERVER["REMOTE_ADDR"],
+			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			"type" => "android",
+		];
+		$this->db->insert( "log", $log );
 		$this->output->set_output( json_encode( $results ) );
 	}
 }
