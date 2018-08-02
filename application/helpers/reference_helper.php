@@ -53,6 +53,7 @@ if ( ! function_exists( "construct_reference" ) )
     
      function parseReferenceToText( $start, $end = null )
     {
+    	if( ! is_numeric( $start ) ) return false;
     	$start = [
     		"book" => getBook( + substr( $start, 0, 2 ) ),
     		"chapter" => + substr( $start, 2, 3 ),
@@ -84,6 +85,7 @@ if ( ! function_exists( "construct_reference" ) )
     function getBook( $book_number )
     {
     	$books = getBooks();
+    	if( ! array_key_exists( $book_number, $books ) ) return false;
 		return $books[$book_number];
     }
     
