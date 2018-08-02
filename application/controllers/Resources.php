@@ -62,8 +62,7 @@ class Resources extends CI_Controller
 		//ANDROID
 		
 		$ref = constructReference( $this->uri->segment(3), $this->uri->segment(4), $this->uri->segment(5) );
-		$resources = [ $this->kjvmodel->plain_verse( $ref ) ] + $this->resourcemodel->getMain( $ref, false );
-		
+		$resources = [ array_filter( $this->kjvmodel->plain_verse( $ref ) ) ] + $this->resourcemodel->getAndroid( $ref );
 		$results['resources'] = array_values( array_filter( $resources ) );
 		$log = [
 			"verse" => $ref,
