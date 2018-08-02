@@ -99,10 +99,10 @@ if ( ! function_exists( "construct_reference" ) )
     {
     	if( ! strpos( $ref, "_" ) || ! strpos( $ref, "." ) ) return false;
     	$pieces = explode( "_", $ref );
-    	$book = $pieces[0];
+    	$book = strtolower( $pieces[0] );
     	$chapter = explode( ".", $pieces[1] )[0];
     	$verse = explode( ".", $pieces[1] )[1];
-    	$book_abbreviations = getBookAbbreviationNumbers();
+    	$book_abbreviations = getBookOptions();
     	if( ! array_key_exists( $book, $book_abbreviations ) ) return false;
     	return constructReference( $book_abbreviations[$book], $chapter, $verse );
     }
@@ -184,6 +184,7 @@ if ( ! function_exists( "construct_reference" ) )
 		];
     }
     
+    //Not used?
     function getBookAbbreviationNumbers()
     {
     	return [
