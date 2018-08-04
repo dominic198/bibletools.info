@@ -106,7 +106,7 @@
 					<h1><b>BibleTools</b>.info</h1>
 					<h3>Bible Verse Explanations and Resources</h3>	
 					<form action="." id="search_form">			
-						<input id="search" autocomplete="off" placeholder="Type a reference"/>
+						<input id="search" autocomplete="off" autocorrect="off" placeholder="Type a reference"/>
 						<a class="fa fa-times-circle" id="clear"></a>
 						<a class="fa fa-bars open-menu"></a>
 						<div class="search-results">
