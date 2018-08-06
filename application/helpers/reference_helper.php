@@ -432,6 +432,7 @@ if ( ! function_exists( "construct_reference" ) )
 			"isa" => 23,
 			"is" => 23,
 			"jeremiah" => 24,
+			"je" => 24,
 			"jer" => 24,
 			"jr" => 24,
 			"lamentations" => 25,

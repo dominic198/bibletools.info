@@ -304,11 +304,12 @@ a:hover {
 .next-verse,
 .prev-verse {
 	color: inherit !important;
-	cursor: pointer;
-	line-height: 21px;
-	font-size: 50px;
 	opacity: .2;
-	padding: 10px 0;
+}
+.next-verse svg,
+.prev-verse svg {
+	width: 40px;
+	height: 40px;
 }
 .prev-verse {
 	float: left;
@@ -334,22 +335,28 @@ a:hover {
 	cursor: pointer
 }
 #clear {
-	font-size: 28px;
 	position: absolute;
 	right: 23px;
 	margin-left: -28px;
-	top: 46px;
+	top: 47px;
 	color: #C8C8C8;
 	cursor: pointer;
 	display: none;
+	width: 28px;
+	height: 28px;
+	margin-top: 2px;
 }
 .open-menu {
-	font-size: 28px;
 	position: absolute;
 	left: 23px;
 	top: 46px;
 	color: #C8C8C8;
 	cursor: pointer
+}
+
+.open-menu svg {
+	width: 28px;
+	height: 28px;
 }
 
 .search-results {
@@ -435,6 +442,14 @@ a:hover {
 	transition: all .3s;
 	border-radius: 1px
 }
+#menu .icon {
+	vertical-align: middle;
+	width: 23px;
+	height: 23px;
+	margin-right: 10px;
+	margin-top: -3px;
+	color: #555;
+}
 #menu.show {
 	left: 0
 }
@@ -505,7 +520,8 @@ a:hover {
 	#clear {
 		top: 30px;
 		right: 15px;
-		font-size: 26px;
+		width: 25px;
+		height: 25px;
 	}
 	.open-menu {
 		top: 29px;
@@ -629,11 +645,13 @@ section#lexicon .close {
 section#lexicon .close:hover {
 	opacity: .8;
 }
-section#lexicon .close .fa {
+section#lexicon .close svg {
 	background-color: #34495e;
 	vertical-align: top;
-	padding: 3px 6px 4px 6px;
+	margin: 3px 6px 4px 6px;
 	border-radius: 50%;
+	width: 30px;
+	height: 30px;
 }
 section#lexicon .arrow {
 	bottom: 100%;

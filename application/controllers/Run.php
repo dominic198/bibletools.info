@@ -567,7 +567,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_ref_to_href()
 	{
-		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%bibleref%"';
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%bibleref%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
 		$previous_use_internal_errors = libxml_use_internal_errors( true );
@@ -576,27 +576,229 @@ class Run extends CI_Controller
 			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 			$xpath = new DOMXPath($doc);
 			$links = $xpath->query( "//a[@class = 'bibleref']" );
-			
 			foreach( $links as $link ) {
-				$content = $link->nodeValue;
-				$a = $doc->createElement( "a", $content );
-				$a->setAttribute( "class", "bible-ref" );
-				
-				preg_match('#(\d+)$#', $string, $matches);//Get numbers at end of string
-				
-				$new_ref = parseTextToShort( $content );
-				if( ! $new_ref ) {
-					echo "Couldn't parse $content" . " in resource id: {$item['id']}";
-					continue;
+				$ref = $link->getAttribute( "data-reference" );
+				$link->removeAttribute( "data-datatype" );
+				//$a = $doc->createElement( "a", $content );
+				//$a->setAttribute( "class", "bible-ref" );
+				if( strpos( $ref, "-" ) !== -1 ) {
+					$ref = explode( "-", $ref );
+					$ref = $ref[0];
 				}
-				$a->setAttribute( "href", "/" . $new_ref );
-				$link->parentNode->replaceChild( $a, $link );
+				$ref_pieces = explode( ".", $ref );
+				if( ! array_key_exists( 1, $ref_pieces)) {
+					$ref_pieces[1] = 1;
+				}
+				$verse = $ref_pieces[1];
+				
+				preg_match('#(\d+)$#', $ref_pieces[0], $matches);//Get numbers at end of string
+				$chapter = $matches[0];
+				
+				$book = rtrim( $ref_pieces[0], $chapter );
+				$ref_to_parse = $book . " " . $chapter . ":" . $verse;
+				$new_ref = parseTextToShort( $ref_to_parse );
+				if( ! $new_ref ) {
+					$span = $doc->createElement( "span", $link->nodeValue );
+					$link->parentNode->replaceChild( $span, $link );
+				} else {
+					$link->setAttribute( "href", "/" . $new_ref );
+					$link->setAttribute( "class", "bible-ref" );
+				}
 			}
 			$content = str_replace( "<html>", "", $doc->saveHTML() );
 			$content = str_replace( "</html>", "", $content );
 			$this->db->set( "content", $content );
 			$this->db->where( "id", $item["id"] );
-			$this->db->update( "egw_quotes" );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_ref_to_href_more()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%iv-vol%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@data-datatype = 'bible']" );
+			foreach( $links as $link ) {
+				$ref = $link->getAttribute( "data-reference" );
+				$link->removeAttribute( "data-datatype" );
+				$link->removeAttribute( "data-resourcename" );
+				if( strpos( $ref, "-" ) !== -1 ) {
+					$ref = explode( "-", $ref );
+					$ref = $ref[0];
+				}
+				$ref_pieces = explode( ".", $ref );
+				if( ! array_key_exists( 1, $ref_pieces)) {
+					$ref_pieces[1] = 1;
+				}
+				$verse = $ref_pieces[1];
+				
+				preg_match('#(\d+)$#', $ref_pieces[0], $matches);//Get numbers at end of string
+				$chapter = $matches[0];
+				
+				$book = rtrim( $ref_pieces[0], $chapter );
+				$ref_to_parse = $book . " " . $chapter . ":" . $verse;
+				$new_ref = parseTextToShort( $ref_to_parse );
+				if( ! $new_ref ) {
+					$span = $doc->createElement( "span", $link->nodeValue );
+					$link->parentNode->replaceChild( $span, $link );
+				} else {
+					$link->setAttribute( "href", "/" . $new_ref );
+					$link->setAttribute( "class", "bible-ref7777" );
+				}
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_popup_to_span()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%popup%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@rel = 'popup']" );
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$span = $doc->createElement( "span", $link->nodeValue );
+				$span->setAttribute( "data-content", $link->getAttribute( "data-content" ) );
+				$span->setAttribute( "class", "help-popup" );
+				$link->parentNode->replaceChild( $span, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			//echo $content;die;
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_internal_to_span()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%iv-vol7%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@data-resourcename = 'iv-vol7']" );
+			foreach( $links as $link ) {
+				$content = $link->nodeValue;
+				$span = $doc->createElement( "span", $link->nodeValue );
+				$span->setAttribute( "class", "sdabc-internal" );
+				$link->parentNode->replaceChild( $span, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			//echo $content;die;
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_remove_milestones()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%data-resourcename%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@rel = 'milestone']" );
+			foreach( $links as $link ) {
+				$link->parentNode->removeChild( $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			//echo $content;die;
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_remove_monographs()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%text.serial.magazine%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@data-resourcetype = 'text.serial.magazine']" );
+			foreach( $links as $link ) {
+				$span = $doc->createElement( "span", $link->nodeValue );
+				$link->parentNode->replaceChild( $span, $link );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			//echo $content;die;
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
+		}
+		libxml_use_internal_errors( $previous_use_internal_errors );
+	}
+	
+	//SDABC
+	function sdabc_egw_refs()
+	{
+		$sql = 'SELECT * FROM resources WHERE content LIKE "%data-resourcename%"';
+		$query = $this->db->query($sql);
+		$items = $query->result_array();
+		$previous_use_internal_errors = libxml_use_internal_errors( true );
+		foreach( $items as $item ) {
+			$doc = new DOMDocument( "1.0", "UTF-8" );
+			$doc->loadHTML( "<html>" . $item['content'] . "</html>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$xpath = new DOMXPath($doc);
+			$links = $xpath->query( "//a[@data-datatype = 'page']" );
+			foreach( $links as $link ) {
+				$page = str_replace( "Page.p_", "", $link->getAttribute( "data-reference" ) );
+				$book_code = str_replace( "iv-", "", $link->getAttribute( "data-resourcename" ) );
+				$reference = $book_code . " " . $page;
+				$link->removeAttribute( "data-reference" );
+				$link->removeAttribute( "data-resourcename" );
+				$link->removeAttribute( "data-datatype" );
+				$link->setAttribute( "href", "https://m.egwwritings.org/search?query=$reference" );
+				$link->setAttribute( "target", "_blank" );
+				$link->setAttribute( "class", "egw-ref" );
+			}
+			$content = str_replace( "<html>", "", $doc->saveHTML() );
+			$content = str_replace( "</html>", "", $content );
+			$this->db->set( "content", $content );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "resources" );
 		}
 		libxml_use_internal_errors( $previous_use_internal_errors );
 	}

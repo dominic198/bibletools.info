@@ -118,7 +118,7 @@ class Kjvmodel extends CI_Model
 		return $html;
 	}
 	
-	function nav( $ref, $numeric = false )
+	function nav( $ref, $numeric = true )
 	{
 
 		if( is_numeric( $ref ) ) {
@@ -129,10 +129,15 @@ class Kjvmodel extends CI_Model
 			$prev = $this->db->query("SELECT * FROM kjv_verses LEFT JOIN kjv_books ON kjv_verses.book = kjv_books.id WHERE kjv_verses.id = $prev_id")->row_array();
 			$next = $this->db->query("SELECT * FROM kjv_verses LEFT JOIN kjv_books ON kjv_verses.book = kjv_books.id WHERE kjv_verses.id = $next_id")->row_array();
 			
-			$book = bookNumberToAbbreviation( $prev['id'] );
-			$nav['prev'] = $prev ? "{$book}_{$prev['chapter']}.{$prev['verse']}" : false;
-			$book = bookNumberToAbbreviation( $next['id'] );
-			$nav['next'] = $next ? "{$book}_{$next['chapter']}.{$next['verse']}" : false;
+			if( $numeric ) {
+				$nav['prev'] = $prev ? "{$prev['id']} {$prev['chapter']}:{$prev['verse']}" : false;
+				$nav['next'] = $next ? "{$next['id']} {$next['chapter']}:{$next['verse']}" : false;
+			} else {
+				$book = bookNumberToAbbreviation( $prev['id'] );
+				$nav['prev'] = $prev ? "{$book}_{$prev['chapter']}.{$prev['verse']}" : false;
+				$book = bookNumberToAbbreviation( $next['id'] );
+				$nav['next'] = $next ? "{$book}_{$next['chapter']}.{$next['verse']}" : false;
+			}
 			
 			return $nav;
 		}
