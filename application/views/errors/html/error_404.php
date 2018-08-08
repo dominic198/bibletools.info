@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $to      = 'adam@bibletools.info';
 $subject = $heading;
 $message .= "<br /><b>URL: </b> ".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+$message .= "<br/>User agent: " . $_SERVER['HTTP_USER_AGENT'];
+$message .= "<br/>Referral URL: " . $_SERVER["HTTP_REFERER"];
+$message .= "IP: " . $_SERVER["REMOTE_ADDR"];
 $headers = 'From: adam@bibletools.info' . "\r\n" .
     'X-Mailer: PHP/' . phpversion();
 $headers  .= 'MIME-Version: 1.0' . "\r\n";
