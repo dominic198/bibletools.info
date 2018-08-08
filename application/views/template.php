@@ -20,7 +20,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=2.1" rel="stylesheet">
+		<link href="/assets/app.min.css?v=2.2" rel="stylesheet">
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=2" rel="stylesheet">
@@ -127,7 +127,7 @@
 	</div>
 	<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<script defer type="text/javascript" src="/assets/app.min.js?v=2.1"></script>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=2.2"></script>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-56336810-1"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
