@@ -374,45 +374,48 @@ class Run extends CI_Controller
 	
 	function fix_egw_failed_quotes()
 	{
-		$sql = 'SELECT scripture_index.* FROM scripture_index LEFT JOIN egw_quotes quotes ON scripture_index.reference = quotes.reference WHERE scripture_index.reference NOT LIKE "%.%" AND quotes.content = ""';
+		$sql = 'SELECT * FROM egw_quotes_new WHERE reference NOT LIKE "%.%" AND run_again = 0';
 		$query = $this->db->query($sql);
 		$references = $query->result_array();
 		foreach( $references as $item ) {
 			$ref = $item["reference"];
-			die($ref);
-			$url_part = $item["href"];
+			$ref = explode( "-", $ref );
+			$ref = $ref[0];
 			
-			$failed_query = $this->db->query( "SELECT id FROM egw_quotes WHERE reference = '$ref' AND failed = 1" );
-			if( ! $failed_query->num_rows() > 0 ) continue;
+			//$url = $this->get_full_url( "https://m.egwwritings.org/search?query=$ref" );
+			//$paragraph_id = substr( $url, strpos( $url, "#" ) + 1 );
+			$html = $this->domparser->file_get_html( "https://m.egwwritings.org/search?query=$ref" );
+			$quotes = $html->find( "p.standard-indented" );
 			
-			$html = $this->get_page_chunk( "https://m.egwwritings.org$url_part" );
-			echo $html;die;
-			
-			$html = $this->domparser->str_get_html( $html );
-			$paragraphs = $html->find( "p.egw_content_wrapper" );
-			
-			$h3 = $html->find( "h3", 0 );
-			
+			$usable_quotes = "";
+			foreach( $quotes as $quote ) {
+				if( strpos( $quote->getAttribute( "data-refcode" ), $ref ) !== false ) {
+					$usable_quotes .= trim( $quote );
+				}
+			}
 			$data = [
-				"reference" => $ref,
+				"run_again" => 1,
 			];
 			
+			$h3 = $html->find( "h3", 0 );
+			$h4 = $html->find( "h4", 0 );
 			if( $h3 ) {
 				$data["chapter_title"] = trim( html_entity_decode( $h3->plaintext ) );
 			}
-			
-			if( count( $paragraphs ) > 0 ) {
-				$content = "";
-				foreach( $paragraphs as $p ) {
-					$content .= $p;
-				}
-				$data["content"] = trim( $content );
+			if( $h4 ) {
+				$data["section_title"] = trim( html_entity_decode( $h4->plaintext ) );
+			}
+			if( $usable_quotes !== "" ) {
+				$data["content"] = $usable_quotes;
+				$data["failed"] = 0;
 			} else {
 				$data["failed"] = 1;
 			}
-			
-			$this->db->insert( "egw_quotes_new", $data );
+			$this->db->set( $data );
+			$this->db->where( "id", $item["id"] );
+			$this->db->update( "egw_quotes_new" );
 			unset( $data );
+			unset( $usable_quotes );
 		}
 	}
 	
@@ -848,6 +851,26 @@ class Run extends CI_Controller
 		}
 	}
 	
+	function create_index()
+	{
+		$verse_query = $this->db->query( "SELECT * FROM kjv_verses WHERE ref > 55003006" );
+		$verses = $verse_query->result_array();
+		foreach( $verses as $verse ) {
+			$ref = $verse["ref"];
+			$resources = $this->db->query( "SELECT id FROM resources WHERE end >= $ref AND start <= $ref OR start = $ref" )->result_array();
+			$index = 0;
+			foreach( $resources as $resource ) {
+				$data = [
+					"verse" => $verse["ref"],
+					"resource_id" => $resource["id"],
+					"order_index" => $index,
+				];
+				$this->db->insert( "index", $data );
+				$index++;
+			}
+		}
+	}
+	
 	function fix_abundance()
 	{
 		$sql = 'SELECT * FROM abundance';
@@ -877,5 +900,32 @@ class Run extends CI_Controller
 			}
 		}
 		
+	}
+	
+	function remove_duplicate_commentaries()
+	{
+		$this->output->enable_profiler(TRUE);
+		$query = $this->db->query( "SELECT *, COUNT(*) count FROM resources GROUP BY content HAVING count > 1 AND info_id = 2 ORDER BY count DESC" );
+		$items = $query->result_array();
+		foreach( $items as $item ) {
+			$duplicates = $this->db->select( "*" )
+				->from( "resources" )
+				->where( "info_id", 2 )
+				->where( "length", $item["length"] )
+				->where( "start", $item["start"] )
+				->where( "id !=", $item["id"] )
+				->get()
+				->result_array();
+			foreach( $duplicates as $duplicate ) {
+				$this->db->delete( "resources", [ "id" => $duplicate["id"] ] );
+				$this->db->delete( "index", [ "resource_id" => $duplicate["id"] ] );
+			}
+		}
+		
+	}
+	
+	function info()
+	{
+		echo phpinfo();
 	}
 }

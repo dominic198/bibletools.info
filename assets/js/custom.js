@@ -17,8 +17,12 @@ $(document).ready(function(){
 		closeMenu();
 	});
 	
-	$( document ).on( "click", ".resource", function(e) {
-		$(this).toggleClass( "expand" );
+	$( document ).on( "click", ".resource.expand .panel-heading", function(e) {
+		$(this).removeClass( "expand" );
+	});
+	
+	$( document ).on( "click", ".resource:not(.expand)", function(e) {
+		$(this).addClass( "expand" );
 	});
 	
 	function loadVerse( ref, raw = false ){
@@ -47,10 +51,10 @@ $(document).ready(function(){
 			$( "h2 .text-ref" ).text( data.text_ref );
 			$( "#resource_list .resource" ).remove();
 			$.each( data.main_resources, function( index, resource ) {
-				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div></div>' );
+				$( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource" data-index-id="' + resource.id + '"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful"></a><a class="mark-helpful"></a></div></div>' );
 			});
 			$.each( data.sidebar_resources, function( index, resource ) {
-				$( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.name + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
+				$( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.source + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
 			});
 			$( ".map .panel-body a" ).magnificPopup( {
 				type: "image"
@@ -73,7 +77,7 @@ $(document).ready(function(){
 		if( value.length > 1 && results.length > 0 && books.join( "." ).toLowerCase().split( "." ).indexOf( value.toLowerCase() ) == -1 ) {
 			$( ".search-results, #clear" ).show();
 			
-			$( ".book-suggestion, .ref-suggestion" ).remove();
+			$( ".book-suggestion" ).remove();
 			$.each( results, function( index, item ) {
 				$( ".search-results .verse-heading" ).after( "<li class='book-suggestion'>" + item + "</li>" );
 			});
@@ -223,16 +227,24 @@ $(document).ready(function(){
 	});
 	
 	$( document ).on( "click", ".expand ul.occurances li", function(e) {
-		ref = $(this).find( "strong" ).text();
+		var ref = $(this).find( "strong" ).text();
 		getVerse( ref );
 		clearLexicon();
 	});
 	
-	//Global functions
+	$( document ).on( "click", ".mark-helpful", function() {
+		var index_id = $(this).parents( ".resource" ).attr( "data-index-id" );
+		$.get( "/resources/helpful/" + index_id );
+		$(this).parents( ".resource" ).find( ".panel-footer" ).html( "<small>Thanks! We may rank this resource higher next time.</small>" );
+	});
 	
-	function isNumber( n ) {
-	  return !isNaN( parseFloat( n ) ) && isFinite( n );
-	}
+	$( document ).on( "click", ".mark-unhelpful", function() {
+		var index_id = $(this).parents( ".resource" ).attr( "data-index-id" );
+		$.get( "/resources/unhelpful/" + index_id );
+		$(this).parents( ".resource" ).find( ".panel-footer" ).html( "<small>Good to know, we may put this resource further down the list.</small>" );
+	});
+	
+	//Global functions
 	
 	function closeMenu(){
 		$( ".history-list" ).removeClass( "open" );

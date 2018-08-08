@@ -118,7 +118,7 @@ class Kjvmodel extends CI_Model
 		return $html;
 	}
 	
-	function nav( $ref, $numeric = true )
+	function nav( $ref, $numeric = false )
 	{
 
 		if( is_numeric( $ref ) ) {
@@ -149,7 +149,7 @@ class Kjvmodel extends CI_Model
 			$query = "SELECT content FROM tsk WHERE start = $ref LIMIT 1";
 			$result = $this->db->query( $query )->row_array();
 			return $result ? [
-				"name" => "Cross References",
+				"source" => "Cross References",
 				"class" => "tsk-panel",
 				"content" => $result["content"] ?? "",
 			] : false;

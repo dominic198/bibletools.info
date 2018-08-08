@@ -67,11 +67,35 @@ class Resources extends CI_Controller
 		$log = [
 			"verse" => $ref,
 			"formatted_verse" => parseReferenceToText( $ref ),
-			"ip" => $_SERVER["REMOTE_ADDR"],
+			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
 			"type" => "android",
 		];
 		$this->db->insert( "log", $log );
 		$this->output->set_output( json_encode( $results ) );
+	}
+	
+	function helpful()
+	{
+		$index_id = $this->uri->segment(3);
+		$data = [
+			"index_id" => $index_id,
+			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
+			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			"helpful" => true,
+		];
+		$this->db->insert( "index_response", $data );
+	}
+	
+	function unhelpful()
+	{
+		$index_id = $this->uri->segment(3);
+		$data = [
+			"index_id" => $index_id,
+			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
+			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
+			"helpful" => false,
+		];
+		$this->db->insert( "index_response", $data );
 	}
 }

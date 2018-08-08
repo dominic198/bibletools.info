@@ -16,7 +16,7 @@ class Mapmodel extends CI_Model
 			$array = [];
 			foreach( $maps as $map ) {
 				$array[] = [
-					"name" => $map["title"],
+					"source" => $map["title"],
 					"class" => "map",
 					"content" => "<a href='/assets/img/maps/{$map["filename"]}'><img src='/assets/img/maps/{$map["filename"]}'/></a>",
 				];

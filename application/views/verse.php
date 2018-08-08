@@ -10,7 +10,7 @@
 			<div class="panel-body"><?php echo $verse; ?></div>
 		</div><!--/ .panel -->
 		<?php foreach( $main_resources as $resource ) { ?>
-    		<div class="panel panel-modern resource">
+    		<div class="panel panel-modern resource" data-index-id="<?php echo $resource["id"]; ?>">
 				<div class="panel-heading">
 					<div class="author-icon <?php echo $resource["logo"]; ?>"></div>
 					<div class="resource-info">
@@ -19,6 +19,11 @@
 					</div>
 				</div>
 				<div class="panel-body"><?php echo $resource["content"]; ?></div>
+				<div class="panel-footer">
+					<small>Was this helpful?</small>
+					<a class="mark-unhelpful"></a>
+					<a class="mark-helpful"></a>
+				</div>
 			</div><!--/ .panel -->
 		<?php } ?>
 	</div>
@@ -26,7 +31,7 @@
 		<?php foreach( $sidebar_resources as $resource ) { ?>
     		<div class="panel panel-modern resource <?php echo $resource["class"]; ?>">
 				<div class="panel-heading">
-					<strong><?php echo $resource["name"]; ?></strong>
+					<strong><?php echo $resource["source"]; ?></strong>
 				</div>
 				<div class="panel-body">
 					<?php echo $resource["content"]; ?>

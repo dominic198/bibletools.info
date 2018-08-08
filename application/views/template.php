@@ -19,15 +19,11 @@
 	
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<?php if( ENVIRONMENT == "production" ) { ?>
 		<link href="/assets/app.min.css?v=2.1" rel="stylesheet">
-		<script async type="text/javascript" src="/assets/app.min.js?v=2.1"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=2" rel="stylesheet">
-		<script type="text/javascript" src="/assets/js/lib.js"></script>
-		<script type="text/javascript" src="/assets/js/custom.js?v=4"></script>
 	<?php } ?>
 </head>
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
@@ -129,5 +125,19 @@
 	<div class="container main">
 		<?php echo $contents; ?>
 	</div>
+	<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<?php if( ENVIRONMENT == "production" ) { ?>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=2.1"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-56336810-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-56336810-1');
+		</script>
+	<?php } else { ?>
+		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
+		<script defer type="text/javascript" src="/assets/js/custom.js?v=4"></script>
+	<?php } ?>
 </body>
 </html>
