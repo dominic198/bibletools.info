@@ -24,10 +24,10 @@ class Verse extends CI_Controller
 			redirect( "/Matt_1.1" );
 		}
 		$short_ref = $ref;
-		saveLastVerse( $short_ref );
 		$ref = shortTextToNumber( $ref );
 		$data["verse"] = $this->kjvmodel->html_verse( $ref );
 		if( ! $data["verse"] ) show_404();
+		saveLastVerse( $short_ref );
 		$data["text_ref"] = parseReferenceToText( $ref );
 		$data["short_ref"] = $short_ref;
 		$data["navigation"] = $this->kjvmodel->nav( $ref );
