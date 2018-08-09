@@ -561,7 +561,7 @@ a:hover {
 	#headerwrap {
 		border-bottom: none;
 		/*background: rgba(35, 101, 140, 0.9);*/
-		background-color: #61a4cc;
+		background: #61a4cc;
 	}
 	#headerwrap .container {
 		padding: 20px 15px 0 15px;
