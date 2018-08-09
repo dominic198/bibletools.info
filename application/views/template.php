@@ -127,13 +127,6 @@
 	</div>
 	<?php if( ENVIRONMENT == "production" ) { ?>
 		<script defer type="text/javascript" src="/assets/app.min.js?v=2.4"></script>
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-56336810-1"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', 'UA-56336810-1');
-		</script>
 	<?php } else { ?>
 		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
 		<script defer type="text/javascript" src="/assets/js/custom.js?v=1"></script>
