@@ -368,10 +368,9 @@ a:hover {
 	position: absolute;
 	right: 23px;
 	margin-left: -28px;
-	top: 47px;
+	top: 45px;
 	color: #C8C8C8;
 	cursor: pointer;
-	display: none;
 	width: 28px;
 	height: 28px;
 	margin-top: 2px;
@@ -392,7 +391,6 @@ a:hover {
 .search-results {
 	width: 100%;
 	box-sizing: border-box;
-	display: none;
 	padding: 5px 8px;
 	position: absolute;
 	background-color: #fff;
@@ -444,9 +442,6 @@ a:hover {
 	z-index: 10;
 	background-color: rgba(255, 255, 255, .95);
 	cursor: pointer;
-}
-.overlay.menu {
-	display: none
 }
 .updating .progress {
 	margin-bottom: 0;
@@ -575,6 +570,9 @@ a:hover {
 		display: none;
 	}
 	.nav-main {
+		display: none;
+	}
+	.navbar {
 		display: none;
 	}
 }

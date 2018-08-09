@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $to      = 'adam@bibletools.info';
 $subject = $heading;
 $message .= "<br /><b>URL: </b> ".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-$message .= "<br/>User agent: " . $_SERVER['HTTP_USER_AGENT'];
+$message .= "<br/>User agent: " . $_SERVER['HTTP_USER_AGENT'] ?? null;
 $message .= "<br/>Referral URL: " . $_SERVER["HTTP_REFERER"] ?? null;
 $message .= "<br/>IP: " . $_SERVER["REMOTE_ADDR"];
 $headers = 'From: adam@bibletools.info' . "\r\n" .
