@@ -61,7 +61,7 @@ ul{margin:18px
 -18px 0 -18px;background-color:#F4F4F4;padding:0
 0 0 18px;box-shadow:inset 0px 2px 14px -5px rgba(0,0,0,.3);box-sizing:content-box;height:0;overflow:hidden}#menu ul.main li ul li:first-of-type{padding-top:18px}#menu ul.main li ul li:last-of-type{padding-bottom:18px}#menu ul.main li
 ul.open{height:100%;overflow:visible}#menu ul.main li ul li
-a{font-size:16px;color:#999}@media only screen and (max-width: 500px){#search_form{width:100%}#search{border:none;border-radius:4px;padding-left:50px;margin-bottom:0;margin-top:14px}#clear{top:30px;right:15px;width:25px;height:25px}.open-menu{top:29px;left:15px;font-size:26px}#headerwrap{border-bottom:none;background:rgba(35, 101, 140, 0.9)}#headerwrap
+a{font-size:16px;color:#999}@media only screen and (max-width: 500px){#search_form{width:100%}#search{border:none;border-radius:4px;padding-left:50px;margin-bottom:0;margin-top:14px}#clear{top:30px;right:15px;width:25px;height:25px}.open-menu{top:29px;left:15px;font-size:26px}#headerwrap{border-bottom:none;background-color:#61a4cc}#headerwrap
 .container{padding:20px
 15px 0 15px}#headerwrap
 h1{font-size:40px;color:#fff;text-align:center}#headerwrap

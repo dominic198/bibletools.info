@@ -18,7 +18,7 @@ $(document).ready(function(){
 	});
 	
 	$( document ).on( "click", ".resource.expand .panel-heading", function(e) {
-		$(this).removeClass( "expand" );
+		$(this).parents( ".resource" ).removeClass( "expand" );
 	});
 	
 	$( document ).on( "click", ".resource:not(.expand)", function(e) {
