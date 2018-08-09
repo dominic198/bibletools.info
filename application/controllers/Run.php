@@ -20,7 +20,7 @@ class Run extends CI_Controller
 		$this->load->library( "minify" ); 
 		$this->minify->css( array( "lib.css", "custom.css" ) ); 
 		$this->minify->deploy_css( true );
-		$this->minify->js( array( "custom.js", "lib.js" ) ); 
+		$this->minify->js( array( "lib.js", "custom.js"  ) ); 
 		$this->minify->deploy_js( true );
 	}
 	
