@@ -126,7 +126,7 @@
 		<?php echo $contents; ?>
 	</div>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<script defer type="text/javascript" src="/assets/app.min.js?v=2.4"></script>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=2.5"></script>
 	<?php } else { ?>
 		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
 		<script defer type="text/javascript" src="/assets/js/custom.js?v=1"></script>
