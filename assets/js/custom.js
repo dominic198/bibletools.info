@@ -4,7 +4,7 @@ if( text_ref.length > 0 ) {
 	u( "#clear" ).removeClass( "hidden" );
 }
 
-u( ".open-menu" ).on( "click", function() {
+u( ".open-menu, .navbar-toggler" ).on( "click", function() {
 	openMenu();
 });
 
@@ -170,24 +170,10 @@ u( document ).on( "click", ".book-suggestion", function() {
 	
 });
 
-u( ".toggle-history" ).on( "click", function() {
-	u( ".history-list" ).show();
-});
-
 u( "#clear" ).on( "click", function() {
 	u( "#search" ).first().value = "";
 	u( "#search" ).first().focus();
 	u(this).addClass( "hidden" );
-});
-
-u( document ).on( "mouse", function(e) {
-	var container = u( "#search_form" );
-	
-	if ( ! container.is( e.target )
-		&& container.has( e.target ).length === 0 )
-	{
-		u( ".search-results" ).hide();
-	}
 });
 
 u( document ).on( "click", ".ref-link", function(e) {
@@ -289,7 +275,7 @@ u( "#menu .history" ).on( "click", function(){
 
 //Dropdown menus
 u( ".nav-item" ).on( "click", function(){
-	u(this).parent().find( "ul" ).first().style.display = "block";
+	u(this).find( "ul" ).first().style.display = "block";
 });
 document.addEventListener("mouseup", function(event) {
 	if ( event.target.closest( "#lexicon" ) ) return;
