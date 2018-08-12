@@ -63,7 +63,7 @@ function loadVerse( ref, raw = false ){
 			u( "h2 .text-ref" ).text( data.text_ref );
 			u( "#resource_list .resource" ).remove();
 			data.main_resources.forEach(function( resource, index ) {
-				u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource" data-index-id="' + resource.id + '"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful"></a><a class="mark-helpful"></a></div></div>' );
+				u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
 			});
 			data.sidebar_resources.forEach(function( resource, index ) {
 				u( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.source + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
@@ -244,15 +244,16 @@ u( document ).on( "click", ".expand ul.occurances li", function(e) {
 });
 
 u( document ).on( "click", ".mark-helpful", function() {
-	var index_id = u(this).parents( ".resource" ).attr( "data-index-id" );
-	$.get( "/resources/helpful/" + index_id );
-	u(this).parents( ".resource" ).find( ".panel-footer" ).html( "<small>Thanks! We may rank this resource higher next time.</small>" );
+	var index_id = u(this).attr( "data-id" );
+	console.log(index_id);
+	fetch( "/resources/helpful/" + index_id );
+	u(this).closest( ".panel-footer" ).html( "<small>Thanks! We may rank this resource higher next time.</small>" );
 });
 
 u( document ).on( "click", ".mark-unhelpful", function() {
-	var index_id = u(this).parents( ".resource" ).attr( "data-index-id" );
-	$.get( "/resources/unhelpful/" + index_id );
-	u(this).parents( ".resource" ).find( ".panel-footer" ).html( "<small>Good to know, we may put this resource further down the list.</small>" );
+	var index_id = u(this).attr( "data-id" );
+	fetch( "/resources/unhelpful/" + index_id );
+	u(this).closest( ".panel-footer" ).html( "<small>Good to know, we may put this resource further down the list.</small>" );
 });
 
 //Global functions

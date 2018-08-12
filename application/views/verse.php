@@ -21,8 +21,8 @@
 				<div class="panel-body"><?php echo $resource["content"]; ?></div>
 				<div class="panel-footer">
 					<small>Was this helpful?</small>
-					<a class="mark-unhelpful"></a>
-					<a class="mark-helpful"></a>
+					<a class="mark-unhelpful" data-id="<?php echo $resource["id"]; ?>"></a>
+					<a class="mark-helpful" data-id="<?php echo $resource["id"]; ?>"></a>
 				</div>
 			</div><!--/ .panel -->
 		<?php } ?>
