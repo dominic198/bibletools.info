@@ -23,5 +23,6 @@ class Mapmodel extends CI_Model
 			}
 			return $array;
 		}
+		return [];
 	}
 }

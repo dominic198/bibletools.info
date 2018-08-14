@@ -13,15 +13,17 @@ class Verse extends CI_Controller
 		$this->load->helper( "url" );
 	}
 
-	function index()
+	function index( $ref = null )
 	{
-		$ref = $this->uri->segment(1);
 		$ref = str_replace( ":", ".", $ref );
 		$history_ref = getLastVerse();
+		$method = "direct";
 		if( ! $ref && $history_ref ) {
-			redirect( "/$history_ref" );
+			$ref = $history_ref;
+			$method = "history";
 		} elseif( ! $ref ) {
-			redirect( "/Matt_1.1" );
+			$ref = "Matt_1.1";
+			$method = "first_load";
 		}
 		$short_ref = $ref;
 		$ref = shortTextToNumber( $ref );
@@ -43,7 +45,7 @@ class Verse extends CI_Controller
 			"formatted_verse" => $data["text_ref"],
 			"ip" => $_SERVER["REMOTE_ADDR"],
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
-			"type" => "web",
+			"method" => $method,
 		];
 		$this->db->insert( "log", $log );
 		

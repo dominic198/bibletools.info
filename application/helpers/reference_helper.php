@@ -14,6 +14,8 @@ if ( ! function_exists( "construct_reference" ) )
     	//Modified from:
     	//https://stackoverflow.com/questions/23719791/php-parsing-explode-bible-search-string-into-variables-or-tokens
     	if( $ref == "" ) return false;
+		$ref = str_replace( "_", " ", $ref );
+		$ref = str_replace( ".", ":", $ref );
 		$parts = preg_split('/\s*:\s*/', trim( $ref, " ;") );
 		$components = [ "book" => "", "chapter" => "", "verse" => "" ];
 		if( isset( $parts[0] ) ) {

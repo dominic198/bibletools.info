@@ -11,50 +11,6 @@ class Resources extends CI_Controller
 		$this->load->model( "kjvmodel" );
 		$this->load->model( "resourcemodel" );
 		$this->load->model( "mapmodel" );
-		$this->load->helper( "history" );
-	}
-	
-	function json()
-	{
-		$segment = $this->uri->segment(3);
-		$ref = $segment == "query" ? parseTextToShort( urldecode( $this->uri->segment(4) ) ) : $segment;
-		$short_ref = $ref;
-		$word = $this->uri->segment(4);
-		$ref = shortTextToNumber( $ref );
-		
-		if( $segment != "query" && $word ) {
-			$strongs = $this->kjvmodel->lexicon( $ref, $word );
-			$resources = array(
-				"strongs" => $strongs,
-				"resources" => array( 
-					$strongs['data']['def']['long'],
-					$this->kjvmodel->lexicon_occurances( $ref, $word, $strongs['base_word'] ),
-				),
-			);
-			$this->output->set_output( json_encode( $resources ) );
-		} else {
-			$resources = array(
-				"main_resources" => $this->resourcemodel->getMain( $ref ),
-				"sidebar_resources" => array_filter( array_merge(
-					[ $this->kjvmodel->getCrossReferences( $ref ) ],
-					$this->mapmodel->get( $ref )
-				) ),
-				"verse" => $this->kjvmodel->html_verse( $ref ),
-				"text_ref" => parseReferenceToText( $ref ),
-				"short_ref" => $short_ref,
-				"nav" => $this->kjvmodel->nav( $ref ),
-			);
-			saveLastVerse( $short_ref );
-			$log = [
-				"verse" => $ref,
-				"formatted_verse" => $resources["text_ref"],
-				"ip" => $_SERVER["REMOTE_ADDR"],
-				"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
-				"type" => "web",
-			];
-			$this->db->insert( "log", $log );
-			$this->output->set_output( json_encode( $resources ) );
-		}
 	}
 	
 	function get()
@@ -69,33 +25,9 @@ class Resources extends CI_Controller
 			"formatted_verse" => parseReferenceToText( $ref ),
 			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
-			"type" => "android",
+			"api_version" => 0,
 		];
 		$this->db->insert( "log", $log );
 		$this->output->set_output( json_encode( $results ) );
-	}
-	
-	function helpful()
-	{
-		$index_id = $this->uri->segment(3);
-		$data = [
-			"index_id" => $index_id,
-			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
-			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
-			"helpful" => true,
-		];
-		$this->db->insert( "index_response", $data );
-	}
-	
-	function unhelpful()
-	{
-		$index_id = $this->uri->segment(3);
-		$data = [
-			"index_id" => $index_id,
-			"ip" => $_SERVER["REMOTE_ADDR"] ?? null,
-			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
-			"helpful" => false,
-		];
-		$this->db->insert( "index_response", $data );
 	}
 }
