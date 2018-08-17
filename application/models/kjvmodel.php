@@ -53,10 +53,23 @@ class Kjvmodel extends CI_Model
 				->result_array();
 			
 			$definition['data'] = json_decode( $definition['data'], true );
-			$definition['pronun'] = json_decode( $definition['pronun'], true );
-			$definition['data']['def']['long']['content'] = $this->makeUl( $definition['data']['def']['long'] );
-			$definition['data']['def']['long']['title'] = "More Strongs Definitions";
-			$definition['connected_words'] = $connected_words;
+			$pronunciation = json_decode( $definition['pronun'], true );
+			
+			return [
+				"pronunciation" => $pronunciation["dic"],
+				"original_word" => $definition["word"],
+				"definition" => $definition['data']['def']["short"],
+				"connected_words" => $connected_words,
+				"resources" => [
+					[
+						"title" => "More Strongs definitions",
+						"content" => $this->makeUl( $definition['data']['def']["long"] ),
+					],
+					$this->lexicon_occurances( $word, $definition['base_word'] ),
+					
+				],
+				
+			];
 			
 			return $definition;
 		}

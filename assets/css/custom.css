@@ -457,15 +457,9 @@ label {
 }
 .panel-footer .mark-helpful, .panel-footer .mark-unhelpful {
 	float: right;
-	padding: 1px 7px;
 	border: solid 1px #eee;
-	font-size: 90%;
-	display: block;
 	width:30px;
 	height: 25px;
-	top: 5px;
-	left: 6px;
-	content: "";
 	background-size: 57%;
 	background-position: center;
 	cursor: pointer;
@@ -721,26 +715,29 @@ section#lexicon .content {
 	overflow-x: hidden;
 	position: relative;
 }
+.close {
+	background: url('data:image/svg+xml;utf8, <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 512"><path fill="#fff" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"></path></svg>') no-repeat;
+	background-position: center;
+	background-size: 50%;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
 section#lexicon .close {
 	position: fixed;
+	vertical-align: top;
+	margin: 3px 6px 4px 6px;
+	border-radius: 50%;
+	background-color: #34495e;
 	top: 4px;
 	right: 8px;
 	opacity: .3;
 	color: #fff;
 	text-shadow: none;
 	z-index: 1;
-	cursor: pointer;
 }
 section#lexicon .close:hover {
 	opacity: .8;
-}
-section#lexicon .close svg {
-	background-color: #34495e;
-	vertical-align: top;
-	margin: 3px 6px 4px 6px;
-	border-radius: 50%;
-	width: 30px;
-	height: 30px;
 }
 section#lexicon .arrow {
 	bottom: 100%;
@@ -956,4 +953,41 @@ section#lexicon .occurances p {
 
 .navbar-light .navbar-text a:hover, .navbar-light .navbar-text a:focus {
   color: rgba(0, 0, 0, 0.9);
+}
+.verse-popper {
+	width: 300px;
+	min-height: 100px;
+	background: #fff;
+	z-index: 1;
+	position: absolute;
+	margin-top: 30px;
+	margin-left: -30px;
+	box-shadow: 0px 31px 75px rgba(255,255,255,1);
+}
+.verse-popper .popper-body {
+	padding: 10px;
+	border: solid 1px #ccc;
+	border-top: none;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	overflow: auto;
+}
+.verse-popper header {
+	padding: 4px 10px;
+	background-color: #61a4cc;
+	color: white;
+	font-weight: 400;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	position: relative;
+}
+.study-verse {
+	float:right;
+}
+.verse-popper .close {
+	position: absolute;
+	top: 4px;
+	right: 5px;
+	width: 25px;
+	height: 25px;
 }

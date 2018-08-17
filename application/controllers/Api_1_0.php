@@ -51,7 +51,7 @@ class Api_1_0 extends CI_Controller
 			"ip" => $_SERVER["REMOTE_ADDR"],
 			"user_agent" => $_SERVER['HTTP_USER_AGENT'] ?? null,
 			"method" => $is_query ? "query" : "ajax",
-			"api_version" => 1.0,
+			"api_version" => "1.0",
 		];
 		$this->db->insert( "log", $log );
 		$this->output->set_output( json_encode( $resources ) );
@@ -59,15 +59,7 @@ class Api_1_0 extends CI_Controller
 	
 	function word( $word )
 	{
-		$strongs = $this->kjvmodel->lexicon( $word );
-		$resources = array(
-			"strongs" => $strongs,
-			"resources" => array( 
-				$strongs['data']['def']['long'],
-				$this->kjvmodel->lexicon_occurances( $word, $strongs['base_word'] ),
-			),
-		);
-		$this->output->set_output( json_encode( $resources ) );
+		$this->output->set_output( json_encode( $this->kjvmodel->lexicon( $word ) ) );
 	}
 	
 	function helpful( $index_id )

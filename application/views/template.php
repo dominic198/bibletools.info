@@ -110,22 +110,23 @@
 	<section id="lexicon" class="col-sm-5">
 		<div class="content">
 			<span class="arrow"></span>
-			<span class="close"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z" class=""></path></span>
+			<span class="close"></span>
 			<div class="definition">Loading...</div>
 		</div>
 	</section>
 	<div class="container main">
+		
 		<?php echo $contents; ?>
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=3.0" rel="stylesheet">
+		<link href="/assets/app.min.css?v=3.1" rel="stylesheet">
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=1" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">
 	<?php } ?>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<script defer type="text/javascript" src="/assets/app.min.js?v=3.0"></script>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=3.1"></script>
 	<?php } else { ?>
 		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
 		<script defer type="text/javascript" src="/assets/js/custom.js?v=1"></script>

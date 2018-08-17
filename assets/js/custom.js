@@ -23,6 +23,21 @@ function initializeMaps() {
 }
 initializeMaps();
 
+/*function getOffset( el ) {
+	const rect = el.getBoundingClientRect();
+	return {
+		left: rect.left + window.scrollX,
+		top: rect.top + window.scrollY
+	};
+}
+
+u( document ).on( "click", ".bible-ref", function(e) {
+	e.preventDefault();
+	u( ".verse-popper" ).remove();
+	var link = u( this ).first();
+	u( "#resource_list" ).first().insertAdjacentHTML( "afterend", '<div class="verse-popper" style="left: ' + getOffset( link ).left + 'px; top: ' + getOffset( link ).top + 'px;"><header>John 15:9 (KJV)<a class="close"></a></header><div class="popper-body"><a class="study-verse" href="#">Study verse »</a></div></div>' );
+});*/
+
 u( document ).on( "click", ".overlay.menu", function() {
 	closeMenu();
 });
@@ -207,11 +222,11 @@ u( document ).on( "click", ".verse .panel-body a", function(e) {
 		if ( this.status >= 200 && this.status < 400 ) {
 			var data = JSON.parse(this.response);
 			u( "#lexicon .definition" ).empty();
-			u( "#lexicon .definition" ).append( '<h2>' + data.strongs.word + '<small>' + data.strongs.pronun.dic + '</small></h2><p class="short">' + data.strongs.data.def.short + '</p><div class="long">' + data.strongs.data.def.html + '</div><div class="resources"></div>' );
+			u( "#lexicon .definition" ).append( '<h2>' + data.original_word + '<small>' + data.pronunciation + '</small></h2><p class="short">' + data.definition + '</p><div class="resources"></div>' );
 			data.resources.forEach( function( resource, index ) {
 				u( "#lexicon .resources" ).append( '<div class="row"><div class="col-sm-12 resource"><div class="panel panel-modern"><div class="panel-heading"><strong>' + resource.title + '</strong></div><div class="panel-body">' + resource.content + '</div></div></div></div>' );
 			});
-			data.strongs.connected_words.forEach( function( word ) {
+			data.connected_words.forEach( function( word ) {
 				u( ".verse [id='" + word.id + "']" ).addClass( "selected" );
 			});
 		} else {
