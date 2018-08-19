@@ -23,7 +23,8 @@ function initializeMaps() {
 }
 initializeMaps();
 
-/*function getOffset( el ) {
+//-----Verse link poppers
+function getOffset( el ) {
 	const rect = el.getBoundingClientRect();
 	return {
 		left: rect.left + window.scrollX,
@@ -32,11 +33,29 @@ initializeMaps();
 }
 
 u( document ).on( "click", ".bible-ref", function(e) {
+	if( ! self.fetch ) { //fetch not supported
+		return;
+	}
 	e.preventDefault();
 	u( ".verse-popper" ).remove();
 	var link = u( this ).first();
-	u( "#resource_list" ).first().insertAdjacentHTML( "afterend", '<div class="verse-popper" style="left: ' + getOffset( link ).left + 'px; top: ' + getOffset( link ).top + 'px;"><header>John 15:9 (KJV)<a class="close"></a></header><div class="popper-body"><a class="study-verse" href="#">Study verse »</a></div></div>' );
-});*/
+	var ref = u( this ).attr( "href" ).substring(1);
+	fetch( "/api/v1.0/bibletext/" + ref ).then( function( response ) {
+		if (response.status !== 200) {
+			window.location = "/" + ref;
+		}
+		response.json().then(function(data) {
+			u( "#resource_list" ).first().insertAdjacentHTML( "afterend", '<div class="verse-popper" style="left: ' + getOffset( link ).left + 'px; top: ' + getOffset( link ).top + 'px;"><header>' + data.title + '<a class="close"></a></header><div class="popper-body">' + data.text + '<a class="study-verse" href="/' + ref + '">Study verse »</a></div></div>' );
+		});
+		
+	} ).catch( function(error) {
+		window.location = "/" + ref;
+	});
+});
+
+u( document ).on( "click", ".verse-popper .close", function() {
+	u( ".verse-popper" ).remove();
+});
 
 u( document ).on( "click", ".overlay.menu", function() {
 	closeMenu();
@@ -218,6 +237,8 @@ u( document ).on( "click", ".verse .panel-body a", function(e) {
 	
 	var request = new XMLHttpRequest();
 	request.open( "GET", "/api/v1.0/word/" + word_id, true );
+	$lexicon.attr( "data-word-id", word_id );
+	$lexicon.attr( "data-page", 1 );
 	request.onload = function() {
 		if ( this.status >= 200 && this.status < 400 ) {
 			var data = JSON.parse(this.response);
@@ -241,6 +262,26 @@ u( document ).on( "click", ".verse .panel-body a", function(e) {
 	
 	request.send();
 	
+});
+
+u( document ).on( "click", ".load-more-occurences", function(e) {
+	$button = u( this );
+	$button.text( "Loading..." );
+	var $lexicon = u( "#lexicon" );
+	var word = $lexicon.attr( "data-word-id" );
+	var page = Number( $lexicon.attr( "data-page" ) ) + 1;
+	$lexicon.attr( "data-page", page );
+	fetch( "api/v1.0/word_occurences/" + word + "/" + page ).then( function( response ) {
+		response.text().then(function(data) {
+			if( ! data ) {
+				$button.remove();
+			} else {
+				$button.text( "Load more" );
+				u( ".load-more-occurences" ).first().insertAdjacentHTML( "beforebegin", data );
+			}
+		});
+		
+	} );
 });
 
 u( "#lexicon .close" ).on( "click", function() {
@@ -297,6 +338,8 @@ u( ".nav-item" ).on( "click", function(){
 document.addEventListener("mouseup", function(event) {
 	if ( event.target.closest( "#lexicon" ) ) return;
 	if ( event.target.closest( ".history-list" ) ) return;
+	if ( event.target.closest( ".verse-popper" ) ) return;
 	clearLexicon();
 	u( ".dropdown-menu.history-list" ).first().style.display = "none";
+	u( ".verse-popper" ).remove();
 });

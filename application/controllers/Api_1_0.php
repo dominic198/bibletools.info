@@ -62,6 +62,11 @@ class Api_1_0 extends CI_Controller
 		$this->output->set_output( json_encode( $this->kjvmodel->lexicon( $word ) ) );
 	}
 	
+	function word_occurences( $word, $page )
+	{
+		$this->output->set_output( $this->kjvmodel->lexicon_occurances( $word, $page ) );
+	}
+	
 	function helpful( $index_id )
 	{
 		$data = [
@@ -82,5 +87,10 @@ class Api_1_0 extends CI_Controller
 			"helpful" => false,
 		];
 		$this->db->insert( "index_response", $data );
+	}
+	
+	function bibletext( $ref )
+	{
+		$this->output->set_output( json_encode( $this->kjvmodel->bibletext( shortTextToNumber( $ref ) ) ) );
 	}
 }

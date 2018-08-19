@@ -120,13 +120,13 @@
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=3.1" rel="stylesheet">
+		<link href="/assets/app.min.css?v=3.2" rel="stylesheet">
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=1" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">
 	<?php } ?>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<script defer type="text/javascript" src="/assets/app.min.js?v=3.1"></script>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=3.2"></script>
 	<?php } else { ?>
 		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
 		<script defer type="text/javascript" src="/assets/js/custom.js?v=1"></script>

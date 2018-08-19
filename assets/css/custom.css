@@ -991,3 +991,6 @@ section#lexicon .occurances p {
 	width: 25px;
 	height: 25px;
 }
+.load-more-occurences {
+	cursor: pointer;
+}

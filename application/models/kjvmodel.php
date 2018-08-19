@@ -34,15 +34,15 @@ class Kjvmodel extends CI_Model
 		}
 	}
 	
-	function lexicon( $word )
+	function lexicon( $word_id )
 	{
-		if( is_numeric( $word ) ) {
-			$lang = ( $word < 621719 ? "hebrew" : "greek" );
+		if( is_numeric( $word_id ) ) {
+			$lang = ( $word_id < 621719 ? "hebrew" : "greek" );
 			$definition = $this->db->select( "kjv_original.word, kjv_original.id, lexicon_$lang.data, lexicon_$lang.base_word, kjv_original.pronun" )
 				->from( "kjv_words" )
 				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
 				->join( "lexicon_$lang", "kjv_original.strongs = lexicon_$lang.strongs" )
-				->where( "kjv_words.id", $word )
+				->where( "kjv_words.id", $word_id )
 				->get()
 				->row_array();
 				
@@ -52,9 +52,27 @@ class Kjvmodel extends CI_Model
 				->get()
 				->result_array();
 			
+			$word = $this->db->select( "*" )
+				->from( "kjv_words" )
+				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
+				->where( "kjv_words.id", $word_id )
+				->get()
+				->row_array();
+			
+			$sign = ( $word_id < 621719 ? "<" : ">=" );
+			$verse_count = $this->db->select( "*" )
+				->from( "kjv_original" )
+				->where( "strongs", $word['strongs'] )
+				->where( "ref $sign 40001001" )
+				->count_all_results();
+			
 			$definition['data'] = json_decode( $definition['data'], true );
 			$pronunciation = json_decode( $definition['pronun'], true );
 			
+			$occurences = $this->lexicon_occurances( $word_id );
+			if( $verse_count > 100 ) {
+				$occurences .= "<a class='load-more-occurences'>Load more</a>";
+			}
 			return [
 				"pronunciation" => $pronunciation["dic"],
 				"original_word" => $definition["word"],
@@ -65,7 +83,10 @@ class Kjvmodel extends CI_Model
 						"title" => "More Strongs definitions",
 						"content" => $this->makeUl( $definition['data']['def']["long"] ),
 					],
-					$this->lexicon_occurances( $word, $definition['base_word'] ),
+					[
+						"title" => $verse_count . " other occurrences of the root word: " . $definition['base_word'],
+						"content" => $occurences,
+					]
 					
 				],
 				
@@ -75,11 +96,11 @@ class Kjvmodel extends CI_Model
 		}
 	}
 	
-	function lexicon_occurances( $word_id, $base_word )
+	function lexicon_occurances( $word_id, $page = 1 )
 	{
 		if( is_numeric( $word_id ) ) {
 			$sign = ( $word_id < 621719 ? "<" : ">=" );
-			
+			$offset = ( $page - 1 ) * 100;
 			$word = $this->db->select( "*" )
 				->from( "kjv_words" )
 				->join( "kjv_original", "kjv_words.orig_id = kjv_original.id" )
@@ -92,6 +113,8 @@ class Kjvmodel extends CI_Model
 				->join( "kjv_original", "kjv_html.ref = kjv_original.ref" )
 				->where( "kjv_original.strongs", $word['strongs'] )
 				->where( "kjv_html.ref $sign 40001001" )
+				->limit( 100 )
+				->offset( $offset )
 				->get()
 				->result_array();
 						
@@ -101,11 +124,8 @@ class Kjvmodel extends CI_Model
 				$words = strip_tags( $verse['words'] );
 				$html .= "<li><strong>{$ref_array['book']} {$ref_array['chapter']}:{$ref_array['verse']}</strong><p>$words</p></li>";
 			}
-			
-			return [
-				"title" => count( $related_verses ) . " other occurances of the root word: $base_word" ,
-				"content" => $html,
-			];
+			$html .= "</ul>";
+			return count( $related_verses ) > 0 ? $html : false;
 		}
 	}
 	
@@ -158,6 +178,19 @@ class Kjvmodel extends CI_Model
 				"class" => "tsk-panel",
 				"content" => $result["content"] ?? "",
 			] : false;
+		}
+	}
+	
+	function bibletext( $ref )
+	{
+		if( $ref ){
+			$query = "SELECT * FROM kjv_text WHERE ref = $ref";
+			$result = $this->db->query( $query )->row_array();
+			return [
+				"text" => $result["words"],
+				"title" => parseReferenceToText( $ref ) . " (KJV)",
+				
+			];
 		}
 	}
 }
