@@ -9,7 +9,7 @@
 			<div class="panel-heading text-center"><strong>King James Version (KJV)</strong></div>
 			<div class="panel-body"><?php echo $verse; ?></div>
 		</div><!--/ .panel -->
-		<?php foreach( $main_resources as $resource ) { ?>
+		<?php foreach( $main_resources as $resource ) { if( $resource["logo"] == "sdabc" ) continue; ?>
     		<div class="panel panel-modern resource" data-index-id="<?php echo $resource["id"]; ?>">
 				<div class="panel-heading">
 					<div class="author-icon <?php echo $resource["logo"]; ?>"></div>

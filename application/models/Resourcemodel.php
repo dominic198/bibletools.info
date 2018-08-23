@@ -11,7 +11,7 @@ class Resourcemodel extends CI_Model
 	function getMain( $ref )
 	{
 		if( is_numeric( $ref ) ) {
-			$resources = $this->db->query( "SELECT *, coalesce(egw_quotes.content, resources.content) as content, index.id as id, resource_info.name as source FROM `index` LEFT JOIN resources ON index.resource_id = resources.id LEFT JOIN resource_info ON resources.info_id = resource_info.id LEFT JOIN egw_quotes ON resources.reference = egw_quotes.reference WHERE index.verse = $ref AND resource_info.id != 6 LIMIT 50" )->result_array();
+			$resources = $this->db->query( "SELECT *, coalesce(egw_quotes.content, resources.content) as content, index.id as id, resource_info.name as source FROM `index` LEFT JOIN resources ON index.resource_id = resources.id LEFT JOIN resource_info ON resources.info_id = resource_info.id LEFT JOIN egw_quotes ON resources.reference = egw_quotes.reference WHERE index.verse = $ref LIMIT 50" )->result_array();
 			
 			return array_map( function( $item ) {
 				$source = $item["source"];

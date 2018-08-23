@@ -97,7 +97,9 @@ function loadVerse( ref, raw = false ){
 			u( "h2 .text-ref" ).text( data.text_ref );
 			u( "#resource_list .resource" ).remove();
 			data.main_resources.forEach(function( resource, index ) {
-				u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
+				if( resource.logo != "sdabc" ) {
+					u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
+				}
 			});
 			console.log(data.sidebar_resources);
 			data.sidebar_resources.forEach(function( resource, index ) {
