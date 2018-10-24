@@ -2,6 +2,13 @@ var text_ref = u( ".text-ref" );
 var short_ref = u( ".verse" ).attr( "data-short-ref" );
 window.history.pushState( short_ref, null, short_ref );
 
+window.onpopstate = function(event) {
+	console.log( window.history );
+	if( event.state != null ){
+		loadVerse( event.state, true, false );
+	}
+};
+
 if( text_ref.length > 0 ) {
 	u( "#search" ).first().value = text_ref.text();
 	u( "#clear" ).removeClass( "hidden" );
@@ -69,12 +76,13 @@ u( document ).on( "click", ".resource:not(.expand)", function(e) {
 	u(this).addClass( "expand" );
 });
 
-function loadVerse( ref, raw = false ){
+function loadVerse( ref, raw = false, updateState = true ){
 	u( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
 	u( "#search" ).first().blur();
 	closeMenu();
 	url = "/api/v1.0/verse/" + ref;
-	if( ! raw ) {
+	if( ! raw && updateState != false ){
+		console.log( "update state" );
 		window.history.pushState( ref, null, ref );
 	}
 	var request = new XMLHttpRequest();
@@ -85,9 +93,10 @@ function loadVerse( ref, raw = false ){
 			if( u( ".verse" ).length < 1 ) {
 				window.location = "/" + data.short_ref;
 			}
-			if( raw ) {
+			if( raw && updateState != false ){
 				window.history.pushState( data.short_ref, null, data.short_ref );
 			}
+			document.title = data.text_ref + " – BibleTools.info";
 			u( "#search" ).first().value = data.text_ref;
 			u( ".verse .panel-body" ).html( data.verse );
 			u( ".next-verse" ).attr( "href", "/" + data.nav.next );
@@ -101,7 +110,6 @@ function loadVerse( ref, raw = false ){
 					u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
 				}
 			});
-			console.log(data.sidebar_resources);
 			data.sidebar_resources.forEach(function( resource, index ) {
 				u( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.source + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
 			});
@@ -304,7 +312,6 @@ u( document ).on( "click", ".expand ul.occurances li", function(e) {
 
 u( document ).on( "click", ".mark-helpful", function() {
 	var index_id = u(this).attr( "data-id" );
-	console.log(index_id);
 	fetch( "/api/v1.0/helpful/" + index_id );
 	u(this).closest( ".panel-footer" ).html( "<small>Thanks! We may rank this resource higher next time.</small>" );
 });

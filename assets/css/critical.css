@@ -29,6 +29,9 @@ body {
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
+input[type=text] {
+	-webkit-appearance: none;
+}
 
 p {
   margin-top: 0;

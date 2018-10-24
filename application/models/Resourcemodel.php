@@ -23,7 +23,9 @@ class Resourcemodel extends CI_Model
 				}
 				$content = $item["content"];
 				if( !empty( $item["reference"] ) ) {
-					$content .= "<a href='https://m.egwwritings.org/search?query={$item['reference']}' target='_blank'>Read in context &raquo;</a>";
+					$ref_parts = explode( "-", $item["reference"] );
+					$url_safe_ref = $ref_parts[0];
+					$content .= "<a href='https://m.egwwritings.org/search?query=$url_safe_ref' target='_blank'>Read in context &raquo;</a>";
 				}
 				$array = [
 					"content" => $content,
