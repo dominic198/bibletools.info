@@ -1,6 +1,5 @@
 var text_ref = u( ".text-ref" );
 var short_ref = u( ".verse" ).attr( "data-short-ref" );
-window.history.pushState( short_ref, null, short_ref );
 
 window.onpopstate = function(event) {
 	console.log( window.history );
