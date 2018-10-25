@@ -303,9 +303,9 @@ function clearLexicon() {
 	u( ".verse a.selected" ).removeClass( "selected" );
 }
 
-u( document ).on( "click", ".expand ul.occurances li", function(e) {
+u( document ).on( "mouseup", ".expand .occurances li", function(e) {
 	var ref = u(this).find( "strong" ).text();
-	getVerse( ref );
+	loadVerse( ref, true );
 	clearLexicon();
 });
 
