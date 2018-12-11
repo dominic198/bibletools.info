@@ -129,8 +129,8 @@
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=3.6" rel="stylesheet">
-		<script defer type="text/javascript" src="/assets/app.min.js?v=3.7"></script>
+		<link href="/assets/app.min.css?v=3.8" rel="stylesheet">
+		<script defer type="text/javascript" src="/assets/app.min.js?v=3.8"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=1" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">

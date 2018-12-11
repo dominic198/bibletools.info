@@ -6,7 +6,6 @@ u( ".contrast-mode" ).toggleClass( "on", is_contrast == "true" );
 u( "body" ).toggleClass( "contrast", is_contrast == "true" );
 
 window.onpopstate = function(event) {
-	console.log( window.history );
 	if( event.state != null ){
 		loadVerse( event.state, true, false );
 	}
@@ -15,6 +14,9 @@ window.onpopstate = function(event) {
 if( text_ref.length > 0 ) {
 	u( "#search" ).first().value = text_ref.text();
 	u( "#clear" ).removeClass( "hidden" );
+	var short_ref = u( ".verse" ).attr( "data-short-ref" );
+	window.history.pushState( short_ref, null, short_ref );
+	
 }
 
 u( ".open-menu, .navbar-toggler" ).on( "click", function() {
@@ -42,7 +44,7 @@ function getOffset( el ) {
 	};
 }
 
-u( document ).on( "click", ".bible-ref", function(e) {
+/*u( document ).on( "click", ".bible-ref", function(e) {
 	if( ! self.fetch ) { //fetch not supported
 		return;
 	}
@@ -61,7 +63,7 @@ u( document ).on( "click", ".bible-ref", function(e) {
 	} ).catch( function(error) {
 		window.location = "/" + ref;
 	});
-});
+});*/
 
 u( document ).on( "click", ".verse-popper .close", function() {
 	u( ".verse-popper" ).remove();
@@ -85,7 +87,6 @@ function loadVerse( ref, raw = false, updateState = true ){
 	closeMenu();
 	url = "/api/v1.0/verse/" + ref;
 	if( ! raw && updateState != false ){
-		console.log( "update state" );
 		window.history.pushState( ref, null, ref );
 	}
 	var request = new XMLHttpRequest();
