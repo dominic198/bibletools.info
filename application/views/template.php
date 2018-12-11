@@ -39,6 +39,10 @@
 			<li><a href="/about/feedback">Send Feedback</a></li>
 			<li><a href="/about/info">About</a></li>
 		</ul>
+		<hr/>
+		<ul class="sub">
+			<li class="contrast-mode"><a href="javascript:void(0)">Contrast Mode</a></li>
+		</ul>
 	</section>
 	<nav class="navbar nav-main navbar-expand-sm navbar-dark">
 		<div class="container">
@@ -118,11 +122,15 @@
 	<div class="container main">
 		
 		<?php echo $contents; ?>
+		<footer class="main">
+			<div class="text">BibleTools.info is a supporting ministry of the Seventh-day Adventist Church</div>
+			<div class="contrast-mode"><a href="javascript:void(0)">Contrast Mode</a></div>
+		</footer>
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=3.5" rel="stylesheet">
-		<script defer type="text/javascript" src="/assets/app.min.js?v=3.6"></script>
+		<link href="/assets/app.min.css?v=3.6" rel="stylesheet">
+		<script defer type="text/javascript" src="/assets/app.min.js?v=3.7"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=1" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">

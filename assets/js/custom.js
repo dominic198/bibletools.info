@@ -1,6 +1,10 @@
 var text_ref = u( ".text-ref" );
 var short_ref = u( ".verse" ).attr( "data-short-ref" );
 
+var is_contrast = localStorage.getItem( "contrast" );
+u( ".contrast-mode" ).toggleClass( "on", is_contrast == "true" );
+u( "body" ).toggleClass( "contrast", is_contrast == "true" );
+
 window.onpopstate = function(event) {
 	console.log( window.history );
 	if( event.state != null ){
@@ -350,4 +354,10 @@ document.addEventListener("mouseup", function(event) {
 	clearLexicon();
 	u( ".dropdown-menu.history-list" ).first().style.display = "none";
 	u( ".verse-popper" ).remove();
+});
+
+u( ".contrast-mode" ).on( "click", function() {
+	u( ".contrast-mode" ).toggleClass( "on" );
+	u( "body" ).toggleClass( "contrast" );
+	localStorage.setItem( "contrast", u(this).hasClass( "on" ) );
 });
