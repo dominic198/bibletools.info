@@ -36,7 +36,9 @@ EOT;
 	endforeach;
 
 endif;
-
+$message .= "<br /><b>URL: </b> ".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+$message .= "<br/>User agent: " . $_SERVER['HTTP_USER_AGENT'] ?? null;
+$message .= "<br/>Referral URL: " . $_SERVER["HTTP_REFERER"] ?? null;
 mail($to, $subject, $body, $headers);
 ?>
 
