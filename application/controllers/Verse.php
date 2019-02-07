@@ -15,23 +15,20 @@ class Verse extends CI_Controller
 
 	function index( $query = null )
 	{
-		if( $ref = shortTextToNumber( $query ) ) {
-			$short_ref = $ref;
-		} elseif( $short_ref = parseTextToShort( urldecode( $query ) ) ) {
-			$ref = shortTextToNumber( $short_ref );
-		} else {
-			show_404();
-		}
-		
-		$ref = str_replace( ":", ".", $ref );
 		$history_ref = getLastVerse();
 		$method = "direct";
-		if( ! $ref && $history_ref ) {
-			$ref = $history_ref;
+		if( ! $query && $history_ref ) {
+			$query = $history_ref;
 			$method = "history";
-		} elseif( ! $ref ) {
-			$ref = "Matt_1.1";
+		} elseif( ! $query ) {
+			$query = "Matt_1.1";
 			$method = "first_load";
+		}
+		
+		if( $ref = shortTextToNumber( $query ) ) {
+			$short_ref = $query;
+		} elseif( $short_ref = parseTextToShort( urldecode( $query ) ) ) {
+			$ref = shortTextToNumber( $short_ref );
 		}
 		
 		$data["verse"] = $this->kjvmodel->html_verse( $ref );
