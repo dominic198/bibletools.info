@@ -85,7 +85,8 @@ function loadVerse( ref, raw = false, updateState = true ){
 	u( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
 	u( "#search" ).first().blur();
 	closeMenu();
-	url = "/api/v1.0/verse/" + ref;
+	var limit = 8;
+	url = "/api/v1.0/verse/" + ref + "/" + limit;
 	if( ! raw && updateState != false ){
 		window.history.pushState( ref, null, ref );
 	}
@@ -103,20 +104,26 @@ function loadVerse( ref, raw = false, updateState = true ){
 			document.title = data.text_ref + " – BibleTools.info";
 			u( "#search" ).first().value = data.text_ref;
 			u( ".verse .panel-body" ).html( data.verse );
+			u( ".verse" ).attr( "data-short-ref", data.short_ref ).attr( "data-ref", data.text_ref );
 			u( ".next-verse" ).attr( "href", "/" + data.nav.next );
 			u( ".prev-verse" ).attr( "href", "/" + data.nav.prev );
 			u( ".prev-verse" ).toggleClass( "hidden", data.nav.prev == false );
 			u( ".next-verse" ).toggleClass( "hidden", data.nav.next == false );
 			u( "h2 .text-ref" ).text( data.text_ref );
+			u( "#resource_list" ).attr( "data-count", data.resource_count );
 			u( "#resource_list .resource" ).remove();
 			data.main_resources.forEach(function( resource, index ) {
-				if( resource.logo != "sdabc" ) {
-					u( "#resource_list .left-column" ).append( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
-				}
+				u( "#resource_list .left-column .load-more" ).before( '<div class="panel panel-modern resource ' + ( resource.logo == "sdabc" ? "hidden" : "" ) + '"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
 			});
 			data.sidebar_resources.forEach(function( resource, index ) {
 				u( "#resource_list .right-column" ).append( '<div class="panel panel-modern resource ' + resource.class + '"><div class="panel-heading"><strong>' + resource.source + '</strong></div><div class="panel-body">' + resource.content + '</div></div>' );
 			});
+			
+			if( u( "#resource_list .left-column .resource" ).length == data.resource_count ) {
+				u( ".load-more" ).addClass( "hidden" );
+			} else {
+				u( ".load-more" ).removeClass( "hidden" );
+			}
 			initializeMaps();
 			u( ".history-list" ).prepend( '<li><a href="/' + ref + '" class="dropdown-item ref-link">' + data.text_ref + '</a></li>' );
 			u( ".history-list" ).each(function( index ) {
@@ -136,6 +143,26 @@ function loadVerse( ref, raw = false, updateState = true ){
 	
 	request.send();
 }
+
+u( document ).on( "click", ".load-more", function(e) {
+	$button = u( this );
+	$button.text( "Loading..." );
+	var ref = u( ".verse" ).attr( "data-short-ref" );
+	var offset = u( "#resource_list .left-column .resource" ).length;
+	var limit = 20;
+	fetch( "api/v1.0/resources/" + ref + "/" + limit + "/" + offset ).then( response => response.json() ).then( data => {
+		data.forEach(function( resource, index ) {
+			if( resource.logo != "sdabc" ) {
+				u( "#resource_list .left-column .load-more" ).before( '<div class="panel panel-modern resource"><div class="panel-heading"><div class="author-icon ' + resource.logo + '"></div><div class="resource-info"><strong>' + resource.author + '</strong><br><small>' + resource.source + '</small></div></div><div class="panel-body">' + resource.content + '</div><div class="panel-footer"><small>Was this helpful?</small><a class="mark-unhelpful" data-id="' + resource.id + '"></a><a class="mark-helpful" data-id="' + resource.id + '"></a></div></div>' );
+			}
+		});
+	}).then( function() {
+		if( u( "#resource_list .left-column .resource" ).length == u( "#resource_list" ).attr( "data-count" ) ) {
+			u( ".load-more" ).addClass( "hidden" );
+		}
+		$button.text( "More Comments" );
+	});
+});
 
 function showSuggestions() {
 	value = u( "#search" ).first().value;

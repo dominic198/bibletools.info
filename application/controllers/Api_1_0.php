@@ -14,7 +14,7 @@ class Api_1_0 extends CI_Controller
 		$this->load->helper( "history" );
 	}
 	
-	function verse( $query, $translation = "kjv" )
+	function verse( $query, $limit = 50 )
 	{
 		if( $ref = shortTextToNumber( $query ) ) {
 			$short_ref = $query;
@@ -27,12 +27,13 @@ class Api_1_0 extends CI_Controller
 		}
 		
 		$resources = [
-			"main_resources" => $this->resourcemodel->getMain( $ref ),
+			"main_resources" => $this->resourcemodel->getMain( $ref, $limit ),
 			"sidebar_resources" => [],
 			"verse" => $this->kjvmodel->html_verse( $ref ),
 			"text_ref" => parseReferenceToText( $ref ),
 			"short_ref" => $short_ref,
 			"nav" => $this->kjvmodel->nav( $ref ),
+			"resource_count" => $this->resourcemodel->countResources( $ref ),
 		];
 		
 		$cross_references = $this->kjvmodel->getCrossReferences( $ref );
@@ -54,6 +55,13 @@ class Api_1_0 extends CI_Controller
 			"api_version" => "1.0",
 		];
 		$this->db->insert( "log", $log );
+		$this->output->set_output( json_encode( $resources ) );
+	}
+	
+	function resources( $ref, $limit = 20, $offset = 0 )
+	{
+		$ref = shortTextToNumber( $ref );
+		$resources = $this->resourcemodel->getMain( $ref, $limit, $offset );
 		$this->output->set_output( json_encode( $resources ) );
 	}
 	

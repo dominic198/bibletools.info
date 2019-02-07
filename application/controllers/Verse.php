@@ -13,8 +13,16 @@ class Verse extends CI_Controller
 		$this->load->helper( "url" );
 	}
 
-	function index( $ref = null )
+	function index( $query = null )
 	{
+		if( $ref = shortTextToNumber( $query ) ) {
+			$short_ref = $ref;
+		} elseif( $short_ref = parseTextToShort( urldecode( $query ) ) ) {
+			$ref = shortTextToNumber( $short_ref );
+		} else {
+			show_404();
+		}
+		
 		$ref = str_replace( ":", ".", $ref );
 		$history_ref = getLastVerse();
 		$method = "direct";
@@ -25,20 +33,20 @@ class Verse extends CI_Controller
 			$ref = "Matt_1.1";
 			$method = "first_load";
 		}
-		$short_ref = $ref;
-		$ref = shortTextToNumber( $ref );
+		
 		$data["verse"] = $this->kjvmodel->html_verse( $ref );
 		if( ! $data["verse"] ) show_404();
 		saveLastVerse( $short_ref );
 		$data["text_ref"] = parseReferenceToText( $ref );
 		$data["short_ref"] = $short_ref;
 		$data["navigation"] = $this->kjvmodel->nav( $ref );
-		$data["main_resources"] = $this->resourcemodel->getMain( $ref );
+		$data["main_resources"] = $this->resourcemodel->getMain( $ref, 8 );
 		$data["sidebar_resources"] = array_filter( array_merge(
 			[ $this->kjvmodel->getCrossReferences( $ref ) ],
 			$this->mapmodel->get( $ref )
 		) );
 		$data["active_tab"] = "verses";
+		$data["resource_count"] = $this->resourcemodel->countResources( $ref );
 		
 		$log = [
 			"verse" => $ref,

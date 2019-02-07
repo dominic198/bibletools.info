@@ -443,7 +443,7 @@ footer.main {
 	margin: 25px 0;
 	font-size: 80%;
 	font-weight: normal;
-	overflow: auto;
+	overflow: hidden;
 }
 footer.main .text {
 	float:left;
@@ -504,6 +504,18 @@ footer.main .text {
 .resource.expand .panel-heading {
 	cursor: pointer;
 	padding-right: 35px
+}
+.load-more {
+	width: 100%;
+	text-align: center;
+	margin-bottom: 25px;
+	border-radius: 3px;
+	padding: 4px;
+	font-size: 90%;
+	border: solid 2px #a4aab8;
+	color: #717a8f;
+	font-weight: normal;
+	cursor: pointer;
 }
  .verse .panel-body a:hover,  .verse .panel-body a.selected {
 	color: #9B2D21;

@@ -3,14 +3,14 @@
 	<span class="text-ref"><?php echo $text_ref; ?></span>
 	<a href="/<?php echo $navigation["next"]; ?>" title="Next Verse" class="ref-link next-verse <?php echo $navigation["next"] ? "" : "hidden"; ?>"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="-200 50 400 400"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z" class=""></path></svg></a>
 </h2>
-<div id="resource_list" class="row">
+<div id="resource_list" class="row" data-count="<?php echo $resource_count; ?>">
 	<div class="col-sm-8 left-column">
 		<div class="panel panel-modern verse" data-short-ref="<?php echo $short_ref; ?>" data-ref="<?php echo $text_ref; ?>">
 			<div class="panel-heading text-center"><strong>King James Version (KJV)</strong></div>
 			<div class="panel-body"><?php echo $verse; ?></div>
 		</div><!--/ .panel -->
-		<?php foreach( $main_resources as $resource ) { if( $resource["logo"] == "sdabc" ) continue; ?>
-    		<div class="panel panel-modern resource" data-index-id="<?php echo $resource["id"]; ?>">
+		<?php foreach( $main_resources as $resource ) { ?>
+    		<div class="panel panel-modern resource <?php if( $resource["logo"] == "sdabc" ) { echo "hidden"; } ?>" data-index-id="<?php echo $resource["id"]; ?>">
 				<div class="panel-heading">
 					<div class="author-icon <?php echo $resource["logo"]; ?>"></div>
 					<div class="resource-info">
@@ -26,6 +26,7 @@
 				</div>
 			</div><!--/ .panel -->
 		<?php } ?>
+		<div class="load-more <?php if( $resource_count == count( $main_resources ) ) { echo "hidden"; } ?>">More Comments</div>
 	</div>
 	<div class="col-sm-4 right-column">
 		<?php foreach( $sidebar_resources as $resource ) { ?>
