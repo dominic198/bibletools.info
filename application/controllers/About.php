@@ -32,4 +32,15 @@ class About extends CI_Controller
 			mail( "adam@bibletools.info", "BibleTools.info Feedback from $name", $message, $headers );
 		}
 	}
+	
+	function donate()
+	{
+		if( ENVIRONMENT !== "development" && ( empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off" ) ){
+			header( "Location: " . "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+			exit();
+		}
+		$data["active_tab"] = "about";
+		$this->template->set( "title", "Donate" );
+		$this->template->load( "template", "donate", $data );
+	}
 }

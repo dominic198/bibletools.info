@@ -52,5 +52,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = "verse/index";
 $route['question/(:any)'] = "question/index/$1";
 $route['questions'] = "questions/index";
+$route['donate'] = "about/donate";
 $route["api/v1.0/(.+)"] = "api_1_0/$1";
 $route['(:any)'] = "verse/index/$1";

@@ -12,6 +12,7 @@
 			<p><strong>Daniel and the Revelation (Uriah Smith)</strong><br>This commentary on the prophetic books was published in 1897 but later revised. Ellen White spoke quite highly of these books several times.</p>
 			<p><strong>SDA Bible Commentary</strong><br>This commentary set is still under copyright, and as a result, is only available in a limited way.</p>
 			<p><strong>Treasury of Scripture Knowledge</strong><br>This resources provides the basis for the cross references. It was created by R.A. Torrey and includes over 500,000 cross references.</p>
+			<a href="/donate" class="btn btn-primary btn-lg">Donate</a>
 		</div>
 	</div>
 </div>
