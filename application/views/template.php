@@ -130,9 +130,9 @@
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
 		<link href="/assets/app.min.css?v=3.9" rel="stylesheet">
-		<script defer type="text/javascript" src="/assets/app.min.js?v=3.9"></script>
+		<script defer type="text/javascript" src="/assets/app.min.js?v=4.0"></script>
 	<?php } else { ?>
-		<link href="/assets/css/lib.css?v=1" rel="stylesheet">
+		<link href="/assets/css/lib.css?v=2" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">
 		<script defer type="text/javascript" src="/assets/js/lib.js"></script>
 		<script defer type="text/javascript" src="/assets/js/custom.js?v=5"></script>
