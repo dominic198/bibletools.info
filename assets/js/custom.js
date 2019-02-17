@@ -35,6 +35,15 @@ function initializeMaps() {
 }
 initializeMaps();
 
+function throwError() {
+    u( ".container.main" ).addClass( "hidden" ).before( '<div class="verse-error container"><b>Oops!</b> That verse couldn\'t be found.</div>' );
+}
+
+function removeError() {
+    u( ".container.main" ).removeClass( "hidden" );
+    u( ".verse-error" ).remove();
+}
+
 //-----Verse link poppers
 function getOffset( el ) {
 	const rect = el.getBoundingClientRect();
@@ -82,7 +91,8 @@ u( document ).on( "click", ".resource:not(.expand)", function(e) {
 });
 
 function loadVerse( ref, raw = false, updateState = true ){
-	u( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
+	removeError();
+    u( ".verse .panel-body" ).html( '<span class="loading-animation"><b>•</b><b>•</b><b>•</b></span>' );
 	u( "#search" ).first().blur();
 	closeMenu();
 	var limit = 8;
@@ -132,13 +142,13 @@ function loadVerse( ref, raw = false, updateState = true ){
 				}
 			});
 		} else {
-			//ToDo: Handle errors
+			throwError();
 	
 		}
 	};
 	
 	request.onerror = function() {
-		//ToDo: Handle errors
+		throwError();
 	};
 	
 	request.send();

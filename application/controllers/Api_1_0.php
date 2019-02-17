@@ -35,6 +35,8 @@ class Api_1_0 extends CI_Controller
 			"nav" => $this->kjvmodel->nav( $ref ),
 			"resource_count" => $this->resourcemodel->countResources( $ref ),
 		];
+        
+        if( ! $resources["verse"] ) show_404();
 		
 		$cross_references = $this->kjvmodel->getCrossReferences( $ref );
 		if( $cross_references ) {

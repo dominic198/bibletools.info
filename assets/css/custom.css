@@ -418,14 +418,14 @@ label {
 	background-color: #c85146;
 	box-shadow: none;
 }
-.global.error {
-	width: 80%;
-	margin: auto;
-	position: fixed;
-	top: 8px;
-	left: 10%;
-	text-align: center;
-	z-index: 9999999
+.verse-error {
+    padding: 16px;
+    font-weight: normal;
+    background-color: #f0f3f6;
+    border: solid 1px #ccc;
+    margin: 25px auto;
+    border-radius: 3px;
+    text-align: center;
 }
 @media only screen and (max-width: 767px) {
 	.no_scroll {

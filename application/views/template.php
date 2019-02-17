@@ -120,7 +120,6 @@
 		</div>
 	</section>
 	<div class="container main">
-		
 		<?php echo $contents; ?>
 		<footer class="main">
 			<div class="text">BibleTools.info is a supporting ministry of the Seventh-day Adventist Church</div>
@@ -129,8 +128,8 @@
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=4.0" rel="stylesheet">
-		<script defer type="text/javascript" src="/assets/app.min.js?v=4.0"></script>
+		<link href="/assets/app.min.css?v=4.1" rel="stylesheet">
+		<script defer type="text/javascript" src="/assets/app.min.js?v=4.1"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=2" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">
