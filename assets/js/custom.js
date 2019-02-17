@@ -270,7 +270,7 @@ u( document ).on( "click", ".ref-link", function(e) {
 });
 
 u( document ).on( "click", ".verse .panel-body a", function(e) {
-	
+	e.preventDefault();
 	clearLexicon();
 	
 	$lexicon = u( "#lexicon" );
