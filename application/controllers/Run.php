@@ -33,17 +33,17 @@ class Run extends CI_Controller
         // - 2. EGW emphasis, specific verse
         $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 2 WHERE resources.info_id > 7 AND emphasis = 1 AND end IS NULL" );
 		
-        // - 3. EGW emphasis, verse range
-        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 3 WHERE resources.info_id > 7 AND emphasis = 1 AND end IS NOT NULL" );
+        // - 3. EGW verse (not emphasis)
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 3 WHERE resources.info_id > 7 AND emphasis != 1 AND end IS NULL" );
         
-        // - 4. EGW verse (not emphasis)
-        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 4 WHERE resources.info_id > 7 AND emphasis != 1 AND end IS NULL" );
+        // - 4. EGW emphasis, verse range
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 4 WHERE resources.info_id > 7 AND emphasis = 1 AND end IS NOT NULL" );
         
         // - 5. EGW verse range (not emphasis)
         $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 5 WHERE resources.info_id > 7 AND emphasis != 1 AND end IS NOT NULL" );
         
         // - 6. EGW chapter (create index entries?)
-        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 6 WHERE resources.start LIKE '%000' AND resources.info_id > 7 AND emphasis != 1" );
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 6 WHERE resources.start LIKE '%000' AND resources.info_id > 7" );
         $this->db->trans_complete();
     }
 	
