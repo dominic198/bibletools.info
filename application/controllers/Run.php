@@ -910,7 +910,6 @@ class Run extends CI_Controller
                     "verse" => $verse["ref"],
                     "resource_id" => $resource["id"],
                 ];
-                print_r($data);die;
                 $this->db->insert( "index", $data );
             }
 		}
