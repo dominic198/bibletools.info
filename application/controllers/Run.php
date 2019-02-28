@@ -23,6 +23,29 @@ class Run extends CI_Controller
 		$this->minify->js( array( "lib.js", "custom.js"  ) ); 
 		$this->minify->deploy_js( true );
 	}
+    
+    function reorder_index()
+    {   
+        $this->db->trans_start();
+        // - 1. Commentaries
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 1 WHERE resources.info_id < 7" );
+        
+        // - 2. EGW emphasis, specific verse
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 2 WHERE resources.info_id > 7 AND emphasis = 1 AND end IS NULL" );
+		
+        // - 3. EGW emphasis, verse range
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 3 WHERE resources.info_id > 7 AND emphasis = 1 AND end IS NOT NULL" );
+        
+        // - 4. EGW verse (not emphasis)
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 4 WHERE resources.info_id > 7 AND emphasis != 1 AND end IS NULL" );
+        
+        // - 5. EGW verse range (not emphasis)
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 5 WHERE resources.info_id > 7 AND emphasis != 1 AND end IS NOT NULL" );
+        
+        // - 6. EGW chapter (create index entries?)
+        $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 6 WHERE resources.start LIKE '%000' AND resources.info_id > 7 AND emphasis != 1" );
+        $this->db->trans_complete();
+    }
 	
 	function restructure()
 	{
@@ -492,6 +515,7 @@ class Run extends CI_Controller
 	//EGW, incomplete remote reference
 	function egw_ref_to_href_complex()
 	{
+		ini_set('memory_limit', '512M');
 		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%egwlink_bible%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -521,6 +545,7 @@ class Run extends CI_Controller
 			}
 			$content = str_replace( "<html>", "", $doc->saveHTML() );
 			$content = str_replace( "</html>", "", $content );
+			//echo $content;die;
 			$this->db->set( "content", $content );
 			$this->db->where( "id", $item["id"] );
 			$this->db->update( "egw_quotes" );
@@ -870,6 +895,26 @@ class Run extends CI_Controller
 			}
 		}
 	}
+    
+    function create_index_for_chapter_comments()
+	{
+		$resources = $this->db->query( "SELECT * FROM resources WHERE start LIKE '%000' AND info_id > 7")->result_array();
+        //print_r($resources);die;
+		foreach( $resources as $resource ) {
+			$chapter = substr( $resource["start"], 0, 5 );
+            $verse_query = $this->db->query( "SELECT * FROM kjv_verses WHERE ref LIKE '$chapter%'" );
+            $verses = $verse_query->result_array();
+            foreach( $verses as $verse ) {
+                $ref = $verse["ref"];
+                $data = [
+                    "verse" => $verse["ref"],
+                    "resource_id" => $resource["id"],
+                ];
+                print_r($data);die;
+                $this->db->insert( "index", $data );
+            }
+		}
+	}
 	
 	function fix_abundance()
 	{
@@ -922,6 +967,116 @@ class Run extends CI_Controller
 			}
 		}
 		
+	}
+
+	function scrape_birding()
+	{
+		$start = 16572;
+		while( $start > 0 ) {
+			$json = file_get_contents( "https://groups.yahoo.com/api/v1/groups/inlandcountybirds/messages?start=$start&count=100&sortOrder=desc&direction=-1&chrome=raw&tz=America%2FLos_Angeles&ts=1536675223873" );
+			$array = json_decode( $json, true );
+			foreach( $array["ygData"]["messages"] as $message ) {
+				$data = [
+					"message_id" => $message["messageId"],
+					"yahooAlias" => $message["yahooAlias"],
+					"email" => $message["email"],
+					"date" => $message["date"],
+					"subject" => $message["subject"],
+					"summary" => $message["summary"],
+					"author" => $message["author"],
+				];
+				$this->db->insert( "yahoo", $data );
+			}
+			$start = $array["ygData"]["prevPageStart"];
+		}
+		
+	}
+
+	function save_birding_messages()
+	{
+		$items = $this->db->select( "*" )
+			->from( "yahoo" )
+			->get()
+			->result_array();
+		foreach( $items as $item ) {
+			$id = $item["message_id"];
+			$html = $this->domparser->file_get_html( "https://groups.yahoo.com/neo/groups/inlandcountybirds/conversations/messages/$id" );
+			$message = $html->find( ".msg-content", 0 );
+			echo $message;die;
+		}
+	}
+	
+	function getPage ($url) {
+
+
+		$useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36';
+		$timeout= 120;
+		$dir            = dirname(__FILE__);
+		$cookie_file    = $dir . '/cookies/' . md5($_SERVER['REMOTE_ADDR']) . '.txt';
+		
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_FAILONERROR, true);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
+		curl_setopt($ch, CURLOPT_ENCODING, "" );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt($ch, CURLOPT_AUTOREFERER, true );
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout );
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 10 );
+		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($ch, CURLOPT_REFERER, 'http://www.google.com/');
+		$content = curl_exec($ch);
+		if(curl_errno($ch))
+		{
+		    echo 'error:' . curl_error($ch);
+		}
+		else
+		{
+		    return $content;        
+		}
+		    curl_close($ch);
+		
+	}
+	
+	function create_abundance()
+	{
+		$json = $this->getPage( "https://ebird.org/mapServices/genHsForWindow.do?maxY=32.63937487360669&maxX=-109.37026977539062&minY=31.339562861785012&minX=-111.69937133789062&yr=all&m=" );
+		foreach( json_decode( $json, true ) as $hotspot ) {
+			$location = $hotspot["l"];
+			$location_name = $hotspot["n"];
+			$exists_query = $this->db->query( "SELECT id FROM abundance WHERE location_id = '$location'" );
+			if( $exists_query->num_rows() > 0 ) continue;
+			$tsv = $this->getPage( "https://ebird.org/barchartData?r=$location&bmo=1&emo=12&byr=1900&eyr=2019&fmt=tsv" );
+			$array = array_slice( str_getcsv($tsv, "\t"), 51);
+			$checklists = array_slice( $array, 0, 48 );
+			$trimmedArray = array_filter( array_map('trim', $array) );
+			$species = array_slice( $trimmedArray, 48 );
+			
+			$species_name = "";
+			$frequencies = [];
+			foreach( $species as $row ) {
+				if( ! stripos( $row, "." ) ) {
+					$frequencies = [];
+					$species_name = $row;
+				} else {
+					$length = count( $frequencies );
+					$frequencies["wk" . ( $length+1 )] = $row;
+					if( count( $frequencies ) == 48 ) {
+						$average = array_sum($frequencies)/48;
+						$frequencies["average"] = $average;
+						$frequencies["bird_name"] = $species_name;
+						$frequencies["location_name"] = $location_name;
+						$frequencies["location_id"] = $location;
+						$this->db->insert( "abundance", $frequencies );
+						
+					}
+				}
+			}
+		}
+		die;
 	}
 	
 	function info()

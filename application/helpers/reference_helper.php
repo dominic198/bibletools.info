@@ -36,7 +36,7 @@ if ( ! function_exists( "construct_reference" ) )
 		
 		if( isset( $parts[1] ) ) {
 			preg_match( "~^(\d+)~", $parts[1], $output );
-			$components['verse'] = $output[0];
+			$components['verse'] = $output[0] ?? 1;
 		} else {
 			$components['verse'] = 1;
 		}

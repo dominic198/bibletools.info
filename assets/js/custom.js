@@ -269,7 +269,7 @@ u( document ).on( "click", ".ref-link", function(e) {
 	u( ".dropdown-menu.history-list" ).first().style.display = "none";
 });
 
-u( document ).on( "click", ".verse .panel-body a", function(e) {
+u( document ).on( "click touchstart", ".verse .panel-body a", function(e) {
 	e.preventDefault();
 	clearLexicon();
 	
@@ -302,13 +302,13 @@ u( document ).on( "click", ".verse .panel-body a", function(e) {
 				u( ".verse [id='" + word.id + "']" ).addClass( "selected" );
 			});
 		} else {
-			//ToDo: Handle errors
+			u( "#lexicon .definition" ).text( "Sorry, no lexicon data available for this word." );
 	
 		}
 	};
 	
 	request.onerror = function() {
-		//ToDo: Handle errors
+		u( "#lexicon .definition" ).text( "Sorry, no lexicon data available for this word." );
 	};
 	
 	request.send();

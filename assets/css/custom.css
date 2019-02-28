@@ -589,7 +589,7 @@ footer.main .text {
 	height: 100%;
 	width: 100%;
 	z-index: 10;
-	background-color: rgba(255, 255, 255, .95);
+	background-color: rgba(255, 255, 255, .6);
 	cursor: pointer;
 }
 #menu {
@@ -748,13 +748,13 @@ section#lexicon .content {
 	cursor: pointer;
 }
 section#lexicon .close {
-	position: fixed;
+	position: sticky !important;
 	vertical-align: top;
 	margin: 3px 6px 4px 6px;
 	border-radius: 50%;
 	background-color: #34495e;
 	top: 4px;
-	right: 8px;
+	float: right;
 	opacity: .3;
 	color: #fff;
 	text-shadow: none;

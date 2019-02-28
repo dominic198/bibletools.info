@@ -6,7 +6,7 @@
 	<meta name="description" content="BibleTools.info is a web app designed to enhance your Bible study experience by providing powerful resources for almost every verse.">
 	<meta name="author" content="Adam Jackson">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width, user-scalable=no" />
+	<meta name="viewport" content="minimum-scale=1, width=device-width, user-scalable=no" />
 	<!--[if IE]><link rel="shortcut icon" href="favicon.ico"><![endif]-->
 	<link rel="icon" href="/favicon.png"> 
 	<link rel="apple-touch-icon" href="/assets/img/icons/Icon-60@2x.png" />
@@ -128,8 +128,8 @@
 	</div>
 	<link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic' rel='stylesheet' type='text/css'>
 	<?php if( ENVIRONMENT == "production" ) { ?>
-		<link href="/assets/app.min.css?v=4.1" rel="stylesheet">
-		<script defer type="text/javascript" src="/assets/app.min.js?v=4.1"></script>
+		<link href="/assets/app.min.css?v=4.2" rel="stylesheet">
+		<script defer type="text/javascript" src="/assets/app.min.js?v=4.2"></script>
 	<?php } else { ?>
 		<link href="/assets/css/lib.css?v=2" rel="stylesheet">
 		<link href="/assets/css/custom.css?v=3" rel="stylesheet">

@@ -45,6 +45,10 @@ class Kjvmodel extends CI_Model
 				->where( "kjv_words.id", $word_id )
 				->get()
 				->row_array();
+            
+            if( ! $definition ) {
+                show_404();
+            }
 				
 			$connected_words = $this->db->select( "id" )
 				->from( "kjv_words" )
@@ -65,7 +69,6 @@ class Kjvmodel extends CI_Model
 				->where( "strongs", $word['strongs'] )
 				->where( "ref $sign 40001001" )
 				->count_all_results();
-			
 			$definition['data'] = json_decode( $definition['data'], true );
 			$pronunciation = json_decode( $definition['pronun'], true );
 			
