@@ -269,7 +269,7 @@ u( document ).on( "click", ".ref-link", function(e) {
 	u( ".dropdown-menu.history-list" ).first().style.display = "none";
 });
 
-u( document ).on( "click touchstart", ".verse .panel-body a", function(e) {
+u( document ).on( "click", ".verse .panel-body a", function(e) {
 	e.preventDefault();
 	clearLexicon();
 	
