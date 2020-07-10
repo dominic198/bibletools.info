@@ -12,11 +12,12 @@ class Run extends CI_Controller
 
 	function index()
 	{
-		//
+		die("Restricted");
 	}
 	
 	function minify()
 	{
+		die("Restricted");
 		$this->load->library( "minify" ); 
 		$this->minify->css( array( "lib.css", "custom.css" ) ); 
 		$this->minify->deploy_css( true );
@@ -26,7 +27,8 @@ class Run extends CI_Controller
     
     function reorder_index()
     {   
-        $this->db->trans_start();
+		die("Restricted");
+		$this->db->trans_start();
         // - 1. Commentaries
         $this->db->query( "UPDATE `index` LEFT JOIN resources ON `index`.resource_id = resources.id SET `index`.order_group = 1 WHERE resources.info_id < 7" );
         
@@ -49,6 +51,7 @@ class Run extends CI_Controller
 	
 	function restructure()
 	{
+		die("Restricted");
 		$sql = 'SELECT id, verse, end_verse, book, chapter FROM barnes';
 		$query = $this->db->query($sql);
 		$references = $query->result_array();
@@ -73,6 +76,7 @@ class Run extends CI_Controller
 	
 	function remove_commas()
 	{
+		die("Restricted");
 		$sql = "SELECT * FROM egw_scripture_reference WHERE verse LIKE '%,%'";
 		$query = $this->db->query( $sql );
 		$references = $query->result_array();
@@ -88,146 +92,9 @@ class Run extends CI_Controller
 		}
 	}
 	
-	function churches()
-	{
-		$churches = array();
-		$page = 183;
-		while( $page < 244 ){
-			$html = $this->domparser->file_get_html( "http://adventistdirectory.org/default.aspx?page=searchresults&&EntityType=C&CtryCode=US&SortBy=0&PageIndex=$page" );
-			if( is_object($html) ){
-				$table = $html->find( "table", 1 );
-				foreach ( $table->find( "tr" ) as $row ) {
-					$link = $row->find( "a", 0 );
-					if( $link ) {
-						$url = "http://adventistdirectory.org/" . $link->href;
-						$church = $this->domparser->file_get_html( $url );
-						
-						$entity_id = explode( "EntityID=", $url );
-						$entity_id = $entity_id[1];
-												
-						$pastor = "";
-						$website = "";
-						$members = "";
-						$phone = "";
-						$mailing_address = "";
-						$physical_address = "";
-						$rows = $church->find( "tr");
-						
-						foreach( $rows as $row ) {
-							$plain = $row->find( "td", 0 )->plaintext;
-							if( strchr( $plain, "Mail" ) ) {
-								$mailing_address_td = $row->find( "td", 1 )->innertext;
-								$mailing_address = $this->parseAddress( $mailing_address_td );
-							} elseif( strchr( $plain, "Address" ) ) {
-								$physical_address_td = $row->find( "td", 1 )->innertext;
-								$physical_address = $this->parseAddress( $physical_address_td );
-							} elseif( strchr( $plain, "Members" ) ) {
-								$members = $row->find( "td", 1 )->plaintext;
-							} elseif( strchr( $plain, "Phone" ) ) {
-								$phone = $row->find( "td", 1 )->plaintext;
-							} elseif( strchr( $plain, "Website" ) ) {
-								$website = $row->find( "td", 1 )->plaintext;
-							} elseif( strchr( $plain, "Pastor" ) ) {
-								$pastor = $row->find( "td", 1 )->plaintext;
-							}
-						}
-						
-						$data = array(
-							"entity_id" => $entity_id,
-							"name" => $church->find( "#_ctl0_lblName", 0 )->plaintext,
-							"members" => trim( $members ),
-							"pastor" => trim( $pastor ),
-							"phone" => trim( $phone ),
-							"website" => trim( $website ),
-						);
-						
-						if( $mailing_address !== "" ) {
-							$data['mailing_address_name'] = $mailing_address['name'];
-							$data['mailing_address'] = $mailing_address['address'];
-							$data['mailing_state'] = $mailing_address['state'];
-							$data['mailing_zip'] = $mailing_address['zip'];
-							$data['mailing_city'] = $mailing_address['city'];
-							$data['mailing_country'] = $mailing_address['country'];
-						}
-						
-						if( $physical_address !== "" ) {
-							$data['physical_address_name'] = $physical_address['name'];
-							$data['physical_address'] = $physical_address['address'];
-							$data['physical_state'] = $physical_address['state'];
-							$data['physical_zip'] = $physical_address['zip'];
-							$data['physical_city'] = $physical_address['city'];
-							$data['physical_country'] = $physical_address['country'];
-						}
-						
-						$this->db->insert('churches', $data);
-						unset( $data );
-						unset( $website );
-						unset( $phone );
-						unset( $pastor );
-						unset( $physical_address );
-						unset( $mailing_address );
-					}
-				}
-			}
-		$page++;
-		}
-	}
-	
-	function parseAddress( $td )
-	{
-		$array = explode( "</div>", $td );
-		if( array_key_exists( 1, $array ) ) {
-			$td = $array[1];
-		}
-		$td = str_replace( "<br>", "", $td );
-		
-		$address = array_map( function( $item ) {
-			return trim( preg_replace('/\t+/', '', $item ) );
-		}, explode( PHP_EOL, $td ) );
-		
-		$address = array_values( array_filter( $address ) );
-		if( count( $address ) == 4 ) {
-			$location = explode( "  ", $address[2] );
-			$state = end( explode( " ", $location[0] ) );
-			$city = explode( " ", $location[0] );
-			array_pop( $city );
-			$city = implode( " ", $city );
-			$zip = $location[1];
-			
-			return array(
-				"name" => $address[0],
-				"address" => $address[1],
-				"state" => $state,
-				"zip" => $zip,
-				"city" => $city,
-				"country" => $address[3]
-			);
-		} else {
-			$location = explode( "  ", $address[1] );
-			$state = end( explode( " ", $location[0] ) );
-			$city = explode( " ", $location[0] );
-			array_pop( $city );
-			$city = implode( " ", $city );
-			if( array_key_exists( 1, $location ) ) {
-				$zip = $location[1];
-			} else {
-				$zip = "";
-			}
-			
-			
-			return array(
-				"name" => "",
-				"address" => $address[0],
-				"state" => $state,
-				"zip" => $zip,
-				"city" => $city,
-				"country" => $address[2]
-			);
-		}
-	}
-	
 	function tsk()
 	{		
+		die("Restricted");
 		$query = $this->db->get( "kjv_verses", 32000, 16883 );
 		
 		foreach ( $query->result() as $verse ) {
@@ -259,6 +126,7 @@ class Run extends CI_Controller
 	
 	function get_full_url( $url )
 	{
+		die("Restricted");
 		$ch = curl_init( $url );
 		curl_setopt( $ch, CURLOPT_HEADER, true );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -279,6 +147,7 @@ class Run extends CI_Controller
 	
 	function get_page_chunk( $url )
 	{
+		die("Restricted");
 		$ch = curl_init( $url );
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -291,6 +160,7 @@ class Run extends CI_Controller
 	
 	function merge_resources()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM sdabc';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -307,6 +177,7 @@ class Run extends CI_Controller
 	
 	function pull_scripture_reference()
 	{
+		die("Restricted");
 		$book_code = "2778.27587";
 		$book_names = array_flip( getBooksNoSpaces() );
 		$toc = $this->domparser->file_get_html( "https://m.egwwritings.org/en/book/$book_code/toc/part" );
@@ -359,6 +230,7 @@ class Run extends CI_Controller
 	
 	function pull_egw_paragraph_quotes()
 	{
+		die("Restricted");
 		$sql = 'SELECT scripture_index.* FROM scripture_index LEFT JOIN egw_quotes_new quotes ON scripture_index.reference = quotes.reference WHERE scripture_index.reference LIKE "%.%" AND quotes.id IS NULL';
 		$query = $this->db->query($sql);
 		$references = $query->result_array();
@@ -397,6 +269,7 @@ class Run extends CI_Controller
 	
 	function fix_egw_failed_quotes()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM egw_quotes_new WHERE reference NOT LIKE "%.%" AND run_again = 0';
 		$query = $this->db->query($sql);
 		$references = $query->result_array();
@@ -444,6 +317,7 @@ class Run extends CI_Controller
 	
 	function ref_to_href()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%scriptRef%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -481,6 +355,7 @@ class Run extends CI_Controller
 	//EGW
 	function egw_ref_to_href()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%egwlink_bible%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -515,6 +390,7 @@ class Run extends CI_Controller
 	//EGW, incomplete remote reference
 	function egw_ref_to_href_complex()
 	{
+		die("Restricted");
 		ini_set('memory_limit', '512M');
 		$sql = 'SELECT * FROM egw_quotes WHERE content LIKE "%egwlink_bible%"';
 		$query = $this->db->query($sql);
@@ -556,6 +432,7 @@ class Run extends CI_Controller
 	//DAR
 	function dar_ref_to_href()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE \'%class="link"%\'';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -595,6 +472,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_ref_to_href()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%bibleref%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -645,6 +523,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_ref_to_href_more()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%iv-vol%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -694,6 +573,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_popup_to_span()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%popup%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -723,6 +603,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_internal_to_span()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%iv-vol7%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -751,6 +632,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_remove_milestones()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%data-resourcename%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -776,6 +658,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_remove_monographs()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%text.serial.magazine%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -802,6 +685,7 @@ class Run extends CI_Controller
 	//SDABC
 	function sdabc_egw_refs()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE "%data-resourcename%"';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -833,6 +717,7 @@ class Run extends CI_Controller
 	
 	function convert_span_to_b()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM resources WHERE content LIKE \'%<span class="head">%\'';
 		$query = $this->db->query($sql);
 		$items = $query->result_array();
@@ -859,6 +744,7 @@ class Run extends CI_Controller
 	
 	function fix_egw_refs()
 	{
+		die("Restricted");
 		$sql = 'SELECT * FROM scripture_index';
 		$query = $this->db->query($sql);
 		$quotes = $query->result_array();
@@ -878,6 +764,7 @@ class Run extends CI_Controller
 	
 	function create_index()
 	{
+		die("Restricted");
 		$verse_query = $this->db->query( "SELECT * FROM kjv_verses WHERE ref > 55003006" );
 		$verses = $verse_query->result_array();
 		foreach( $verses as $verse ) {
@@ -898,6 +785,7 @@ class Run extends CI_Controller
     
     function create_index_for_chapter_comments()
 	{
+		die("Restricted");
 		$resources = $this->db->query( "SELECT * FROM resources WHERE start LIKE '%000' AND info_id > 7")->result_array();
         //print_r($resources);die;
 		foreach( $resources as $resource ) {
@@ -915,21 +803,9 @@ class Run extends CI_Controller
 		}
 	}
 	
-	function fix_abundance()
-	{
-		$sql = 'SELECT * FROM abundance';
-		$query = $this->db->query($sql);
-		$items = $query->result_array();
-		foreach( $items as $item ) {
-			$consistency = ($item["wk1"] > 0) + ($item["wk2"] > 0) + ($item["wk3"] > 0) + ($item["wk4"] > 0) + ($item["wk5"] > 0) + ($item["wk6"] > 0) + ($item["wk7"] > 0) + ($item["wk8"] > 0) + ($item["wk9"] > 0) + ($item["wk10"] > 0) + ($item["wk11"] > 0) + ($item["wk12"] > 0) + ($item["wk13"] > 0) + ($item["wk14"] > 0) + ($item["wk15"] > 0) + ($item["wk16"] > 0) + ($item["wk17"] > 0) + ($item["wk18"] > 0) + ($item["wk19"] > 0) + ($item["wk20"] > 0) + ($item["wk21"] > 0) + ($item["wk22"] > 0) + ($item["wk23"] > 0) + ($item["wk24"] > 0) + ($item["wk25"] > 0) + ($item["wk26"] > 0) + ($item["wk27"] > 0) + ($item["wk28"] > 0) + ($item["wk29"] > 0) + ($item["wk30"] > 0) + ($item["wk31"] > 0) + ($item["wk32"] > 0) + ($item["wk33"] > 0) + ($item["wk34"] > 0) + ($item["wk35"] > 0) + ($item["wk36"] > 0) + ($item["wk37"] > 0) + ($item["wk38"] > 0) + ($item["wk39"] > 0) + ($item["wk40"] > 0) + ($item["wk41"] > 0) + ($item["wk42"] > 0) + ($item["wk43"] > 0) + ($item["wk44"] > 0) + ($item["wk45"] > 0) + ($item["wk46"] > 0) + ($item["wk47"] > 0) + ($item["wk48"] > 0);
-			$this->db->set( "consistency", $consistency, FALSE );
-			$this->db->where( "id", $item["id"] );
-			$this->db->update('abundance');
-		}
-	}
-	
 	function create_egw_info()
 	{
+		die("Restricted");
 		$query = $this->db->query( "SELECT * FROM resources WHERE reference != '' AND info_id IS NULL" );
 		$items = $query->result_array();
 		foreach( $items as $item ) {
@@ -948,6 +824,7 @@ class Run extends CI_Controller
 	
 	function remove_duplicate_commentaries()
 	{
+		die("Restricted");
 		$this->output->enable_profiler(TRUE);
 		$query = $this->db->query( "SELECT *, COUNT(*) count FROM resources GROUP BY content HAVING count > 1 AND info_id = 2 ORDER BY count DESC" );
 		$items = $query->result_array();
@@ -966,120 +843,5 @@ class Run extends CI_Controller
 			}
 		}
 		
-	}
-
-	function scrape_birding()
-	{
-		$start = 16572;
-		while( $start > 0 ) {
-			$json = file_get_contents( "https://groups.yahoo.com/api/v1/groups/inlandcountybirds/messages?start=$start&count=100&sortOrder=desc&direction=-1&chrome=raw&tz=America%2FLos_Angeles&ts=1536675223873" );
-			$array = json_decode( $json, true );
-			foreach( $array["ygData"]["messages"] as $message ) {
-				$data = [
-					"message_id" => $message["messageId"],
-					"yahooAlias" => $message["yahooAlias"],
-					"email" => $message["email"],
-					"date" => $message["date"],
-					"subject" => $message["subject"],
-					"summary" => $message["summary"],
-					"author" => $message["author"],
-				];
-				$this->db->insert( "yahoo", $data );
-			}
-			$start = $array["ygData"]["prevPageStart"];
-		}
-		
-	}
-
-	function save_birding_messages()
-	{
-		$items = $this->db->select( "*" )
-			->from( "yahoo" )
-			->get()
-			->result_array();
-		foreach( $items as $item ) {
-			$id = $item["message_id"];
-			$html = $this->domparser->file_get_html( "https://groups.yahoo.com/neo/groups/inlandcountybirds/conversations/messages/$id" );
-			$message = $html->find( ".msg-content", 0 );
-			echo $message;die;
-		}
-	}
-	
-	function getPage ($url) {
-
-
-		$useragent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36';
-		$timeout= 120;
-		$dir            = dirname(__FILE__);
-		$cookie_file    = $dir . '/cookies/' . md5($_SERVER['REMOTE_ADDR']) . '.txt';
-		
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_FAILONERROR, true);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
-		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt($ch, CURLOPT_ENCODING, "" );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt($ch, CURLOPT_AUTOREFERER, true );
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout );
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout );
-		curl_setopt($ch, CURLOPT_MAXREDIRS, 10 );
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_REFERER, 'http://www.google.com/');
-		$content = curl_exec($ch);
-		if(curl_errno($ch))
-		{
-		    echo 'error:' . curl_error($ch);
-		}
-		else
-		{
-		    return $content;        
-		}
-		    curl_close($ch);
-		
-	}
-	
-	function create_abundance()
-	{
-		$json = $this->getPage( "https://ebird.org/mapServices/genHsForWindow.do?maxY=32.63937487360669&maxX=-109.37026977539062&minY=31.339562861785012&minX=-111.69937133789062&yr=all&m=" );
-		foreach( json_decode( $json, true ) as $hotspot ) {
-			$location = $hotspot["l"];
-			$location_name = $hotspot["n"];
-			$exists_query = $this->db->query( "SELECT id FROM abundance WHERE location_id = '$location'" );
-			if( $exists_query->num_rows() > 0 ) continue;
-			$tsv = $this->getPage( "https://ebird.org/barchartData?r=$location&bmo=1&emo=12&byr=1900&eyr=2019&fmt=tsv" );
-			$array = array_slice( str_getcsv($tsv, "\t"), 51);
-			$checklists = array_slice( $array, 0, 48 );
-			$trimmedArray = array_filter( array_map('trim', $array) );
-			$species = array_slice( $trimmedArray, 48 );
-			
-			$species_name = "";
-			$frequencies = [];
-			foreach( $species as $row ) {
-				if( ! stripos( $row, "." ) ) {
-					$frequencies = [];
-					$species_name = $row;
-				} else {
-					$length = count( $frequencies );
-					$frequencies["wk" . ( $length+1 )] = $row;
-					if( count( $frequencies ) == 48 ) {
-						$average = array_sum($frequencies)/48;
-						$frequencies["average"] = $average;
-						$frequencies["bird_name"] = $species_name;
-						$frequencies["location_name"] = $location_name;
-						$frequencies["location_id"] = $location;
-						$this->db->insert( "abundance", $frequencies );
-						
-					}
-				}
-			}
-		}
-		die;
-	}
-	
-	function info()
-	{
-		echo phpinfo();
 	}
 }
