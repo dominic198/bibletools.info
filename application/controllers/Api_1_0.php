@@ -57,24 +57,24 @@ class Api_1_0 extends CI_Controller
 			"api_version" => "1.0",
 		];
 		$this->db->insert( "log", $log );
-		$this->output->set_output( json_encode( $resources ) );
+		$this->output->set_content_type('application/json')->set_output( json_encode( $resources ) );
 	}
 	
 	function resources( $ref, $limit = 20, $offset = 0 )
 	{
 		$ref = shortTextToNumber( $ref );
 		$resources = $this->resourcemodel->getMain( $ref, $limit, $offset );
-		$this->output->set_output( json_encode( $resources ) );
+		$this->output->set_content_type('application/json')->set_output( json_encode( $resources ) );
 	}
 	
 	function word( $word )
 	{
-		$this->output->set_output( json_encode( $this->kjvmodel->lexicon( $word ) ) );
+		$this->output->set_content_type('application/json')->set_output( json_encode( $this->kjvmodel->lexicon( $word ) ) );
 	}
 	
 	function word_occurences( $word, $page )
 	{
-		$this->output->set_output( $this->kjvmodel->lexicon_occurances( $word, $page ) );
+		$this->output->set_content_type('application/json')->set_output( $this->kjvmodel->lexicon_occurances( $word, $page ) );
 	}
 	
 	function helpful( $index_id )
@@ -101,6 +101,6 @@ class Api_1_0 extends CI_Controller
 	
 	function bibletext( $ref )
 	{
-		$this->output->set_output( json_encode( $this->kjvmodel->bibletext( shortTextToNumber( $ref ) ) ) );
+		$this->output->set_content_type('application/json')->set_output( json_encode( $this->kjvmodel->bibletext( shortTextToNumber( $ref ) ) ) );
 	}
 }
