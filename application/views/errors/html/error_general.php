@@ -1,16 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-$to      = 'adam@bibletools.info';
-$subject = $heading;
-$headers = 'From: adam@bibletools.info' . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
-$headers  .= 'MIME-Version: 1.0' . "\r\n";
-$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-$message .= "<br /><b>URL: </b> ".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-$message .= "<br/>User agent: " . $_SERVER['HTTP_USER_AGENT'] ?? null;
-$message .= "<br/>Referral URL: " . $_SERVER["HTTP_REFERER"] ?? null;
-mail($to, $subject, $message, $headers);
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
