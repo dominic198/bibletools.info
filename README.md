@@ -1,3 +1,9 @@
+# Looking for a new home
+
+For the last 8 years BibleTools.info is a project that I (Adam Jackson) have soley developed and maintained. Unfortunately, I no longer have the capcity to continue moving the project forward and I think it would be better served in the hands of someone who can give it more attention.
+
+If you or your organization is interested in adopting the project, send me a message at adam@bibletools.info
+
 # BibleTools.info
 
 Note: I haven't done too much work on this for a while so the codebase is a bit out of date. If you're interested in contributing to the project, feel free to get in touch.
